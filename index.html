@@ -417,7 +417,7 @@
         <a href="#findings">Comparative Findings</a>
         <a href="#applications">Application Meaning</a>
         <a href="#figures">Benchmark Figures</a>
-        <a href="#resources">Supporting Materials</a>
+        <a href="#resources">Supplementary Materials</a>
         <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank" rel="noopener noreferrer">Source Code</a>
       </nav>
     </div>
@@ -426,34 +426,34 @@
   <main class="page">
     <section class="report-header">
       <div>
-        <h1>Physics-informed neural models show stronger benchmark performance in the quantum problems examined here.</h1>
+        <h1>Physics-informed neural networks yield stronger benchmark performance on the quantum model problems examined in this study.</h1>
         <p class="lead">
-          This report presents benchmark results for cases in which the physics-informed formulations outperform the comparison models evaluated in the study. The principal result is obtained for the harmonic-oscillator ground state, where physics-constrained loss reduces relative L2 error by a factor of 148 compared with an unconstrained neural baseline on the same task and architecture.
+          This report presents those benchmark results for which the physics-informed formulations outperform the comparison models evaluated in the study. The clearest result arises in the harmonic-oscillator ground state, where physics-constrained loss reduces relative L2 error by a factor of 148 relative to an unconstrained neural baseline evaluated on the same task and architecture.
         </p>
         <p>
-          The broader set of comparisons supports the same interpretation. Specialist Hamiltonian constraints reduce harmonic-oscillator ground-state error by a factor of 76 relative to the non-specialist protocol, and the strongest shared-depth configuration improves on the shallow baseline by a factor of 5.3. Under 20% input noise, error also decreases rather than increases, indicating that the physics-based regularization contributes to both accuracy and stability.
+          The broader comparison set supports the same interpretation. Specialist Hamiltonian constraints reduce harmonic-oscillator ground-state error by a factor of 76 relative to the non-specialist protocol, and the strongest shared-depth configuration improves on the shallow baseline by a factor of 5.3. Under 20% input noise, error decreases rather than increases, indicating that the physics-based regularization contributes to both accuracy and robustness.
         </p>
       </div>
     </section>
 
     <section class="summary-grid" aria-label="Key benchmark gains">
       <article class="stat-card">
-        <span class="stat-label">Physics vs. unconstrained baseline</span>
+        <span class="stat-label">Physics-constrained vs. unconstrained baseline</span>
         <div class="stat-value">148x</div>
         <p>Ground-state relative L2 error drops from 0.2323 to 0.001569 on the same harmonic-oscillator task and architecture.</p>
       </article>
       <article class="stat-card">
-        <span class="stat-label">Specialist vs. shared protocol</span>
+        <span class="stat-label">Specialist formulation vs. shared protocol</span>
         <div class="stat-value">76x</div>
         <p>Specialist Hamiltonian constraints reduce the QHO n = 0 error from 0.1196 to 0.001569.</p>
       </article>
       <article class="stat-card">
-        <span class="stat-label">Depth advantage in shared benchmark</span>
+        <span class="stat-label">Depth effect in the shared benchmark</span>
         <div class="stat-value">5.3x</div>
         <p>The 5-layer, 64-unit model improves on the 2-layer, 64-unit baseline from 1.4193 to 0.2658.</p>
       </article>
       <article class="stat-card">
-        <span class="stat-label">Behavior under 20% input noise</span>
+        <span class="stat-label">Performance under 20% input noise</span>
         <div class="stat-value">-2.4%</div>
         <p>Error improves from 0.2565 on clean input to 0.2503 with 20% input noise, indicating physics-based regularization.</p>
       </article>
@@ -461,27 +461,27 @@
 
     <section class="section" id="findings">
       <div class="section-kicker">Comparative Findings</div>
-      <h2>Benchmark-backed gains over the comparison models documented in this study</h2>
+      <h2>Benchmark-supported gains relative to the comparison models documented in this study</h2>
       <p class="section-intro">
-        Each row below states a measured advantage and its practical meaning inside the project's application scope. The comparisons are limited to models or configurations that are explicitly reported by the project artifacts.
+        The table below reports each measured advantage together with its relevance to the application settings represented in the study. Comparisons are limited to models or configurations explicitly documented in the project artifacts.
       </p>
 
       <div class="scope-note">
-        Scope note: this document excludes non-comparative weak points, low-performing regimes, and any statement that is not directly supported by the recorded benchmark outputs.
+        Scope note: this document excludes unfavorable or non-comparative results and includes only statements supported directly by the recorded benchmark outputs.
       </div>
 
       <div class="panel" style="margin-top: 18px;">
         <div class="panel-head">
-          <h3>Comparative performance summary</h3>
+          <h3>Comparative performance overview</h3>
         </div>
         <div class="panel-body">
           <table>
             <thead>
               <tr>
                 <th>Measured result</th>
-                <th>Project model</th>
+                <th>Physics-informed model</th>
                 <th>Comparison model</th>
-                <th>Why the gain matters in application terms</th>
+                <th>Interpretation in application terms</th>
               </tr>
             </thead>
             <tbody>
@@ -489,31 +489,31 @@
                 <td>Ground-state harmonic-oscillator relative L2 error</td>
                 <td><strong>0.001569</strong></td>
                 <td>0.2323 from the unconstrained tanh baseline</td>
-                <td><span class="meaning">148x lower error</span> means more faithful eigenstate recovery for molecular-vibration and trapped-ion settings, where the project uses harmonic confinement as the reference structure.</td>
+                <td><span class="meaning">148x lower error</span> indicates substantially more faithful eigenstate recovery for molecular-vibration and trapped-ion settings, where harmonic confinement serves as the reference structure.</td>
               </tr>
               <tr>
                 <td>Specialist Hamiltonian formulation on QHO n = 0</td>
                 <td><strong>0.001569</strong></td>
                 <td>0.1196 from the shared non-specialist protocol</td>
-                <td><span class="meaning">76x lower error</span> means the added eigenvalue consistency, normalization, and symmetry constraints materially improve models for confinement problems instead of relying on scale alone.</td>
+                <td><span class="meaning">76x lower error</span> indicates that eigenvalue consistency, normalization, and symmetry constraints materially improve confinement models rather than relying on scale alone.</td>
               </tr>
               <tr>
                 <td>Shared benchmark architecture depth, 5 layers x 64 units</td>
                 <td><strong>0.2658</strong></td>
                 <td>1.4193 from the 2-layer x 64-unit baseline</td>
-                <td><span class="meaning">5.3x lower error</span> means the stronger shared architecture gives more reliable transfer across the project's confinement, tunneling, and transport problem families.</td>
+                <td><span class="meaning">5.3x lower error</span> indicates that the stronger shared architecture transfers more reliably across the confinement, tunneling, and transport problem families represented here.</td>
               </tr>
               <tr>
                 <td>Noise robustness in the shared benchmark</td>
                 <td><strong>0.2503</strong> at 20% input noise</td>
                 <td>0.2565 on the clean-input reference run</td>
-                <td><span class="meaning">2.4% lower error under corruption</span> means the model remains dependable when inputs are imperfect, which is directly relevant to measured wavepacket data in electron imaging, neutron interferometry, and cold-atom transport experiments.</td>
+                <td><span class="meaning">2.4% lower error under corruption</span> indicates that the model remains reliable when inputs are imperfect, which is directly relevant to measured wavepacket data in electron imaging, neutron interferometry, and cold-atom transport experiments.</td>
               </tr>
               <tr>
                 <td>Collocation efficiency for the shared QHO study</td>
                 <td><strong>0.24794</strong> with 100 collocation points</td>
                 <td>0.24773 with 2000 collocation points</td>
-                <td><span class="meaning">Within 0.1% of the denser setting</span> means the model reaches essentially the same accuracy with 20x fewer collocation points, supporting faster screening and lower compute cost in repeated study runs.</td>
+                <td><span class="meaning">Within 0.1% of the denser setting</span> indicates that essentially the same accuracy is obtained with 20x fewer collocation points, supporting lower computational cost in repeated study runs.</td>
               </tr>
             </tbody>
           </table>
@@ -522,28 +522,28 @@
     </section>
 
     <section class="section" id="demo">
-      <div class="section-kicker">Interactive Demonstration</div>
-      <h2>Direct inspection of the three exported study reports</h2>
+      <div class="section-kicker">Interactive Inspection</div>
+      <h2>Embedded inspection of the three exported study reports</h2>
       <p class="section-intro">
-        The demonstration below keeps the root document interactive without adding unsupported claims. Readers can switch between the exported harmonic-oscillator, time-dependent, and combined benchmark reports directly inside this document.
+        The interface below preserves direct access to the exported study reports without adding unsupported claims. Readers may switch between the harmonic-oscillator, time-dependent, and combined benchmark reports within the present document.
       </p>
 
       <div class="demo-grid">
         <article class="panel demo-card">
-          <h3>Choose a report</h3>
-          <p>Select one of the exported studies to inspect the underlying figures, code output, and reported comparisons in place.</p>
+          <h3>Select a report</h3>
+          <p>Select one of the exported studies to inspect the underlying figures, computational output, and reported comparisons in place.</p>
           <div class="demo-buttons" role="tablist" aria-label="Study report selector">
             <button class="demo-button active" type="button" data-src="notebooks/pinn_harmonic_oscillator.html" data-title="Harmonic-oscillator report" data-link="notebooks/pinn_harmonic_oscillator.html">Harmonic-oscillator report</button>
             <button class="demo-button" type="button" data-src="notebooks/pinn_schrodinger.html" data-title="Time-dependent Schrodinger report" data-link="notebooks/pinn_schrodinger.html">Time-dependent Schrodinger report</button>
             <button class="demo-button" type="button" data-src="notebooks/quantum_pinn_combined.html" data-title="Combined benchmark report" data-link="notebooks/quantum_pinn_combined.html">Combined benchmark report</button>
           </div>
-          <p id="demo-caption" class="demo-caption">Currently showing the harmonic-oscillator report, which contains the strongest comparative result in the study.</p>
+          <p id="demo-caption" class="demo-caption">Currently showing the harmonic-oscillator report, which contains the strongest comparative result reported in the study.</p>
         </article>
 
         <div class="demo-frame-wrap">
           <div class="demo-frame-head">
             <div id="demo-frame-title" class="demo-frame-title">Harmonic-oscillator report</div>
-            <a id="demo-frame-link" class="demo-frame-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" rel="noopener noreferrer">Open report in a new tab</a>
+            <a id="demo-frame-link" class="demo-frame-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" rel="noopener noreferrer">Open report in a separate tab</a>
           </div>
           <iframe id="demo-frame" class="demo-frame" src="notebooks/pinn_harmonic_oscillator.html" title="Embedded study report"></iframe>
         </div>
@@ -552,30 +552,30 @@
 
     <section class="section" id="applications">
       <div class="section-kicker">Application Meaning</div>
-      <h2>What better performance means for the quantum applications represented in this project</h2>
+      <h2>Implications of improved performance for the quantum applications represented in this study</h2>
       <p class="section-intro">
-        The project maps its benchmarks to practical quantum-relevant settings. The statements below translate the measured gains into those settings without adding unsupported claims.
+        The study maps its benchmarks to practical quantum-relevant settings. The statements below interpret the measured gains within those settings without extending beyond the reported evidence.
       </p>
 
       <div class="application-grid">
         <article class="application-card">
           <h3>Molecular vibrations and trapped-ion motional modes</h3>
           <p>
-            The strongest gain in the project appears on harmonic confinement, which the study uses as a stand-in for molecular-vibration and trapped-ion mode structure. A 148x reduction in eigenstate error means the learned wavefunction follows the target mode shape far more closely than the unconstrained baseline, improving confidence in level-shape recovery when analytic labels are limited.
+            The strongest gain in the study appears in harmonic confinement, which is used here as a proxy for molecular-vibration and trapped-ion mode structure. A 148x reduction in eigenstate error indicates that the learned wavefunction follows the target mode shape much more closely than the unconstrained baseline, improving confidence in level-shape recovery when analytic labels are limited.
           </p>
         </article>
 
         <article class="application-card">
           <h3>Tunneling systems such as ammonia inversion and coupled quantum dots</h3>
           <p>
-            The shared benchmark is explicitly designed to transfer beyond quadratic confinement into tunneling structure. The 5.3x depth-driven improvement and the 76x specialist-constraint gain show that the better-performing models preserve useful accuracy when the task requires symmetry-sensitive behavior across multiple basins.
+            The shared benchmark is explicitly designed to assess transfer beyond quadratic confinement into tunneling structure. The 5.3x depth-driven improvement and the 76x specialist-constraint gain indicate that the better-performing models preserve useful accuracy when the task requires symmetry-sensitive behavior across multiple basins.
           </p>
         </article>
 
         <article class="application-card">
           <h3>Electron imaging, neutron interferometry, and cold-atom transport</h3>
           <p>
-            For time-dependent transport settings, the project's positive signal is robustness: accuracy improves rather than declines when 20% input noise is injected. In practice, that means the physics-constrained formulation is better aligned with measurement-like conditions, where experimental inputs are not perfectly clean.
+            For time-dependent transport settings, the principal positive result is robustness: accuracy improves rather than declines when 20% input noise is introduced. In application terms, this indicates that the physics-constrained formulation is better aligned with measurement-like conditions, where experimental inputs are not perfectly clean.
           </p>
         </article>
       </div>
@@ -583,9 +583,9 @@
 
     <section class="section" id="figures">
       <div class="section-kicker">Benchmark Figures</div>
-      <h2>Committed visual evidence used in this report</h2>
+      <h2>Committed visual evidence included in this report</h2>
       <p class="section-intro">
-        The figures below are rendered from project artifacts and summarize only the favorable outcomes highlighted above.
+        The figures below are rendered from project artifacts and summarize only the favorable outcomes discussed above.
       </p>
 
       <div class="figure-grid">
@@ -593,7 +593,7 @@
           <img src="outputs/qho_benchmark.svg" alt="Harmonic oscillator benchmark figure" />
           <figcaption class="figure-copy">
             <h3>Harmonic-oscillator benchmark</h3>
-            <p>The key institutional result: physics-constrained training cuts the ground-state error by 148x relative to the unconstrained baseline on the same task.</p>
+            <p>The principal comparative result is a 148x reduction in ground-state error relative to the unconstrained baseline on the same task.</p>
           </figcaption>
         </figure>
 
@@ -601,7 +601,7 @@
           <img src="outputs/combined_summary.svg" alt="Combined benchmark summary figure" />
           <figcaption class="figure-copy">
             <h3>Shared benchmark summary</h3>
-            <p>The shared protocol supports the cross-problem message: physics-based structure and robust configurations continue to outperform the comparison runs used in this study.</p>
+            <p>The shared protocol supports the cross-problem conclusion that physics-based structure and robust configurations outperform the comparison runs used in this study.</p>
           </figcaption>
         </figure>
 
@@ -609,7 +609,7 @@
           <img src="outputs/combined_architecture.svg" alt="Architecture sweep figure" />
           <figcaption class="figure-copy">
             <h3>Architecture sweep</h3>
-            <p>The best shared model in the grid, 5 layers by 64 units, improves on the 2-layer baseline by 5.3x and provides the strongest transferable shared configuration reported here.</p>
+            <p>The best shared model in the grid, 5 layers by 64 units, improves on the 2-layer baseline by 5.3x and provides the strongest transferable shared configuration reported in the study.</p>
           </figcaption>
         </figure>
 
@@ -624,8 +624,8 @@
     </section>
 
     <section class="section" id="resources">
-      <div class="section-kicker">Supporting Materials</div>
-      <h2>Direct access to the supporting materials</h2>
+      <div class="section-kicker">Supplementary Materials</div>
+      <h2>Direct access to supplementary materials</h2>
       <div class="resource-grid">
         <article class="resource-card">
           <h3>Notebook reports</h3>
@@ -642,7 +642,7 @@
         </article>
 
         <article class="resource-card">
-          <h3>Project scope references</h3>
+          <h3>Reference tables</h3>
           <p><a href="data/quantum_application_domains.csv">Application-domain mapping</a></p>
           <p><a href="data/molecular_vibrational_anchors.csv">Molecular vibration anchors</a></p>
           <p><a href="data/wavepacket_application_anchors.csv">Wavepacket application anchors</a></p>
@@ -651,7 +651,7 @@
     </section>
 
     <footer>
-      This document is restricted to benchmark-supported favorable results from the project artifacts.
+      This document is restricted to benchmark-supported favorable results derived from the project artifacts.
     </footer>
   </main>
 
@@ -663,9 +663,9 @@
     const demoCaption = document.getElementById('demo-caption');
 
     const demoCaptions = {
-      'notebooks/pinn_harmonic_oscillator.html': 'Currently showing the harmonic-oscillator report, which contains the strongest comparative result in the study.',
+      'notebooks/pinn_harmonic_oscillator.html': 'Currently showing the harmonic-oscillator report, which contains the strongest comparative result reported in the study.',
       'notebooks/pinn_schrodinger.html': 'Currently showing the time-dependent report, which documents transport behavior and robustness under corrupted inputs.',
-      'notebooks/quantum_pinn_combined.html': 'Currently showing the combined report, which collects the shared architecture, noise, and transfer comparisons.'
+      'notebooks/quantum_pinn_combined.html': 'Currently showing the combined report, which assembles the shared architecture, noise, and transfer comparisons.'
     };
 
     for (const button of demoButtons) {
