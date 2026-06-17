@@ -31,20 +31,38 @@ class PositiveParameter(nn.Module):
 class TimeMLP(nn.Module):
     """MLP mapping scalar time t to a real vector.
 
+    Optionally encodes the time input with a deterministic Fourier feature basis
+    ``[sin(k omega_0 t), cos(k omega_0 t)]`` for ``k = 1..fourier_features`` with
+    fundamental frequency ``omega_0 = 2*pi / fourier_period``. This removes the
+    spectral bias of a plain MLP and lets the network represent the fast coherent
+    oscillations (Bohr frequencies) of multi-level open quantum systems.
+
     Args:
         output_dim: dimension of output vector
         hidden_dim: width of hidden layers
         n_layers: number of hidden layers
         activation: 'gelu', 'tanh', or 'relu'
+        fourier_features: number of Fourier modes (0 disables, recovering a plain MLP)
+        fourier_period: time-window length T; harmonics are multiples of 2*pi/T
     """
 
     def __init__(self, output_dim: int, hidden_dim: int = 128,
-                 n_layers: int = 4, activation: str = 'gelu'):
+                 n_layers: int = 4, activation: str = 'gelu',
+                 fourier_features: int = 0, fourier_period: float = 1.0):
         super().__init__()
         act_map = {'gelu': nn.GELU, 'tanh': nn.Tanh, 'relu': nn.ReLU}
         act_cls = act_map.get(activation, nn.GELU)
 
-        layers = [nn.Linear(1, hidden_dim), act_cls()]
+        self.fourier_features = int(fourier_features)
+        if self.fourier_features > 0:
+            base = 2.0 * float(np.pi) / float(fourier_period)
+            freqs = base * torch.arange(1, self.fourier_features + 1, dtype=torch.float32)
+            self.register_buffer('freqs', freqs)
+            in_dim = 1 + 2 * self.fourier_features
+        else:
+            in_dim = 1
+
+        layers = [nn.Linear(in_dim, hidden_dim), act_cls()]
         for _ in range(n_layers - 1):
             layers.extend([nn.Linear(hidden_dim, hidden_dim), act_cls()])
         layers.append(nn.Linear(hidden_dim, output_dim))
@@ -61,6 +79,9 @@ class TimeMLP(nn.Module):
         """
         if t.dim() == 1:
             t = t.unsqueeze(-1)
+        if self.fourier_features > 0:
+            ang = t * self.freqs  # (batch, fourier_features)
+            t = torch.cat([t, torch.sin(ang), torch.cos(ang)], dim=-1)
         return self.net(t)
 
 
@@ -81,12 +102,14 @@ class DensityMatrixNet(nn.Module):
         n_layers: MLP depth
     """
 
-    def __init__(self, d: int, hidden_dim: int = 128, n_layers: int = 4):
+    def __init__(self, d: int, hidden_dim: int = 128, n_layers: int = 4,
+                 fourier_features: int = 0, fourier_period: float = 1.0):
         super().__init__()
         self.d = d
         # Lower-triangular A has d*(d+1)/2 complex entries = d*(d+1) real parameters
         n_params = d * (d + 1)  # real + imag for lower triangular
-        self.mlp = TimeMLP(output_dim=n_params, hidden_dim=hidden_dim, n_layers=n_layers)
+        self.mlp = TimeMLP(output_dim=n_params, hidden_dim=hidden_dim, n_layers=n_layers,
+                           fourier_features=fourier_features, fourier_period=fourier_period)
 
         # Pre-compute indices for lower-triangular matrix
         tril_idx = torch.tril_indices(d, d)

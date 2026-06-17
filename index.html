@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumPINNs Research Report</title>
+  <title>QuantumPINNs — Applied Mathematics for Quantum Computing</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2319435b'/%3E%3Cpath d='M20 66c18-40 42-40 60 0' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='34' cy='44' r='6' fill='%23ffffff'/%3E%3Ccircle cx='66' cy='44' r='6' fill='%23ffffff'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -431,14 +431,15 @@
   <header class="masthead">
     <div class="masthead-inner">
       <div class="identity">
-        <span class="identity-mark">Research Report</span>
-        <div class="identity-title">QuantumPINNs for Quantum-Relevant Physical Modeling</div>
+        <span class="identity-mark">Applied Mathematics · Quantum Computing</span>
+        <div class="identity-title">QuantumPINNs</div>
       </div>
       <nav class="masthead-nav">
-        <a href="#findings">Comparative Findings</a>
-        <a href="#applications">Application Meaning</a>
-        <a href="#figures">Benchmark Figures</a>
-        <a href="#resources">Supplementary Materials</a>
+        <a href="#findings">Validation</a>
+        <a href="#research">Research Program</a>
+        <a href="#applications">Quantum Relevance</a>
+        <a href="#figures">Figures</a>
+        <a href="#resources">Materials</a>
         <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank" rel="noopener noreferrer">Source Code</a>
       </nav>
     </div>
@@ -447,12 +448,13 @@
   <main class="page">
     <section class="report-header">
       <div>
-        <h1>Physics-informed neural networks yield stronger benchmark performance on the quantum model problems examined in this study.</h1>
+        <span class="section-kicker">Applied mathematics · Quantum computing · Scientific machine learning</span>
+        <h1>Structure-preserving and physics-informed numerical methods for quantum dynamics.</h1>
         <p class="lead">
-          This report presents those benchmark results for which the physics-informed formulations outperform the comparison models evaluated in the study. The clearest result arises in the harmonic-oscillator ground state, where physics-constrained loss reduces relative L2 error by a factor of 148 relative to an unconstrained neural baseline evaluated on the same task and architecture.
+          <strong>QuantumPINNs</strong> brings an applied-mathematics perspective to quantum computing: physics-informed neural networks and structure-preserving solvers that respect the operator structure of quantum systems, are backed by provable guarantees, and are designed to scale on accelerators. It pairs reproducible benchmark validation with a research program on open quantum systems relevant to device characterization, noise modeling, and control.
         </p>
         <p>
-          The broader comparison set supports the same interpretation. Specialist Hamiltonian constraints reduce harmonic-oscillator ground-state error by a factor of 76 relative to the non-specialist protocol, and the strongest shared-depth configuration improves on the shallow baseline by a factor of 5.3. Under 20% input noise, error decreases rather than increases, indicating that the physics-based regularization contributes to both accuracy and robustness.
+          The validation pillar uses physics-informed neural networks on canonical quantum model problems. The clearest result arises in the harmonic-oscillator ground state, where a physics-constrained loss reduces relative L2 error by a factor of 148 over an unconstrained neural baseline on the same task and architecture. Specialist Hamiltonian constraints add a further factor of 76 over a non-specialist protocol, a deeper shared configuration improves on its shallow baseline by a factor of 5.3, and accuracy improves rather than degrades under 20% input noise — evidence that physics-based regularization buys both accuracy and robustness.
         </p>
       </div>
     </section>
@@ -481,14 +483,14 @@
     </section>
 
     <section class="section" id="findings">
-      <div class="section-kicker">Comparative Findings</div>
-      <h2>Benchmark-supported gains relative to the comparison models documented in this study</h2>
+      <div class="section-kicker">Reproducible Validation</div>
+      <h2>Quantitative gains on quantum model problems, every number drawn from committed artifacts</h2>
       <p class="section-intro">
-        The table below reports each measured advantage together with its relevance to the application settings represented in the study. Comparisons are limited to models or configurations explicitly documented in the project artifacts.
+        Each row below reports a measured advantage together with its relevance to a quantum-relevant setting. Every value is read directly from the committed CSV outputs in the repository, and comparisons are limited to models or configurations explicitly recorded there — the emphasis is on results that are reproducible from the included code rather than headline claims.
       </p>
 
       <div class="scope-note">
-        Scope note: this document excludes unfavorable or non-comparative results and includes only statements supported directly by the recorded benchmark outputs.
+        Scope note: this summary reports the favorable, benchmark-supported outcomes; it is not presented as hardware data or as a state-of-the-art claim. The accompanying scripts regenerate every figure and table.
       </div>
 
       <div class="panel" style="margin-top: 18px;">
@@ -542,11 +544,63 @@
       </div>
     </section>
 
+    <section class="section" id="research">
+      <div class="section-kicker">Research Program</div>
+      <h2>Structure-preserving learning and matrix-free compilation for open quantum systems</h2>
+      <p class="section-intro">
+        Real quantum processors are never described by an ideal Hamiltonian alone: relaxation, dephasing, leakage, crosstalk, and control-induced dissipation make the density matrix the object that must stay physical throughout. The core research direction here treats learning these dynamics as an applied-mathematics problem — inferring a physically admissible Markovian generator from sparse, noisy observations — and answers it with constructions that are correct by design and provably so. This is directly the mathematics of quantum device characterization, noise modeling, and control.
+      </p>
+
+      <div class="application-grid">
+        <article class="application-card">
+          <h3>Invalid states made unrepresentable</h3>
+          <p>
+            A Cholesky-type density network maps every time point to <code>A A&#8224; / Tr(A A&#8224;)</code>, so the output is Hermitian, positive semidefinite, and unit-trace exactly — at every iteration and every evaluation point. Physicality is enforced at the architecture level rather than requested through a penalty that the optimizer must repair after the fact.
+          </p>
+        </article>
+
+        <article class="application-card">
+          <h3>A generator that stays CPTP</h3>
+          <p>
+            Dissipation is parameterized so the learned generator remains in Gorini–Kossakowski–Sudarshan–Lindblad form: nonnegative rates via softplus, full Kossakowski matrices as positive semidefinite Gram matrices <code>B B&#8224;</code>. The recovered dynamics are therefore a completely positive, trace-preserving semigroup by construction.
+          </p>
+        </article>
+
+        <article class="application-card">
+          <h3>Matrix-free, accelerator-aware compiler</h3>
+          <p>
+            A symbolic open-system specification — Hilbert dimension, Hamiltonian terms, jump operators, rates, observables — is lowered to either a dense Liouvillian or a structured residual kernel that stores <code>H</code> and the <code>m</code> Lindblad operators instead of a <code>d&#178;&#215;d&#178;</code> superoperator. The structured path is built for batched GPU kernels and large Hilbert spaces.
+          </p>
+        </article>
+      </div>
+
+      <div class="panel" style="margin-top: 18px;">
+        <div class="panel-head">
+          <h3>Mathematical guarantees and quantum-device validation</h3>
+        </div>
+        <div class="panel-body" style="padding: 20px 22px;">
+          <p>
+            The accompanying manuscript proves six results: exact physicality of the density map, universal approximation of continuous density trajectories (including boundary-rank states), CPTP-semigroup preservation of the learned generator, a trace-norm residual-to-error certificate, a local identifiability bound from the sensitivity Gramian, and a dense-versus-structured compiler complexity theorem.
+          </p>
+          <p>
+            Five reproducible experiments make the contributions concrete: a <strong>qubit inverse problem</strong> with near-exact parameter recovery (0.1–9%) and ≈1.00 trajectory fidelity that beats an unconstrained baseline on every parameter; a <strong>sparse-measurement ablation</strong> with one-to-two orders of magnitude lower trajectory error than the baseline, robust down to 10% observation; a <strong>two-qubit dissipative gate</strong> whose learned generator generalizes to held-out initial states at ≈0.98 fidelity; a <strong>compiler scaling ablation</strong> that is 5–13× faster than dense evaluation at exact agreement; and a <strong>qutrit reconstruction</strong> study where Fourier time-features lift fidelity from 0.88 to 0.95. The study is deliberately reproducible and modest in scale — not hardware data or a state-of-the-art claim — and its limitations are stated plainly.
+          </p>
+          <p style="margin-bottom: 0;">
+            <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/tree/main/submission" target="_blank" rel="noopener noreferrer">Manuscript and theory</a>
+            &nbsp;·&nbsp;
+            <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/tree/main/submission/code/experiments" target="_blank" rel="noopener noreferrer">Experiment scripts</a>
+            &nbsp;·&nbsp;
+            <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/blob/main/submission/figures/exp5_compiler_scaling.pdf" target="_blank" rel="noopener noreferrer">Compiler scaling figure</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="demo">
       <div class="section-kicker">Interactive Inspection</div>
-      <h2>Embedded inspection of the three exported study reports</h2>
+      <h2>Embedded inspection of the three executed evaluation notebooks</h2>
       <p class="section-intro">
-        The interface below preserves direct access to the exported study reports without adding unsupported claims. Readers may switch between the harmonic-oscillator, time-dependent, and combined benchmark reports within the present document.
+        The interface below gives direct access to the executed notebooks behind the numbers above, without adding unsupported claims. Readers can switch between the harmonic-oscillator, time-dependent, and combined benchmark reports within this page.
       </p>
 
       <div class="demo-grid">
@@ -572,10 +626,10 @@
     </section>
 
     <section class="section" id="applications">
-      <div class="section-kicker">Application Meaning</div>
-      <h2>Implications of improved performance for the quantum applications represented in this study</h2>
+      <div class="section-kicker">Quantum Relevance</div>
+      <h2>Why these model problems matter for quantum hardware</h2>
       <p class="section-intro">
-        The study maps its benchmarks to practical quantum-relevant settings. The statements below interpret the measured gains within those settings without extending beyond the reported evidence.
+        The benchmark problems are chosen because they are the building blocks of real quantum platforms — confinement for trapped-ion and neutral-atom registers, tunneling for charge and flux qubits, and time-dependent transport for the wavepacket dynamics probed in characterization experiments. The interpretations below stay within the reported evidence and connect each measured gain to a setting the open-systems research program above is designed to address.
       </p>
 
       <div class="application-grid">
@@ -668,11 +722,18 @@
           <p><a href="data/molecular_vibrational_anchors.csv">Molecular vibration anchors</a></p>
           <p><a href="data/wavepacket_application_anchors.csv">Wavepacket application anchors</a></p>
         </article>
+
+        <article class="resource-card">
+          <h3>Open-systems research</h3>
+          <p><a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/tree/main/submission" target="_blank" rel="noopener noreferrer">Manuscript and theory</a></p>
+          <p><a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/tree/main/submission/code/experiments" target="_blank" rel="noopener noreferrer">Quantum-device experiments</a></p>
+          <p><a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/blob/main/submission/figures/exp5_compiler_scaling.pdf" target="_blank" rel="noopener noreferrer">Compiler scaling figure</a></p>
+        </article>
       </div>
     </section>
 
     <footer>
-      This document is restricted to benchmark-supported favorable results derived from the project artifacts.
+      An applied-mathematics research portfolio in quantum computing: physics-informed and structure-preserving methods for quantum dynamics, with reproducible validation and provable guarantees. All quantitative claims are derived directly from the committed project artifacts.
     </footer>
   </main>
 

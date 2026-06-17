@@ -47,7 +47,7 @@ def _train_model(model, rate_params, obs_torch, t_data, target_tensor, mask,
         n_colloc = 50
         t_colloc = torch.linspace(0, t_max, n_colloc).requires_grad_(True)
         rho_colloc = model(t_colloc)
-        p_loss = physics_residual_loss(rho_colloc, t_colloc.unsqueeze(-1),
+        p_loss = physics_residual_loss(rho_colloc, t_colloc,
                                        lambda rho: lindblad_rhs_fn(rho, rate_params))
 
         rho_pred_0 = model(torch.zeros(1))

@@ -128,7 +128,7 @@ def run(config: dict = None):
         n_colloc = 60
         t_colloc = torch.linspace(0, t_max, n_colloc).requires_grad_(True)
         rho_colloc = model_cptp(t_colloc)
-        p_loss = physics_residual_loss(rho_colloc, t_colloc.unsqueeze(-1),
+        p_loss = physics_residual_loss(rho_colloc, t_colloc,
                                        lambda rho: lindblad_rhs_fn_cptp(rho, rate_params_cptp))
 
         # IC loss
@@ -194,7 +194,7 @@ def run(config: dict = None):
         n_colloc = 60
         t_colloc = torch.linspace(0, t_max, n_colloc).requires_grad_(True)
         rho_colloc = model_base(t_colloc)
-        p_loss = physics_residual_loss(rho_colloc, t_colloc.unsqueeze(-1),
+        p_loss = physics_residual_loss(rho_colloc, t_colloc,
                                        lambda rho: lindblad_rhs_fn_base(rho, rate_params_base))
 
         rho_pred_0 = model_base(torch.zeros(1))
@@ -244,8 +244,10 @@ def run(config: dict = None):
         f.write(r"\hline" + "\n")
         f.write(r"Parameter & True Value & CPTP-PINN Error & Unconstrained Error \\" + "\n")
         f.write(r"\hline" + "\n")
+        param_tex = {'omega': r'$\omega$', 'Omega': r'$\Omega$',
+                     'gamma1': r'$\gamma_1$', 'gamma_phi': r'$\gamma_\phi$'}
         for k in true_params:
-            f.write(f"{k} & {true_params[k]:.4f} & {err_cptp[k]:.4f} & {err_base[k]:.4f} \\\\\n")
+            f.write(f"{param_tex.get(k, k)} & {true_params[k]:.4f} & {err_cptp[k]:.4f} & {err_base[k]:.4f} \\\\\n")
         f.write(r"\hline" + "\n")
         f.write(r"Mean Fidelity & --- & " + f"{np.mean(fid_cptp):.4f} & {np.mean(fid_base):.4f}" + r" \\" + "\n")
         f.write(r"\hline" + "\n")
