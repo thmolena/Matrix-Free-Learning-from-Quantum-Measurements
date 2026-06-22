@@ -68,6 +68,8 @@ def main(argv=None):
         description='Reproduce the manuscript tables and figures.')
     p.add_argument('--output-dir', default='ctpcpinn_results',
                    help='where to write tables/ and figures/ (default: ./ctpcpinn_results)')
+    p.add_argument('--in-place', action='store_true',
+                   help='write directly into the parent submission/{tables,figures} folders')
     p.add_argument('--quick', action='store_true', help='fast smoke test (NOT publication quality)')
     p.add_argument('--experiment', choices=EXPERIMENTS, default=None,
                    help='run only this experiment (default: all)')
@@ -78,7 +80,8 @@ def main(argv=None):
     torch.set_num_threads(max(1, args.threads))
     config = dict(QUICK_CONFIG if args.quick else FULL_CONFIG)
 
-    out = Path(args.output_dir).resolve()
+    out = (Path(__file__).resolve().parents[2]
+           if args.in_place else Path(args.output_dir).resolve())
     config['figures_dir'] = str(out / 'figures')
     config['tables_dir'] = str(out / 'tables')
     (out / 'figures').mkdir(parents=True, exist_ok=True)
