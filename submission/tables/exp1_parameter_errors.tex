@@ -1,17 +1,16 @@
 \begin{table}[ht]
 \centering
-\caption{Experiment 1: Parameter recovery relative errors.}
+\caption{Experiment 1: single-qubit parameter-recovery relative error, mean state fidelity, and positivity-violation rate (fraction of time points with a negative eigenvalue). Values are mean $\pm$ 95\% CI over 5 seeds. True values: $\omega=3.1416$, $\Omega=0.6283$, $\gamma_1=0.3000$, $\gamma_\phi=0.1500$. The classical least-squares fit uses the exact model structure and is the strongest method on this full-data task; the PINN advantage appears under sparse measurements (Table~\ref{tab:exp2}).}
 \label{tab:exp1}
-\begin{tabular}{lccc}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
 \hline
-Parameter & True Value & CPTP-PINN Error & Unconstrained Error \\
+Method & $\omega$ err & $\Omega$ err & $\gamma_1$ err & $\gamma_\phi$ err & Mean fidelity & Pos.\ viol. \\
 \hline
-$\omega$ & 3.1416 & 0.0011 & 0.0101 \\
-$\Omega$ & 0.6283 & 0.0186 & 0.0858 \\
-$\gamma_1$ & 0.3000 & 0.0652 & 0.1997 \\
-$\gamma_\phi$ & 0.1500 & 0.0872 & 0.4820 \\
+CPTP-PINN (ours) & 0.001 $\pm$ 0.001 & 0.026 $\pm$ 0.013 & 0.079 $\pm$ 0.027 & 0.131 $\pm$ 0.050 & 1.0000 $\pm$ 0.0000 & 0.000 \\
+Soft-penalty PINN & 0.158 $\pm$ 0.195 & 0.358 $\pm$ 0.287 & 0.266 $\pm$ 0.288 & 1.455 $\pm$ 1.184 & 0.9507 $\pm$ 0.1163 & 0.004 \\
+Unconstrained & 0.157 $\pm$ 0.195 & 0.362 $\pm$ 0.284 & 0.276 $\pm$ 0.283 & 1.439 $\pm$ 1.185 & 0.9511 $\pm$ 0.1165 & 0.006 \\
+Classical LSQ & 0.001 $\pm$ 0.001 & 0.016 $\pm$ 0.012 & 0.019 $\pm$ 0.008 & 0.020 $\pm$ 0.019 & 1.0000 $\pm$ 0.0000 & 0.000 \\
 \hline
-Mean Fidelity & --- & 1.0000 & 0.9998 \\
-\hline
-\end{tabular}
+\end{tabular}}
 \end{table}

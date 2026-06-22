@@ -1,0 +1,200 @@
+================================================================================
+REPRODUCE.txt  --  Exact reproduction of every table and figure in main.pdf
+================================================================================
+
+This file tells you, step by step, how to regenerate EVERY number, table, and
+figure in the manuscript from scratch, and how to verify you got the right
+answer. Nothing in the paper is entered by hand: the scripts in this folder
+write the LaTeX table files and the PDF figures directly.
+
+If you only read one thing, read section 2 (Quick start) and section 5 (the
+threading caveat -- it is the one non-obvious gotcha on multi-core machines).
+
+
+--------------------------------------------------------------------------------
+1. WHAT GETS PRODUCED
+--------------------------------------------------------------------------------
+Running the experiments writes, into the parent `submission/` directory:
+
+  submission/tables/exp1_parameter_errors.tex   <- Table 1 (main text)
+  submission/tables/exp2_sparse_ablation.tex    <- Table 2 (main text)
+  submission/tables/exp3_leakage_results.tex    <- Extended Data Table 3
+  submission/tables/exp4_gate_results.tex       <- Extended Data Table 4
+  submission/tables/exp5_runtime_memory.tex     <- Extended Data Table 5
+  submission/figures/exp1_parameter_recovery.pdf <- Fig. 2a
+  submission/figures/exp1_state_fidelity.pdf     <- Fig. 2b
+  submission/figures/exp2_sparse_measurements.pdf<- Fig. 3a
+  submission/figures/exp3_qutrit_leakage.pdf     <- Fig. 3b
+  submission/figures/exp4_gate_fidelity.pdf      <- Fig. 3c
+  submission/figures/exp5_compiler_scaling.pdf   <- Fig. 4
+
+main.tex \input's the table files and \includegraphics the figure files, so
+recompiling main.tex after a run picks up the regenerated numbers automatically.
+(Figure 1 is a schematic drawn in TikZ inside main.tex; it needs no script.)
+
+
+--------------------------------------------------------------------------------
+2. QUICK START  (install the pip package, then reproduce)
+--------------------------------------------------------------------------------
+The code in this folder (submission/code) is an installable Python package named
+`ctpcpinn`. Install it and you get two console scripts: `ctpcpinn-reproduce` and
+`ctpcpinn-validate`.
+
+  # (recommended) a clean environment, e.g. conda:
+  conda create -n ctpcpinn python=3.11 -y && conda activate ctpcpinn
+  # ... or:  python -m venv .venv && source .venv/bin/activate
+
+  cd submission/code
+
+  # Install. For BIT-IDENTICAL manuscript numbers, use the pinned extra:
+  pip install ".[exact]"     # exact versions used to produce the committed tables
+  #   or:  pip install .     # broad version floors (installs more widely)
+
+  # Reproduce ALL tables and figures (deterministic; ~35 min on a laptop CPU).
+  # Writes ./ctpcpinn_results/{tables,figures}.
+  ctpcpinn-reproduce
+
+  # Quick check that the invariants hold (Hermiticity, PSD, trace, dense==structured):
+  ctpcpinn-validate
+
+  # Fast smoke test (2 seeds, few epochs -- NOT publication quality, ~1 min):
+  ctpcpinn-reproduce --quick
+
+  # A single experiment, or a custom output directory:
+  ctpcpinn-reproduce --experiment exp1 --output-dir my_out
+
+To regenerate the files used by the manuscript IN PLACE (submission/tables,
+submission/figures) and rebuild the PDF, run from submission/code:
+
+  python run_all.py                      # writes into ../tables and ../figures
+  cd .. && tectonic -X compile main.tex  # OR: latexmk -pdf main.tex
+
+The console scripts and run_all.py both pin BLAS/OpenMP to a single thread
+internally (section 5), so you do not need to set the environment variables by
+hand. The output table/figure files are exactly those that main.tex includes.
+
+
+--------------------------------------------------------------------------------
+3. ENVIRONMENT
+--------------------------------------------------------------------------------
+Tested with:
+  Python 3.11
+  numpy >= 1.24, scipy >= 1.10, torch >= 2.0, matplotlib >= 3.7
+(see ../../requirements.txt for the full list). No GPU is required; everything
+runs on CPU. A LaTeX engine (tectonic is easiest -- single binary, fetches its
+own packages) is needed only to rebuild the PDF, not to produce the numbers.
+
+
+--------------------------------------------------------------------------------
+4. DETERMINISM AND THE EXACT CONFIGURATION
+--------------------------------------------------------------------------------
+Every training experiment is repeated over a FIXED set of five random seeds,
+[0, 1, 2, 3, 4], and reports mean +/- a 95% Student-t confidence interval over
+those seeds. Each seed redraws BOTH the network initialization and the
+measurement-noise realization, so the confidence intervals capture optimization
+*and* data-noise variability.
+
+The "full" configuration that reproduces the manuscript (config.py, FULL_CONFIG):
+  seeds            = [0, 1, 2, 3, 4]
+  n_epochs         = 3000          (Adam, learning rate 1e-3)
+  n_time_points    = 100
+  noise_std        = 0.02
+  n_repeats_timing = 50            (compiler benchmark, median of 50 timings)
+
+Results are DETERMINISTIC for a given seed: rerunning produces bit-for-bit (up
+to floating point) the same table values. The only seed-independent, machine-
+dependent numbers are the wall-clock TIMES in exp5 (Table 5); their ratios and
+the analytic memory columns are stable, the absolute milliseconds are not.
+
+
+--------------------------------------------------------------------------------
+5. IMPORTANT: THREADING / OpenMP CAVEAT  (read this if a run hangs)
+--------------------------------------------------------------------------------
+On macOS + conda (and some Linux setups) PyTorch and NumPy/SciPy can load two
+copies of the OpenMP runtime (libomp + libiomp5). Under that condition we
+observed two failure modes:
+
+  (a) hard crash:  "OMP: Error #15 ... libomp already initialized" or
+                   "pthread_mutex_init failed", and
+  (b) silent hang: a training process stops using CPU and never finishes,
+                   especially when several processes run at once or when a
+                   single process uses >= 3 BLAS/OMP threads.
+
+We therefore run everything SINGLE-THREADED, which is bullet-proof and, because
+the matrices here are tiny (d = 2..8), costs almost nothing in speed. The
+recommended invocation (also what run_all.py sets internally) is:
+
+  OMP_NUM_THREADS=1
+  MKL_THREADING_LAYER=SEQUENTIAL     # stops MKL loading a second OpenMP runtime
+  KMP_DUPLICATE_LIB_OK=TRUE          # last-resort guard if a duplicate remains
+
+Do NOT run several experiments concurrently on this kind of environment unless
+you have confirmed a single OpenMP runtime; run them sequentially (run_all.py
+does this for you).
+
+
+--------------------------------------------------------------------------------
+6. EXPECTED RESULTS (so you can check your run)
+--------------------------------------------------------------------------------
+With the full configuration above you should obtain (mean +/- 95% CI, 5 seeds):
+
+  Experiment 1 (single-qubit identification, Table 1):
+    CPTP-PINN     omega err 0.001, Omega 0.026, gamma_1 0.079, gamma_phi 0.131,
+                  mean fidelity 1.0000, positivity violations 0.000
+    Soft-penalty  gamma_phi err ~1.46 (>140%), positivity violations ~0.004
+    Unconstrained gamma_phi err ~1.44,          positivity violations ~0.006
+    Classical LSQ omega 0.001, Omega 0.016, gamma_1 0.019, gamma_phi 0.020
+    => CPTP-PINN beats the soft/unconstrained nets on every parameter and is
+       competitive with the model-based least-squares fit; only the hard
+       constraint gives exactly zero positivity violations.
+
+  Experiment 2 (sparse measurements, Table 2):
+    CPTP-PINN mean trace distance 0.004 - 0.010 across fractions 1.0..0.10;
+    soft/unconstrained ~0.37 (1-2 orders of magnitude worse), with confidence
+    intervals as wide as their means.
+
+  Experiment 3 (fast qutrit, Extended Data Table 3) -- the open problem:
+    Plain MLP             mean fidelity ~0.77 +/- 0.35
+    Fourier time-features mean fidelity ~0.52 +/- 0.49
+    => high variance; the single-seed Fourier advantage does NOT survive seed
+       averaging. This is reported honestly as the main open problem.
+
+  Experiment 4 (two-qubit gate, Extended Data Table 4):
+    trained |00> 0.994; held-out |01>/|10>/|+0> ~0.95/0.96/0.97; average ~0.969.
+
+  Experiment 5 (compiler, Extended Data Table 5):
+    structured residual faster than dense at every d, ~6.3x (d=2) .. ~10.9x
+    (d=8); dense memory grows as d^4, structured as ~m*d^2 (exact agreement of
+    the two residuals to floating-point precision).
+
+
+--------------------------------------------------------------------------------
+7. TESTS
+--------------------------------------------------------------------------------
+A dependency-free check of the core invariants (Hermiticity, positivity, unit
+trace, trace preservation, dense==structured residual):
+
+  cd submission/code
+  KMP_DUPLICATE_LIB_OK=TRUE python validate.py
+
+(There are also pytest-style tests under code/tests/ if pytest is installed.)
+
+
+--------------------------------------------------------------------------------
+8. WHERE TO START READING THE CODE
+--------------------------------------------------------------------------------
+See THEORY.txt for a from-scratch walkthrough (linear algebra -> density
+matrices -> Lindblad/GKSL -> neural nets & autodiff -> PINNs -> the hard
+Cholesky constraint -> the matrix-free compiler), with each step mapped to the
+module that implements it. A good reading order is:
+
+  ctpcpinn/operators.py   (the linear-algebra primitives)
+  ctpcpinn/lindblad.py    (the physics: master equation, fidelity, trace dist.)
+  ctpcpinn/solvers.py     (ground-truth ODE integration)
+  ctpcpinn/models.py      (the neural networks, incl. the Cholesky density map)
+  ctpcpinn/losses.py      (data + physics-residual + initial-condition losses)
+  ctpcpinn/compiler.py    (the IR and dense-vs-structured residual kernels)
+  ctpcpinn/metrics.py     (fidelity / trace distance / positivity diagnostics)
+  ctpcpinn/stats.py       (multi-seed mean +/- 95% CI aggregation)
+  ctpcpinn/experiments/exp*.py  (each experiment, end to end)
+================================================================================

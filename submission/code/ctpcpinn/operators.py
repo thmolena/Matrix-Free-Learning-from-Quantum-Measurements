@@ -1,4 +1,22 @@
-"""Quantum operators in numpy complex128."""
+"""Quantum operators -- the linear-algebra primitives (THEORY.txt sections 1-2).
+
+Everything in this project is built from small complex matrices. A d-level
+quantum system has states in C^d and operators that are d x d complex matrices.
+This module provides the elementary operators we compose into Hamiltonians,
+jump (Lindblad) operators and observables:
+
+  * Pauli matrices sigma_x, sigma_y, sigma_z  -- the basis of qubit operators;
+  * identity, projectors |i><j|, ladder operators (sigma_-, sigma_+, destroy);
+  * commutator [A,B]=AB-BA and anticommutator {A,B}=AB+BA, which appear directly
+    in the Lindblad equation (see lindblad.py);
+  * kron_n -- the tensor (Kronecker) product that builds multi-qubit operators
+    from single-qubit ones (e.g. sigma_x (x) I for "sigma_x on qubit 1").
+
+Recurring facts used elsewhere: a matrix is Hermitian if A = A^dagger (real
+eigenvalues); it is positive semidefinite if additionally all eigenvalues are
+>= 0; and for ANY matrix A the product A A^dagger is automatically Hermitian and
+positive semidefinite -- the fact the density network exploits (models.py).
+"""
 
 import numpy as np
 from functools import reduce

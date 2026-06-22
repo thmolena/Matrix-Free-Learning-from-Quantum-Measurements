@@ -1,4 +1,22 @@
-"""Ground-truth solvers using scipy for Lindblad dynamics."""
+"""Ground-truth ODE integration and synthetic data (THEORY.txt sections 6-7).
+
+To test the learned model we need (a) the TRUE trajectory and (b) noisy
+measurements of it. This module provides both:
+
+  * solve_lindblad_trajectory(): integrates the master equation
+    d rho/dt = L[rho] from an initial state with a high-accuracy adaptive
+    Runge-Kutta solver (scipy.integrate.solve_ivp). It vectorizes rho to a
+    length-d^2 vector; for time-independent systems it precomputes the dense
+    Liouvillian for speed, otherwise it evaluates the structured RHS each step.
+    This is the "forward problem" -- the reference the PINN must match.
+  * generate_measurements(): turns a trajectory into synthetic data by computing
+    expectation values <O_j> = Tr[O_j rho(t_i)] and adding Gaussian measurement
+    noise of a fixed standard deviation. A fixed seed makes the data
+    reproducible; the experiments vary that seed to get error bars.
+
+These solvers are deliberately separate from the learning code: they are the
+trusted "physics oracle" that the neural surrogate (models.py) is graded against.
+"""
 
 import numpy as np
 from scipy.integrate import solve_ivp

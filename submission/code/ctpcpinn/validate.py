@@ -3,7 +3,6 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
 
@@ -104,7 +103,10 @@ def test_solver():
         assert result['min_eigenvalue'] >= -1e-8
     print("  [PASS] ODE solver produces valid states")
 
-if __name__ == '__main__':
+def main():
+    """Run all dependency-free invariant checks (console script ctpcpinn-validate)."""
+    import os
+    os.environ.setdefault('KMP_DUPLICATE_LIB_OK', 'TRUE')
     print("Running validation tests...")
     test_operators()
     test_lindblad_trace()
@@ -113,3 +115,8 @@ if __name__ == '__main__':
     test_compiler()
     test_solver()
     print("\nAll tests PASSED.")
+    return 0
+
+
+if __name__ == '__main__':
+    main()

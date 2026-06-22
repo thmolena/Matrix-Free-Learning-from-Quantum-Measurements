@@ -1,0 +1,325 @@
+================================================================================
+THEORY.txt -- The whole method from first principles, mapped to the code
+================================================================================
+
+Goal: let a reader who knows undergraduate linear algebra and a little calculus
+understand EVERY piece of this codebase -- the quantum physics, the machine
+learning, and the "compiler" -- and see exactly which file implements which
+idea. Each section ends with "CODE:" pointing at the relevant module(s).
+
+Contents
+  0.  Notation and the one-line summary
+  1.  Linear algebra you need (vectors, complex matrices, Hermitian, PSD, trace)
+  2.  Quantum states: pure states and the density matrix
+  3.  The set of physical states D(H)
+  4.  Open-system dynamics: the Lindblad / GKSL master equation
+  5.  Complete positivity and trace preservation (CPTP)
+  6.  The forward problem: integrating the master equation
+  7.  The inverse problem: what we are actually learning
+  8.  Neural networks from scratch (an MLP is just a parameterized function)
+  9.  Automatic differentiation (how gradients are computed)
+  10. Physics-informed neural networks (PINNs): the residual loss
+  11. The hard constraint: the Cholesky density map (the central idea)
+  12. The generator parameterization (keeping the physics legal)
+  13. Theory of computation view: the intermediate representation and the
+      dense-vs-structured compiler, and why complexity matters
+  14. Statistics: why we use many seeds and confidence intervals
+  15. Theorems <-> code map
+
+
+--------------------------------------------------------------------------------
+0. NOTATION AND THE ONE-LINE SUMMARY
+--------------------------------------------------------------------------------
+d        Hilbert-space dimension (qubit d=2, qutrit d=3, two qubits d=4).
+i        the imaginary unit; A^dagger = conjugate transpose of A.
+[A,B]    commutator AB - BA;   {A,B}  anticommutator AB + BA.
+rho      a density matrix (the quantum state), a d x d complex matrix.
+Tr       trace (sum of diagonal entries).
+
+One line: we learn a physically-valid model of how a noisy quantum system
+evolves in time, from sparse measurements, by (a) representing the state with a
+neural network that CANNOT output an illegal state, and (b) forcing the learned
+equation of motion to obey the residual of the physical master equation.
+
+
+--------------------------------------------------------------------------------
+1. LINEAR ALGEBRA YOU NEED
+--------------------------------------------------------------------------------
+A quantum state of a d-level system lives in C^d (length-d complex vectors).
+Operators are d x d complex matrices. Three properties recur:
+
+  * Hermitian:            A = A^dagger. Hermitian matrices have real eigenvalues.
+  * Positive semidefinite (PSD), written A >= 0: Hermitian AND every eigenvalue
+    >= 0, equivalently v^dagger A v >= 0 for all v. Key fact: for ANY matrix A,
+    the product A A^dagger is automatically Hermitian and PSD, because
+    v^dagger (A A^dagger) v = || A^dagger v ||^2 >= 0. We will exploit this.
+  * Trace:                Tr(A) = sum_i A_ii. It is linear and cyclic
+    (Tr(AB) = Tr(BA)).
+
+CODE: ctpcpinn/operators.py (Pauli matrices, projectors |i><j|, commutators,
+tensor products) -- these are the building blocks for every Hamiltonian and
+jump operator used in the experiments.
+
+
+--------------------------------------------------------------------------------
+2. QUANTUM STATES: PURE STATES AND THE DENSITY MATRIX
+--------------------------------------------------------------------------------
+A "pure" state is a unit vector |psi> in C^d. But a real device is usually in a
+statistical mixture of pure states (because of noise). The object that describes
+BOTH cases is the density matrix:
+
+  rho = sum_k p_k |psi_k><psi_k|,   p_k >= 0,  sum_k p_k = 1.
+
+For a single qubit (d=2) every density matrix can be written with the "Bloch
+vector" r = (r_x, r_y, r_z):
+
+  rho(r) = (1/2)(I + r_x sigma_x + r_y sigma_y + r_z sigma_z),
+
+and rho is a valid state if and only if ||r|| <= 1 (the Bloch ball). This is the
+simplest example of "the physical states form a constrained set," section 3.
+
+
+--------------------------------------------------------------------------------
+3. THE SET OF PHYSICAL STATES D(H)
+--------------------------------------------------------------------------------
+A d x d matrix rho is a physical state iff ALL THREE hold:
+
+  (i)   Hermitian:        rho = rho^dagger      (real, consistent probabilities)
+  (ii)  Positive semidef: rho >= 0              (no negative probabilities)
+  (iii) Unit trace:       Tr(rho) = 1           (probabilities sum to 1)
+
+Call this set D(H). It is a convex but curved set (for a qubit, the Bloch ball).
+The entire difficulty the paper addresses is: a generic neural network that
+outputs a d x d matrix has NO reason to land in D(H). Penalizing violations
+after the fact ("soft penalty") competes with fitting the data. The paper's
+answer is to make illegal states unrepresentable (section 11).
+
+CODE: ctpcpinn/lindblad.py:check_density_matrix() measures the three violations;
+ctpcpinn/metrics.py:positivity_violation_rate() counts how often a model leaves
+the set.
+
+
+--------------------------------------------------------------------------------
+4. OPEN-SYSTEM DYNAMICS: THE LINDBLAD / GKSL MASTER EQUATION
+--------------------------------------------------------------------------------
+A closed (noiseless) system obeys the Schrodinger / von Neumann equation
+d rho/dt = -i [H, rho], where H = H^dagger is the Hamiltonian (the energy
+operator). An OPEN system also exchanges with an environment (relaxation,
+dephasing, leakage). For Markovian (memoryless) noise the most general legal
+equation of motion is the Gorini-Kossakowski-Sudarshan-Lindblad (GKSL) form:
+
+  d rho/dt = L[rho]
+           = -i [H, rho]                                     (coherent part)
+             + sum_k gamma_k ( L_k rho L_k^dagger
+                               - (1/2){ L_k^dagger L_k, rho } )   (dissipation)
+
+  with gamma_k >= 0 (rates) and L_k the "jump operators" (e.g. sigma_- for
+  amplitude damping, sigma_z for dephasing). The dissipator is what makes the
+  dynamics irreversible. L (the map rho -> d rho/dt) is called the generator,
+  or, in vectorized form, the Liouvillian.
+
+CODE: ctpcpinn/lindblad.py:lindblad_rhs() evaluates exactly this right-hand
+side; liouvillian_dense() builds its d^2 x d^2 matrix form (section 13).
+
+
+--------------------------------------------------------------------------------
+5. COMPLETE POSITIVITY AND TRACE PRESERVATION (CPTP)
+--------------------------------------------------------------------------------
+Two non-negotiable physical requirements on the *evolution* rho(0) -> rho(t):
+  * trace preserving: probabilities stay normalized, Tr(rho(t)) = 1 for all t;
+  * completely positive: rho(t) stays >= 0 even if the system is entangled with
+    an untouched bystander.
+The GKSL theorem says: e^{tL} is a CPTP map for every t >= 0 IF AND ONLY IF L
+has the form in section 4 with gamma_k >= 0 and H Hermitian. So if we want a
+LEARNED generator to be physical, we must keep gamma_k >= 0 and H Hermitian by
+construction -- section 12.
+
+
+--------------------------------------------------------------------------------
+6. THE FORWARD PROBLEM: INTEGRATING THE MASTER EQUATION
+--------------------------------------------------------------------------------
+Given H, the L_k and the rates, "simulate the physics" = solve the ODE
+d rho/dt = L[rho] from an initial state rho(0). We do this with a standard
+high-accuracy ODE integrator (scipy's Runge-Kutta) on the vectorized state. This
+"ground truth" is what we generate synthetic noisy measurements from, and what
+we compare the learned model against.
+
+CODE: ctpcpinn/solvers.py:solve_lindblad_trajectory() (uses scipy.integrate),
+generate_measurements() (adds Gaussian measurement noise to <O_j> = Tr[O_j rho]).
+
+
+--------------------------------------------------------------------------------
+7. THE INVERSE PROBLEM: WHAT WE ARE ACTUALLY LEARNING
+--------------------------------------------------------------------------------
+We are given noisy measurements y_ij ~ Tr[O_j rho(t_i)] of a few observables at
+some times, possibly with many entries MISSING. We want to recover:
+  * a trajectory rho(t) consistent with the data, AND
+  * the generator parameters Theta = (H parameters, rates gamma_k).
+This is harder than the forward problem and is generally ill-posed: if the
+chosen measurements do not "excite" a parameter, no method can recover it
+(this is the identifiability theorem, Theorem 5 / sensitivity Gramian).
+
+
+--------------------------------------------------------------------------------
+8. NEURAL NETWORKS FROM SCRATCH
+--------------------------------------------------------------------------------
+A multilayer perceptron (MLP) is just a parameterized function f_phi: R^n -> R^m
+built by alternating affine maps and a nonlinearity:
+
+  h_0 = x
+  h_{l+1} = sigma( W_l h_l + b_l )      (sigma = GELU/tanh/relu, applied entrywise)
+  f_phi(x) = W_L h_L + b_L
+
+The parameters phi = {W_l, b_l} are learned. The Universal Approximation Theorem
+says a wide enough one-hidden-layer MLP can approximate any continuous function
+on a compact set to arbitrary accuracy -- this is the basis of Theorem 2.
+
+Here the input x is just the scalar TIME t (optionally expanded with Fourier
+features [t, sin(k w t), cos(k w t)] to fight "spectral bias," the tendency of
+plain MLPs to learn low frequencies first). The output is interpreted as the
+entries of a matrix (section 11).
+
+CODE: ctpcpinn/models.py:TimeMLP (the MLP + optional Fourier features),
+DensityMatrixNet (wraps it into the Cholesky map), UnconstrainedDensityNet
+(the baseline that outputs matrix entries directly).
+
+
+--------------------------------------------------------------------------------
+9. AUTOMATIC DIFFERENTIATION
+--------------------------------------------------------------------------------
+Training minimizes a loss J(phi) by gradient descent: phi <- phi - lr * dJ/dphi.
+The gradient is computed by "backpropagation," which is the chain rule applied
+mechanically through the computation graph -- this is what PyTorch's autograd
+does. We also use autograd in a second, less common way: to compute the TIME
+DERIVATIVE d rho/dt of the network output, by differentiating rho_phi(t) with
+respect to its input t. That derivative is what enters the physics residual
+(section 10).
+
+CODE: ctpcpinn/losses.py:physics_residual_loss() calls torch.autograd.grad on
+rho with respect to t; the optimizer is Adam (a standard adaptive-gradient
+method), torch.optim.Adam in each experiment.
+
+
+--------------------------------------------------------------------------------
+10. PHYSICS-INFORMED NEURAL NETWORKS (PINNs): THE RESIDUAL LOSS
+--------------------------------------------------------------------------------
+A PINN trains a network to satisfy a differential equation by penalizing the
+equation's RESIDUAL at sampled "collocation" points, in addition to fitting
+data. Our total loss has three terms:
+
+  J = lambda_data * J_data + lambda_phys * J_phys + lambda_0 * J_0
+
+  J_data = mean over observed (i,j) of ( Tr[O_j rho_phi(t_i)] - y_ij )^2
+  J_phys = mean over collocation tau of || d rho_phi/dt - L_Theta[rho_phi] ||_F^2
+  J_0    = || rho_phi(0) - rho_0 ||_F^2
+
+J_phys ties the trajectory to the (learned) physics; J_data ties it to the
+measurements; J_0 anchors the initial state. Minimizing J jointly fits the
+network parameters phi AND the generator parameters Theta.
+
+CODE: ctpcpinn/losses.py (data_loss, physics_residual_loss,
+initial_condition_loss, positivity_penalty for the soft baseline). Each
+experiments/exp*.py assembles these into its training loop.
+
+
+--------------------------------------------------------------------------------
+11. THE HARD CONSTRAINT: THE CHOLESKY DENSITY MAP (THE CENTRAL IDEA)
+--------------------------------------------------------------------------------
+Instead of outputting rho directly and hoping it is legal, the network outputs a
+matrix A_phi(t) and we DEFINE
+
+  rho_phi(t) = A_phi(t) A_phi(t)^dagger / Tr( A_phi(t) A_phi(t)^dagger ).
+
+By the "key fact" of section 1, A A^dagger is always Hermitian and PSD; dividing
+by its (positive) trace makes the trace exactly 1. Therefore rho_phi(t) is in
+D(H) at EVERY time, EVERY training step, and EVERY evaluation point -- no penalty,
+no projection, no tuning. This is Theorem 1 (exact physicality), and it is the
+reason the method is robust under sparse data (Experiment 2): an unconstrained
+or soft-penalized network can drift out of D(H); this one cannot.
+
+We take A_phi lower-triangular with a positive (softplus) diagonal -- a
+"Cholesky factor" -- which removes redundant degrees of freedom. A rank-r
+variant A in C^{d x r} (+ optional isotropic floor) handles large d.
+
+CODE: ctpcpinn/models.py:DensityMatrixNet.forward() builds A from the MLP output
+and returns A A^dagger / Tr(A A^dagger).
+
+
+--------------------------------------------------------------------------------
+12. THE GENERATOR PARAMETERIZATION (KEEPING THE PHYSICS LEGAL)
+--------------------------------------------------------------------------------
+For the LEARNED equation of motion to stay CPTP (section 5) we parameterize:
+  * rates:        gamma_k = softplus(xi_k) + gamma_min >= 0  (softplus(x)=ln(1+e^x)
+                  is smooth and always positive), so rates can never go negative;
+  * Hamiltonian:  H_theta = sum_l theta_l G_l with Hermitian basis G_l, so H stays
+                  Hermitian;
+  * (general case) a full Kossakowski matrix C = B B^dagger >= 0, again PSD by
+                  construction.
+This is Theorem 3: the learned generator is always a legal GKSL generator.
+
+CODE: ctpcpinn/models.py:PositiveParameter (softplus-positive scalar); each
+experiment builds H and the L_k from these and calls torch_lindblad_rhs.
+
+
+--------------------------------------------------------------------------------
+13. THEORY-OF-COMPUTATION VIEW: THE IR AND THE DENSE-VS-STRUCTURED COMPILER
+--------------------------------------------------------------------------------
+The physics residual L_Theta[rho] must be evaluated millions of times during
+training, so HOW we compute it matters. There are two ways:
+
+  * DENSE: vectorize rho into a length-d^2 vector and multiply by the
+    d^2 x d^2 Liouvillian matrix L (built once via Kronecker products). Storage
+    O(d^4); each evaluation O(d^4).
+  * STRUCTURED ("matrix-free"): never build L; evaluate the commutator and each
+    dissipator term directly as small d x d matrix products. Storage O(m d^2)
+    (just H and the m jump operators); each evaluation O(m d^3).
+
+This is a classic COMPILER idea: keep the computation in a high-level
+"intermediate representation" (IR) -- dimension, Hamiltonian terms, jump
+operators, rates, observables, batching, mode -- and LOWER it to whichever
+kernel is cheaper for the current regime (small d and tiny batches favor dense;
+large d or large batches favor structured). The asymptotic gap d^4 vs m d^3 is
+Theorem 6, and Experiment 5 measures it (the two kernels agree to floating-point
+precision, so "structured" is a pure speed/memory win, not an approximation).
+
+Why "theory of computation" at all: the same mathematical map (the generator)
+has many computational REPRESENTATIONS with different complexity; choosing the
+representation is a compilation/scheduling problem, exactly analogous to lowering
+a high-level program to hardware-specific kernels.
+
+CODE: ctpcpinn/compiler.py (QuantumModelIR = the IR; CompiledLindbladModel with
+mode='dense'|'structured'; benchmark_residual_modes); ctpcpinn/lindblad.py
+(liouvillian_dense vs lindblad_rhs); ctpcpinn/metrics.py
+(memory_estimate_dense_vs_structured).
+
+
+--------------------------------------------------------------------------------
+14. STATISTICS: WHY MANY SEEDS AND CONFIDENCE INTERVALS
+--------------------------------------------------------------------------------
+A single training run depends on a random seed (network init + noise draw).
+Reporting one run can be misleading: a lucky seed can look great while the
+method is actually unreliable (this is exactly what happens to the qutrit
+Fourier result in Experiment 3). We therefore repeat each experiment over five
+seeds and report mean +/- a 95% confidence interval (Student-t, appropriate for
+small samples). When the interval is wide relative to the mean, the result is
+NOT robust -- and we say so.
+
+CODE: ctpcpinn/stats.py:aggregate() (mean, sample std, Student-t 95% CI),
+fmt_pm() (the "mean $\pm$ ci" strings written into the LaTeX tables).
+
+
+--------------------------------------------------------------------------------
+15. THEOREMS <-> CODE MAP
+--------------------------------------------------------------------------------
+  Thm 1  Exact physicality          models.py:DensityMatrixNet.forward
+  Thm 2  Universal approximation     models.py:TimeMLP (UAT for MLPs)
+  Thm 3  GKSL preservation           models.py:PositiveParameter + *_lindblad_rhs
+  Thm 4  Residual certificate        losses.py:physics_residual_loss (the
+                                      residual whose trace-norm bounds the error)
+  Thm 5  Local identifiability       metrics.py + the sensitivity discussion;
+                                      observed in exp3's rate-recovery difficulty
+  Thm 6  Dense vs structured cost    compiler.py + lindblad.liouvillian_dense;
+                                      measured in ctpcpinn/experiments/exp5_compiler_ablation.py
+
+Read REPRODUCE.txt for how to run everything and what numbers to expect.
+================================================================================

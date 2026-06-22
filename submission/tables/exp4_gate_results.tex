@@ -1,17 +1,17 @@
 \begin{table}[ht]
 \centering
-\caption{Experiment 4: Two-qubit gate fidelity proxy.}
+\caption{Experiment 4: two-qubit dissipative gate. State fidelity for the trained $\lvert 00\rangle$ trajectory and for three held-out initial states obtained by propagating the learned generator. Mean $\pm$ 95\% CI over 5 seeds.}
 \label{tab:exp4}
 \begin{tabular}{lcc}
 \hline
-Initial State & Mean Fidelity & Final Fidelity \\
+Initial state & Mean fidelity & Final fidelity \\
 \hline
-$\lvert 00\rangle$ & 0.9881 & 0.9999 \\
-$\lvert 01\rangle$ & 0.9723 & 0.9905 \\
-$\lvert 10\rangle$ & 0.9719 & 0.9903 \\
-$\lvert {+}0\rangle$ & 0.9829 & 0.9882 \\
+$\lvert 00\rangle$ (trained) & 0.9944 $\pm$ 0.0014 & 0.9998 $\pm$ 0.0001 \\
+$\lvert 01\rangle$ (held-out) & 0.9504 $\pm$ 0.0065 & 0.9731 $\pm$ 0.0092 \\
+$\lvert 10\rangle$ (held-out) & 0.9551 $\pm$ 0.0087 & 0.9808 $\pm$ 0.0086 \\
+$\lvert {+}0\rangle$ (held-out) & 0.9743 $\pm$ 0.0043 & 0.9808 $\pm$ 0.0045 \\
 \hline
-Average & 0.9788 & --- \\
+Average & 0.9685 $\pm$ 0.0047 & --- \\
 \hline
 \end{tabular}
 \end{table}

@@ -2,7 +2,6 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import numpy as np
 import time
@@ -44,7 +43,8 @@ def run(config: dict = None):
     tables_dir = config.get('tables_dir', 'submission/tables')
     verbose = config.get('verbose', True)
     n_batch = config.get('n_batch', 100)
-    n_repeats = config.get('n_repeats', 5)
+    # Timing is noisy; use many repeats and report the median (warm-up excluded).
+    n_repeats = config.get('n_repeats_timing', max(config.get('n_repeats', 5), 30))
 
     Path(figures_dir).mkdir(parents=True, exist_ok=True)
     Path(tables_dir).mkdir(parents=True, exist_ok=True)
@@ -75,16 +75,16 @@ def run(config: dict = None):
         )
 
         result = benchmark_residual_modes(ir, params, n_points=n_batch, n_repeats=n_repeats)
-        times_dense.append(result['dense']['mean_time_s'])
-        times_structured.append(result['structured']['mean_time_s'])
+        times_dense.append(result['dense']['median_time_s'])
+        times_structured.append(result['structured']['median_time_s'])
 
         mem = memory_estimate_dense_vs_structured(d, m)
         memory_data.append(mem)
 
         if verbose:
-            print(f"    Dense: {result['dense']['mean_time_s']:.4f}s, "
-                  f"Structured: {result['structured']['mean_time_s']:.4f}s, "
-                  f"Ratio: {result['dense']['mean_time_s'] / max(result['structured']['mean_time_s'], 1e-10):.2f}x")
+            print(f"    Dense: {result['dense']['median_time_s']:.4f}s, "
+                  f"Structured: {result['structured']['median_time_s']:.4f}s, "
+                  f"Ratio: {result['dense']['median_time_s'] / max(result['structured']['median_time_s'], 1e-10):.2f}x")
 
     # Plot
     plot_compiler_scaling(dims, times_dense, times_structured,
@@ -95,7 +95,11 @@ def run(config: dict = None):
     with open(table_path, 'w') as f:
         f.write(r"\begin{table}[ht]" + "\n")
         f.write(r"\centering" + "\n")
-        f.write(r"\caption{Experiment 5: Compiler runtime and memory scaling.}" + "\n")
+        f.write(r"\caption{Experiment 5: compiler runtime and memory scaling. Times are the "
+                r"median residual-evaluation wall time over " + f"{n_repeats}" +
+                r" repeats (warm-up excluded) for a batch of " + f"{n_batch}" +
+                r" states; memory is the analytic storage for the dense $d^2\times d^2$ "
+                r"Liouvillian versus the structured operators. CPU, single machine.}" + "\n")
         f.write(r"\label{tab:exp5}" + "\n")
         f.write(r"\begin{tabular}{lccccc}" + "\n")
         f.write(r"\hline" + "\n")

@@ -1,4 +1,23 @@
-"""Evaluation metrics for CPTP-Compiler-PINNs."""
+"""Evaluation metrics: how we score a learned trajectory (THEORY.txt sections 3, 14).
+
+These functions turn a predicted trajectory of density matrices into the numbers
+reported in the tables and figures:
+
+  * state_fidelity_over_time / fidelity: the Uhlmann fidelity
+    F(rho,sigma) = (Tr sqrt(sqrt(rho) sigma sqrt(rho)))^2, 1 for identical states
+    and lower as they differ (computed stably by eigendecomposition in
+    lindblad.py);
+  * trace_distance_over_time: the trace distance (1/2)||rho-sigma||_1, the
+    operationally meaningful "distinguishability" of two states;
+  * parameter_relative_error: |learned - true| / |true| for each generator
+    parameter (the inverse-problem score);
+  * positivity_violation_rate: the fraction of time points where the model leaves
+    the physical set (a negative eigenvalue) -- this is EXACTLY 0 for the hard
+    Cholesky model and nonzero for the soft/unconstrained baselines, which is the
+    quantitative form of the central claim;
+  * memory_estimate_dense_vs_structured: the analytic O(d^4) vs O(m d^2) storage
+    used in the compiler table.
+"""
 
 import numpy as np
 import time

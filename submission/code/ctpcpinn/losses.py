@@ -1,4 +1,29 @@
-"""Loss functions for CPTP-Compiler-PINNs."""
+"""The physics-informed loss (THEORY.txt sections 9-10).
+
+A physics-informed neural network (PINN) is trained to satisfy a differential
+equation by penalizing the equation's RESIDUAL at sampled collocation points, in
+addition to fitting data. The total objective is
+
+    J = lambda_data * J_data + lambda_phys * J_phys + lambda_0 * J_0
+
+  * data_loss (J_data): mean squared error between predicted observables
+    Tr[O_j rho_phi(t_i)] and the measurements, with an optional binary MASK so
+    that missing entries are simply skipped (this is how the sparse-measurement
+    experiment works).
+  * physics_residual_loss (J_phys): the heart of the method. It computes the time
+    derivative d rho_phi/dt by AUTOMATIC DIFFERENTIATION of the network output
+    with respect to its input t, then penalizes the Frobenius norm of the
+    Lindblad residual || d rho_phi/dt - L_Theta[rho_phi] ||^2. A small residual
+    certifies a small trajectory error in trace norm (Theorem 4).
+  * initial_condition_loss (J_0): anchors rho_phi(0) to the known initial state.
+  * positivity_penalty: the SOFT alternative to the hard Cholesky constraint --
+    it penalizes negative eigenvalues after the fact. Used only by the
+    soft-penalty baseline, precisely to demonstrate that a penalty is weaker than
+    making illegal states unrepresentable (Experiments 1-2).
+
+Gradients of J with respect to both the network parameters and the generator
+parameters are obtained by backpropagation; the optimizer is Adam.
+"""
 
 import torch
 import torch.nn as nn
@@ -73,6 +98,26 @@ def physics_residual_loss(rho_t: torch.Tensor, t: torch.Tensor,
     residual = drho_dt - lind_rhs
     loss = (residual.real ** 2 + residual.imag ** 2).sum(dim=(-2, -1)).mean()
     return loss
+
+
+def positivity_penalty(rho_t: torch.Tensor) -> torch.Tensor:
+    """Soft positivity penalty: mean over the batch of sum_i ReLU(-lambda_i(rho)).
+
+    This is the *soft* alternative to the hard Cholesky constraint: it penalizes
+    negative eigenvalues after the fact instead of making them unrepresentable.
+    Used by the soft-penalty PINN baseline (Sec. 3.3 of the manuscript). The
+    eigenvalues are taken of the Hermitian part of rho so the penalty is well
+    defined even when the network output drifts away from Hermiticity.
+
+    Args:
+        rho_t: (N, d, d) complex tensor of (approximate) density matrices.
+
+    Returns:
+        scalar penalty (zero iff every matrix in the batch is PSD).
+    """
+    rho_herm = 0.5 * (rho_t + rho_t.conj().transpose(-2, -1))
+    eigvals = torch.linalg.eigvalsh(rho_herm)  # (N, d), ascending, real
+    return torch.relu(-eigvals).sum(dim=-1).mean()
 
 
 def initial_condition_loss(rho_pred_0: torch.Tensor,

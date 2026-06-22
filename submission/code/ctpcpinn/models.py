@@ -1,4 +1,37 @@
-"""PyTorch neural network models for CPTP-PINNs."""
+"""The neural networks, including the central hard-constraint idea.
+
+(THEORY.txt sections 8, 11-12.)
+
+A neural network here is just a parameterized function fit by gradient descent.
+Three pieces:
+
+  * TimeMLP: a plain multilayer perceptron mapping the scalar TIME t to a real
+    vector. Optionally it first expands t into Fourier features
+    [t, sin(k w t), cos(k w t)]_{k=1..K} to combat "spectral bias" (the tendency
+    of MLPs to learn low frequencies first), which matters for fast oscillatory
+    dynamics. (Experiment 3 shows this fix is not robust across seeds.)
+
+  * DensityMatrixNet -- THE CENTRAL IDEA (Theorem 1, exact physicality). Rather
+    than output a density matrix directly and hope it is legal, it outputs the
+    entries of a lower-triangular complex matrix A_phi(t) (positive softplus
+    diagonal) and returns
+
+        rho_phi(t) = A_phi A_phi^dagger / Tr(A_phi A_phi^dagger).
+
+    Because A A^dagger is always Hermitian and positive semidefinite, and the
+    trace division forces unit trace, rho_phi is a VALID density matrix at every
+    time, every training step and every evaluation point -- by construction, with
+    no penalty or projection. This is what makes the method robust under sparse
+    data (Experiment 2).
+
+  * UnconstrainedDensityNet: the baseline that outputs matrix entries directly
+    (only soft-symmetrized and trace-normalized). It can leave the physical set;
+    comparing against it isolates the value of the hard constraint.
+
+  * PositiveParameter: a scalar parameterized as softplus(raw) so it is ALWAYS
+    positive -- used for the Lindblad rates gamma_k >= 0, which keeps the learned
+    generator completely positive (Theorem 3).
+"""
 
 import torch
 import torch.nn as nn

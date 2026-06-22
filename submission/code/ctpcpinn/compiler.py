@@ -1,4 +1,32 @@
-"""Intermediate representation and compiler for Lindblad models."""
+"""The compiler: representation and complexity (THEORY.txt section 13).
+
+The physics residual L_Theta[rho] is evaluated millions of times during
+training, so HOW it is computed matters. The same mathematical generator has two
+computational representations with very different cost -- a classic compiler
+trade-off (keep a high-level intermediate representation, then "lower" it to the
+kernel that is cheapest for the current regime):
+
+  * QuantumModelIR: the intermediate representation (IR) -- a small, symbolic
+    description of the open system (dimension, Hamiltonian function, jump-operator
+    function, observables). It commits to no particular kernel.
+  * CompiledLindbladModel(ir, mode): lowers the IR to one of two residual kernels
+      - mode='dense':      build the d^2 x d^2 Liouvillian once (Kronecker
+                           products) and apply it by matrix-vector product.
+                           Storage and per-eval cost O(d^4).
+      - mode='structured': never build the Liouvillian; evaluate the commutator
+                           and each dissipator term directly as d x d matrix
+                           products. Storage O(m d^2), per-eval cost O(m d^3).
+    The two give identical results to floating-point precision, so 'structured'
+    is a pure speed/memory win, not an approximation.
+  * benchmark_residual_modes(): times the two kernels (median over repeats) --
+    this is what experiment 5 reports, and it matches the asymptotic complexity
+    theorem (Theorem 6): dense d^4 vs structured m d^3, with dense memory growing
+    as 16^n for n qubits.
+
+Why "compiler": choosing the representation of a fixed map to minimize cost is a
+compilation/scheduling problem, exactly analogous to lowering a high-level
+program to hardware-specific kernels.
+"""
 
 import numpy as np
 import time
@@ -153,16 +181,21 @@ def benchmark_residual_modes(ir: QuantumModelIR, params: dict,
     results = {}
     for mode in ['dense', 'structured']:
         compiled = CompiledLindbladModel(ir, mode=mode)
+        # Warm-up (excluded): first call pays one-off allocation/JIT-like costs.
+        compiled.residual_batch(t_batch, rho_batch, drho_dt_batch, params)
         times_list = []
         for _ in range(n_repeats):
             start = time.perf_counter()
             compiled.residual_batch(t_batch, rho_batch, drho_dt_batch, params)
-            elapsed = time.perf_counter() - start
-            times_list.append(elapsed)
-        mean_time = np.mean(times_list)
+            times_list.append(time.perf_counter() - start)
+        times_arr = np.asarray(times_list)
+        median_time = float(np.median(times_arr))
         results[mode] = {
-            'mean_time_s': mean_time,
-            'evals_per_sec': n_points / mean_time if mean_time > 0 else float('inf'),
+            'mean_time_s': float(np.mean(times_arr)),
+            'median_time_s': median_time,
+            'std_time_s': float(np.std(times_arr, ddof=1)) if len(times_arr) > 1 else 0.0,
+            'iqr_time_s': float(np.subtract(*np.percentile(times_arr, [75, 25]))),
+            'evals_per_sec': n_points / median_time if median_time > 0 else float('inf'),
         }
 
     return results
