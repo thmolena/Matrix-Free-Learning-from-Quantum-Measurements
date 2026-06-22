@@ -91,6 +91,19 @@ button {
   font-weight: 700;
 }
 
+.local-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.local-nav a {
+  color: var(--accent);
+}
+
 .status-strip {
   display: flex;
   flex-direction: column;
@@ -320,5 +333,13 @@ p {
   .masthead-inner,
   .status-strip {
     align-items: flex-start;
+  }
+
+  .masthead-inner {
+    flex-direction: column;
+  }
+
+  .local-nav {
+    margin-left: 0;
   }
 }

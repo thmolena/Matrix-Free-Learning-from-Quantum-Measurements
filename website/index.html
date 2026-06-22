@@ -3,19 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumPINNs Local Inference Interface</title>
+  <title>CPTP-Compiler-PINNs — Local Inference Interface</title>
+  <meta name="description" content="Local inference interface for the CPTP-Compiler-PINN framework: structure-preserving learning and matrix-free compilation for open quantum dynamics." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .num-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .num-table th, .num-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .num-table th { background: var(--panel-strong); font-size: 0.84rem; }
+    .num-table td.num, .num-table th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .num-table tr:last-child td { border-bottom: 0; }
+    .num-table tr.win td { background: #eef6f1; }
+    .stat-line { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .stat-line strong { color: var(--accent); font-size: 1.15rem; }
+    .math-block { margin: 12px 0; padding: 12px 16px; border: 1px solid var(--line); background: var(--panel); overflow-x: auto; }
+    .math-block .katex-display { margin: 4px 0; }
+    .honest-note { padding: 14px 18px; border-left: 4px solid var(--warning); background: var(--panel); color: var(--ink); margin-top: 8px; }
+    .honest-note:last-child { margin-bottom: 0; }
+  </style>
 </head>
 <body>
   <header class="masthead">
     <div class="container masthead-inner">
       <div class="identity">
-        <a class="site-title" href="../index.html">QuantumPINNs</a>
+        <a class="site-title" href="../index.html">CPTP-Compiler-PINNs</a>
         <span class="site-subtitle">Local inference interface</span>
       </div>
+      <nav class="local-nav" aria-label="Page sections">
+        <a href="#background">Background</a>
+        <a href="#method">Method</a>
+        <a href="#inference">Demo</a>
+        <a href="#results">Results</a>
+        <a href="#conclusion">Conclusion</a>
+      </nav>
       <div class="status-strip">
         <span class="status-label">API Status</span>
         <span id="health-status" class="status-value">Checking API...</span>
@@ -24,18 +48,24 @@
   </header>
 
   <main class="page">
+    <!-- HERO -->
     <section class="hero">
       <div>
-        <span class="report-label">Developer Report Interface</span>
-        <h1>Submit spatial and temporal coordinates to inspect model inference through the local API.</h1>
+        <span class="report-label">Open Quantum Systems · Physics-Informed ML</span>
+        <h1>Inspect a structure-preserving open-system model through the local API.</h1>
         <p class="lead">
-          This page applies the same report-oriented presentation as the project landing page while remaining focused on local evaluation. It is intended for controlled inspection of trained model outputs served by the Flask API in <code>src/server.py</code>.
+          This page is the operational endpoint of the <strong>CPTP-Compiler-PINN</strong> framework: structure-preserving
+          residual learning and matrix-free compilation for Markovian (GKSL) open quantum dynamics. It serves trained-model
+          predictions from the Flask API in <code>src/server.py</code> for controlled, expert inspection. Physicality is an
+          architectural invariant here, not a penalty: the density map
+          <span class="katex-inline" data-tex="\rho=AA^\dagger/\operatorname{Tr}(AA^\dagger)"></span> is Hermitian, PSD and
+          unit-trace by construction.
         </p>
       </div>
 
       <aside class="aside-card">
         <div class="aside-row">
-          <span class="aside-label">Use Case</span>
+          <span class="aside-label">Use case</span>
           <div class="aside-value">Local inspection of trained PINN predictions</div>
         </div>
         <div class="aside-row">
@@ -43,17 +73,65 @@
           <div class="aside-value">http://localhost:5000</div>
         </div>
         <div class="aside-row">
-          <span class="aside-label">Expected Payload</span>
+          <span class="aside-label">Expected payload</span>
           <div class="aside-value">Comma-separated x values and optional t values</div>
         </div>
       </aside>
     </section>
 
-    <section class="section section-grid">
+    <!-- BACKGROUND + METHOD -->
+    <section class="section section-grid" id="background">
       <article class="panel card-large">
         <div class="panel-head">
-          <h2>Inference Request</h2>
-          <p>Enter comma-separated coordinates. When no time values are supplied, the interface uses <code>t = 0</code>.</p>
+          <h2>Background &amp; method</h2>
+          <p>Why physicality should be structural, not penalized.</p>
+        </div>
+        <div class="panel-body prose-block" id="method">
+          <p>
+            A real device carries relaxation, dephasing, leakage, crosstalk, and control-induced dissipation; the object that
+            must stay physical is the density matrix in
+            <span class="katex-inline" data-tex="\mathcal{D}(\mathcal{H})=\{\rho:\rho=\rho^\dagger,\rho\succeq0,\operatorname{Tr}\rho=1\}"></span>.
+            For Markovian, time-local dynamics the generator has GKSL form:
+          </p>
+          <div class="math-block">
+            <span class="katex-display-target" data-tex="\dot\rho=-\mathrm{i}[H_\Theta,\rho]+\sum_{k}\gamma_k\!\left(L_k\rho L_k^\dagger-\tfrac12\{L_k^\dagger L_k,\rho\}\right)."></span>
+          </div>
+          <p>
+            A direct neural map <span class="katex-inline" data-tex="t\mapsto\rho_\theta(t)"></span> lacks reason to stay
+            Hermitian, PSD, or unit-trace, and a negative-eigenvalue penalty only asks the optimizer to repair an invalid output
+            after the fact. This framework makes invalid states <em>unrepresentable</em> via a Cholesky density network and keeps
+            the learned generator CPTP via
+            <span class="katex-inline" data-tex="\gamma_k=\operatorname{softplus}(\xi_k)\ge0"></span> and
+            <span class="katex-inline" data-tex="C=BB^\dagger\succeq0"></span>. A matrix-free compiler lowers the open-system IR to a
+            dense or structured Lindblad residual, avoiding the <span class="katex-inline" data-tex="d^2\times d^2"></span> Liouvillian.
+          </p>
+          <p>
+            The local API turns a trained model into an evaluation service: given coordinates <span class="katex-inline" data-tex="x"></span>
+            and optional <span class="katex-inline" data-tex="t"></span>, it returns wavefunction components and density values for inspection.
+          </p>
+        </div>
+      </article>
+
+      <article class="panel card-small">
+        <div class="panel-head">
+          <h2>Headline numbers</h2>
+          <p>5-seed mean &plusmn; 95% CI.</p>
+        </div>
+        <div class="panel-body prose-block">
+          <div class="stat-line"><strong>0.004&ndash;0.010</strong><span>sparse-data trace distance (ours) vs. &asymp;0.37 baselines</span></div>
+          <div class="stat-line"><strong>0.000</strong><span>positivity violations, by construction</span></div>
+          <div class="stat-line"><strong>0.97 &plusmn; 0.005</strong><span>two-qubit generator transfer to held-out states</span></div>
+          <div class="stat-line"><strong>5.9&ndash;12.9&times;</strong><span>matrix-free compiler speedup (<span class="katex-inline" data-tex="d=2\ldots8"></span>)</span></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- DEMO (PRESERVED FORM) -->
+    <section class="section section-grid" id="inference">
+      <article class="panel card-large">
+        <div class="panel-head">
+          <h2>Inference request</h2>
+          <p>Enter comma-separated coordinates. When time values are omitted, the interface uses <code>t = 0</code>.</p>
         </div>
         <div class="panel-body form-layout">
           <label class="field-label" for="x-input">x coordinates</label>
@@ -81,20 +159,21 @@
 
       <article class="panel card-small">
         <div class="panel-head">
-          <h2>Interface Notes</h2>
+          <h2>Interface notes</h2>
         </div>
         <div class="panel-body prose-block">
           <p>The API response is expected to include real and imaginary wavefunction components together with probability density.</p>
-          <p>The output panel preserves one line per queried coordinate pair to support quick inspection and manual spot checks.</p>
+          <p>The output panel preserves one line per queried coordinate pair to support quick inspection and manual verification.</p>
           <p>This page is intended for local developer use and does not simulate results when the API is unavailable.</p>
         </div>
       </article>
     </section>
 
-    <section class="section section-grid">
+    <!-- INFERENCE OUTPUT + RESULTS -->
+    <section class="section section-grid" id="results">
       <article class="panel card-large">
         <div class="panel-head">
-          <h2>Inference Output</h2>
+          <h2>Inference output</h2>
           <p>Prediction results are rendered exactly as returned by the local service after numeric formatting for readability.</p>
         </div>
         <div class="panel-body">
@@ -104,7 +183,7 @@
 
       <article class="panel card-small">
         <div class="panel-head">
-          <h2>Quick Start</h2>
+          <h2>Quick start</h2>
         </div>
         <div class="panel-body">
           <pre class="command-block"># 0. Use the project environment
@@ -122,12 +201,104 @@ python -m http.server 8000
         </div>
       </article>
     </section>
+
+    <!-- KEY RESULTS TABLE -->
+    <section class="section">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Where the structure-preserving PINN prevails (Experiment 2, sparse ablation)</h2>
+          <p>Mean trace distance to the exact single-qubit trajectory, 5 seeds, mean &plusmn; 95% CI.</p>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="num-table">
+            <thead>
+              <tr><th>Retained fraction</th><th class="num">CPTP-PINN (ours)</th><th class="num">Soft-penalty PINN</th><th class="num">Unconstrained</th></tr>
+            </thead>
+            <tbody>
+              <tr class="advantage"><td>1.00</td><td class="num"><strong>0.0044 &plusmn; 0.0038</strong></td><td class="num">0.3668 &plusmn; 0.3497</td><td class="num">0.3688 &plusmn; 0.3482</td></tr>
+              <tr class="advantage"><td>0.50</td><td class="num"><strong>0.0052 &plusmn; 0.0037</strong></td><td class="num">0.3683 &plusmn; 0.3469</td><td class="num">0.3717 &plusmn; 0.3436</td></tr>
+              <tr class="advantage"><td>0.25</td><td class="num"><strong>0.0050 &plusmn; 0.0018</strong></td><td class="num">0.3682 &plusmn; 0.3490</td><td class="num">0.3709 &plusmn; 0.3467</td></tr>
+              <tr class="advantage"><td>0.10</td><td class="num"><strong>0.0100 &plusmn; 0.0062</strong></td><td class="num">0.3572 &plusmn; 0.3616</td><td class="num">0.3572 &plusmn; 0.3626</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <div class="transparent-note">
+        <strong>Transparent framing.</strong> On <em>full</em> single-qubit data a classical least-squares fit that already knows the
+        exact model is the strongest method (rates to &asymp;2%). The CPTP-PINN's value is guaranteed physicality (0.000
+        positivity violations) and one-to-two orders of magnitude lower trajectory error under <em>sparse</em> measurements,
+        robust down to 10% observation. The two-qubit learned generator transfers to held-out states at 0.97 &plusmn; 0.005;
+        fast qutrit reconstruction is the principal open problem (a single-seed Fourier advantage does not survive seed averaging).
+        Full tables are on the <a href="../index.html#results">main project page</a>.
+      </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="section section-grid" id="conclusion">
+      <article class="panel card-large">
+        <div class="panel-head">
+          <h2>Conclusion</h2>
+          <p>How to read this local demo in the full research story.</p>
+        </div>
+        <div class="panel-body prose-block">
+          <p>
+            The interactive form is the operational endpoint of the pipeline: train a structure-preserving model, serve it
+            locally, and inspect predictions at selected coordinates. The conceptual point is that physicality should be an
+            architectural invariant rather than an after-the-fact penalty — and the mathematics shows this costs nothing
+            essential: universal approximation still holds, the learned generator stays CPTP, residuals furnish an a-posteriori
+            trace-norm certificate, and structured compilation avoids a dense Liouvillian.
+          </p>
+          <p>
+            The study is deliberately reproducible and modest in scale — synthetic CPU simulations, Markovian assumption, five
+            seeds — not hardware data nor a state-of-the-art claim. The novelty is the modeling discipline behind the returned
+            values, not the form itself.
+          </p>
+        </div>
+      </article>
+
+      <article class="panel card-small">
+        <div class="panel-head">
+          <h2>Paper &amp; code</h2>
+        </div>
+        <div class="panel-body prose-block">
+          <p><a href="../index.html">Open the full CPTP-Compiler-PINN report</a></p>
+          <p><a href="../submission/main.tex">Manuscript source (main.tex)</a></p>
+          <p><a href="../submission/code/run_all.py">Reproduce all tables/figures (run_all.py)</a></p>
+          <p><a href="../notebooks/quantum_pinn_combined.html">Combined benchmark report</a></p>
+        </div>
+      </article>
+    </section>
   </main>
 
   <footer class="footer">
-    QuantumPINNs local inference interface for Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling
+    CPTP-Compiler-PINNs local inference interface — structure-preserving learning and matrix-free compilation for open quantum dynamics.
+    All quantitative claims are 5-seed mean &plusmn; 95% CI from the committed tables.
   </footer>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function renderTex(selector, displayMode) {
+        document.querySelectorAll(selector).forEach(function (el) {
+          var tex = el.getAttribute("data-tex");
+          if (!tex || typeof katex === "undefined") return;
+          try { katex.render(tex, el, { displayMode: displayMode, throwOnError: false }); }
+          catch (e) { /* leave raw on failure */ }
+        });
+      }
+      function renderAll() {
+        renderTex(".katex-inline", false);
+        renderTex(".katex-display-target", true);
+      }
+      if (typeof katex !== "undefined") { renderAll(); }
+      else {
+        var tries = 0;
+        var iv = setInterval(function () {
+          if (typeof katex !== "undefined" || tries++ > 50) { clearInterval(iv); renderAll(); }
+        }, 100);
+      }
+    });
+  </script>
   <script src="demo.js"></script>
 </body>
 </html>
