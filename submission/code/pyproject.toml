@@ -6,21 +6,22 @@ build-backend = "setuptools.build_meta"
 name = "ctpcpinn"
 version = "1.0.0"
 description = "CPTP-Compiler-PINNs: structure-preserving residual learning and matrix-free compilation for open quantum dynamics. Reproduces every table and figure of the manuscript."
-readme = "REPRODUCE.txt"
+readme = { text = "CPTP-Compiler-PINNs code artifact. Run python run_all.py for in-place manuscript artifacts; see ctpcpinn/foundations.py for the from-scratch theory-to-code map.", content-type = "text/plain" }
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Molena Huynh" }]
 keywords = ["quantum", "open-quantum-systems", "lindblad", "physics-informed-neural-networks", "PINN", "reproducibility"]
 
-# Broad floors so the package installs widely. For BIT-IDENTICAL reproduction of
-# the manuscript numbers, install the exact pinned versions instead:
-#     pip install ".[exact]"
-# (these are the versions the committed tables/figures were produced with).
+# Broad floors so the package imports widely. For bit-identical reproduction of
+# the manuscript numbers, use an environment containing the exact dependency
+# versions listed in the optional group below, then run from the source tree with
+# PYTHONPATH=. so no editable-install metadata is generated.
 dependencies = [
     "numpy>=1.24",
     "scipy>=1.10",
     "torch>=2.0",
     "matplotlib>=3.7",
+    "cycler>=0.11",
 ]
 
 [project.optional-dependencies]

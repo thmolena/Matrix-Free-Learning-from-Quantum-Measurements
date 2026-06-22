@@ -1,4 +1,4 @@
-"""The physics-informed loss (THEORY.txt sections 9-10).
+"""The physics-informed loss.
 
 A physics-informed neural network (PINN) is trained to satisfy a differential
 equation by penalizing the equation's RESIDUAL at sampled collocation points, in

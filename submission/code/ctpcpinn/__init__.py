@@ -8,8 +8,8 @@ entry points are the console scripts installed with the package::
     ctpcpinn-reproduce --quick    # fast smoke test
     ctpcpinn-validate             # dependency-free invariant checks
 
-See REPRODUCE.txt (how to reproduce) and THEORY.txt (the method from first
-principles, mapped to each module).
+See foundations.py for the method from first principles and reproduction
+guidance mapped to each module.
 """
 
 __version__ = "1.0.0"

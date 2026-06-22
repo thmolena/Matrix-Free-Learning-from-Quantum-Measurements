@@ -1,4 +1,4 @@
-"""The physics: the Lindblad/GKSL master equation (THEORY.txt sections 4-6, 13).
+"""The physics: the Lindblad/GKSL master equation.
 
 An open quantum system's state rho(t) (a density matrix) evolves by the
 Gorini-Kossakowski-Sudarshan-Lindblad (GKSL) master equation

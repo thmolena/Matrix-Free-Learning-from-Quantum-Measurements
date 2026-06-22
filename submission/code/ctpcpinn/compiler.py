@@ -1,4 +1,4 @@
-"""The compiler: representation and complexity (THEORY.txt section 13).
+"""The compiler: representation and complexity.
 
 The physics residual L_Theta[rho] is evaluated millions of times during
 training, so HOW it is computed matters. The same mathematical generator has two

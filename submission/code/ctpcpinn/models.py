@@ -1,6 +1,6 @@
 """The neural networks, including the central hard-constraint idea.
 
-(THEORY.txt sections 8, 11-12.)
+See foundations.py for the from-scratch theory map.
 
 A neural network here is just a parameterized function fit by gradient descent.
 Three pieces:

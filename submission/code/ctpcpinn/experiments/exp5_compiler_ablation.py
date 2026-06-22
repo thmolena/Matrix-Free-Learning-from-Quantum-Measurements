@@ -1,4 +1,15 @@
-"""Experiment 5: Compiler ablation — dense vs structured Liouvillian."""
+"""Experiment 5: Compiler ablation -- dense vs structured Liouvillian.
+
+Reproduces the compiler-scaling result of the manuscript (Results, "Dense-versus-
+structured compiler scaling"; Theorem "compiler" complexity). For random Lindblad
+systems at dimensions d = 2..8 it benchmarks residual evaluation two ways: dense
+mode materializes the d^2 x d^2 Liouvillian, structured mode applies the commutator
+and dissipator terms directly from H and the jump operators (compiler.py). The two
+agree to floating-point precision; the table/figure report median wall time over
+``n_repeats_timing`` repeats plus the analytic dense-vs-structured memory (~d^4 vs
+storing only H, the m jump operators and rho). Writes exp5_runtime_memory.tex and
+exp5_compiler_scaling.pdf into submission/{tables,figures}.
+"""
 
 import sys
 import os

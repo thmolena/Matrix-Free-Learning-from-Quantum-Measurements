@@ -107,7 +107,11 @@ Recommended reading order:
 
 ```bash
 conda activate qaoa
-pip install -r requirements.txt
+cd submission/code
+export PYTHONPATH=.
+python run_all.py
+python -m ctpcpinn.validate
+cd ../..
 
 jupyter nbconvert --to notebook --execute --inplace notebooks/pinn_harmonic_oscillator.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/pinn_schrodinger.ipynb
@@ -144,7 +148,6 @@ python -m http.server 8000
 QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/
 ├── README.md
 ├── index.html          # research portfolio + interactive demo (GitHub Pages)
-├── requirements.txt
 ├── data/
 ├── notebooks/          # executed PINN benchmark notebooks
 ├── outputs/            # committed CSV/SVG benchmark artifacts

@@ -1,4 +1,4 @@
-"""Quantum operators -- the linear-algebra primitives (THEORY.txt sections 1-2).
+"""Quantum operators -- the linear-algebra primitives.
 
 Everything in this project is built from small complex matrices. A d-level
 quantum system has states in C^d and operators that are d x d complex matrices.

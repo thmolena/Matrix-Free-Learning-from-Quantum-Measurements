@@ -108,13 +108,8 @@ def main(argv=None):
     for name in todo:
         print(f"\n--- {name}: {_TITLES[name]} ---")
         exp_start = time.time()
-        try:
-            _load(name).run(dict(config))
-            print(f"    done in {time.time() - exp_start:.1f}s")
-        except Exception as e:
-            print(f"    FAILED: {e}")
-            import traceback
-            traceback.print_exc()
+        _load(name).run(dict(config))
+        print(f"    done in {time.time() - exp_start:.1f}s")
 
     print("\n" + "=" * 70)
     print(f"Finished {len(todo)} experiment(s) in {time.time() - t0:.1f}s")

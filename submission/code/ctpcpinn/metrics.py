@@ -1,4 +1,4 @@
-"""Evaluation metrics: how we score a learned trajectory (THEORY.txt sections 3, 14).
+"""Evaluation metrics: how we score a learned trajectory.
 
 These functions turn a predicted trajectory of density matrices into the numbers
 reported in the tables and figures:

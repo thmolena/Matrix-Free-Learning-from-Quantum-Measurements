@@ -1,4 +1,13 @@
-"""Training loop for CPTP-Compiler-PINNs."""
+"""Training loop for CPTP-Compiler-PINNs.
+
+Minimizes the physics-informed objective of the manuscript (Methods, "Observation
+model and loss"): the weighted sum of the masked data term, the Lindblad residual
+``||d rho_phi/dt - L_Theta[rho_phi]||`` and the initial-condition term. The
+trajectory is the hard-constrained Cholesky density network (models.py; Theorem 1
+physicality) and the generator is the CPTP parameterization (Theorem 3); PyTorch
+autograd supplies the time derivative for the residual. See losses.py for the loss
+terms and foundations.py/theory.py for the from-scratch theory-to-code map.
+"""
 
 import torch
 import torch.nn as nn

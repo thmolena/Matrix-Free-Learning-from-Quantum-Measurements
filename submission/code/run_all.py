@@ -20,8 +20,9 @@ copies of the OpenMP runtime, which on this workload causes hard crashes
 threads are used or several processes run at once. We therefore pin everything
 to a SINGLE thread and force MKL to a sequential backend BEFORE importing torch.
 The matrices here are tiny (d = 2..8), so single-threaded costs almost nothing.
-See REPRODUCE.txt section 5 for details. You can override with N>1 via the
-environment, but only do so if you have confirmed a single OpenMP runtime.
+See ctpcpinn/foundations.py for the reproduction and theory map. You can
+override with N>1 via the environment, but only do so if you have confirmed a
+single OpenMP runtime.
 
 Determinism
 -----------

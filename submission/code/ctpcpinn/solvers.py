@@ -1,4 +1,4 @@
-"""Ground-truth ODE integration and synthetic data (THEORY.txt sections 6-7).
+"""Ground-truth ODE integration and synthetic data.
 
 To test the learned model we need (a) the TRUE trajectory and (b) noisy
 measurements of it. This module provides both:

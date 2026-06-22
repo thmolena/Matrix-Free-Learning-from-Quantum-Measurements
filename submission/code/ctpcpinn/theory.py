@@ -1,0 +1,75 @@
+"""From-principles guide for CPTP-Compiler-PINNs.
+
+Linear algebra
+--------------
+A d-level quantum state is represented by a d by d complex density matrix rho.
+It is physical if it is Hermitian, positive semidefinite and trace one. The
+helper modules operators.py, lindblad.py and metrics.py implement these checks
+and the matrix operations used in every experiment.
+
+Open-system physics
+-------------------
+Closed-system dynamics use -i[H, rho]. Markovian open-system dynamics add
+Lindblad dissipators:
+
+    d rho / dt = -i[H, rho]
+        + sum_k gamma_k (L_k rho L_k^dagger
+        - 0.5 {L_k^dagger L_k, rho}).
+
+If the rates gamma_k are nonnegative and H is Hermitian, the generated evolution
+is completely positive and trace preserving (CPTP). lindblad.py evaluates this
+right-hand side and solvers.py integrates it to create ground-truth trajectories.
+
+Machine learning
+----------------
+A multilayer perceptron is a parameterized function built from affine maps and
+nonlinearities. Here the input is time, optionally expanded by Fourier features,
+and the output parameterizes a density matrix and a generator. PyTorch automatic
+differentiation supplies d rho_phi / dt for the physics residual.
+
+Physics-informed loss
+---------------------
+losses.py combines three terms:
+
+* data loss against observed expectation values;
+* residual loss ||d rho_phi / dt - L_theta[rho_phi]||_F**2;
+* initial-condition loss at t = 0.
+
+The Cholesky hard constraint
+----------------------------
+The central state parameterization is
+
+    rho_phi(t) = A_phi(t) A_phi(t)^dagger / Tr(A_phi(t) A_phi(t)^dagger).
+
+This makes illegal density matrices unrepresentable: every output is Hermitian,
+positive semidefinite and trace one. Rates are parameterized with softplus, and
+Hermitian bases keep the Hamiltonian legal, so learned generators stay in the
+GKSL form.
+
+Compiler view
+-------------
+compiler.py compares dense Liouvillian evaluation, which stores a d**2 by d**2
+superoperator, with a structured residual kernel that applies commutators and
+dissipators directly. The manuscript's compiler benchmark reports time and memory
+for these two representations.
+
+Statistics and reproduction
+---------------------------
+Each stochastic experiment uses fixed seeds and reports mean plus 95 percent
+confidence intervals. To reproduce the submitted artifacts from submission/code:
+
+    export PYTHONPATH=.
+    python run_all.py
+    python -m ctpcpinn.validate
+"""
+
+
+GUIDE = __doc__
+
+
+def main() -> None:
+    print(GUIDE)
+
+
+if __name__ == "__main__":
+    main()

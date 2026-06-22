@@ -1,4 +1,10 @@
-"""Utility functions."""
+"""Utility functions.
+
+Reproducibility helpers used by every experiment. ``set_seed`` pins the NumPy and
+PyTorch random streams so each experiment is deterministic per seed; the manuscript
+repeats every training experiment over the fixed seeds [0, 1, 2, 3, 4] and reports
+mean +/- 95% CI (see stats.py and the "Reproducibility and scope" section).
+"""
 
 import numpy as np
 import torch
