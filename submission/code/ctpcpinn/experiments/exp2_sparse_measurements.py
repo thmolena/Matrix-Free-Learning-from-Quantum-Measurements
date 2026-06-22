@@ -154,13 +154,13 @@ def run(config: dict = None):
                 r"versus retained observation fraction. Mean $\pm$ 95\% CI over "
                 + f"{len(seeds)} seeds." + r"}" + "\n")
         f.write(r"\label{tab:exp2}" + "\n")
-        f.write(r"\begin{tabular}{lccc}" + "\n\\hline\n")
+        f.write(r"\begin{tabular}{lccc}" + "\n\\toprule\n")
         f.write(r"Fraction & CPTP-PINN (ours) & Soft-penalty PINN & Unconstrained \\"
-                + "\n\\hline\n")
+                + "\n\\midrule\n")
         for fi, frac in enumerate(FRACTIONS):
             f.write(f"{frac:.2f} & " + " & ".join(fmt_pm(td[m][fi], digits=4) for m in methods)
                     + r" \\" + "\n")
-        f.write(r"\hline" + "\n\\end{tabular}\n\\end{table}\n")
+        f.write(r"\bottomrule" + "\n\\end{tabular}\n\\end{table}\n")
 
     if verbose:
         for m in methods:

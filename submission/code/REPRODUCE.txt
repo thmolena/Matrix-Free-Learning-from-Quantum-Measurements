@@ -21,6 +21,7 @@ Running the experiments writes, into the parent `submission/` directory:
   submission/tables/exp3_leakage_results.tex    <- Extended Data Table 3
   submission/tables/exp4_gate_results.tex       <- Extended Data Table 4
   submission/tables/exp5_runtime_memory.tex     <- Extended Data Table 5
+  submission/figures/fig1_schematic.pdf          <- Fig. 1 (method schematic)
   submission/figures/exp1_parameter_recovery.pdf <- Fig. 2a
   submission/figures/exp1_state_fidelity.pdf     <- Fig. 2b
   submission/figures/exp2_sparse_measurements.pdf<- Fig. 3a
@@ -30,7 +31,9 @@ Running the experiments writes, into the parent `submission/` directory:
 
 main.tex \input's the table files and \includegraphics the figure files, so
 recompiling main.tex after a run picks up the regenerated numbers automatically.
-(Figure 1 is a schematic drawn in TikZ inside main.tex; it needs no script.)
+Figure 1 is a method-overview schematic drawn programmatically in matplotlib
+(ctpcpinn/plotting.py:plot_schematic); run_all.py and ctpcpinn-reproduce write it
+to submission/figures/fig1_schematic.pdf, so it regenerates with everything else.
 
 
 --------------------------------------------------------------------------------

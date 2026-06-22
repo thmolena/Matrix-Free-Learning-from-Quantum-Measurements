@@ -183,15 +183,15 @@ def run(config: dict = None):
                 r"obtained by propagating the learned generator. Mean $\pm$ 95\% CI over "
                 + f"{len(seeds)} seeds." + r"}" + "\n")
         f.write(r"\label{tab:exp4}" + "\n")
-        f.write(r"\begin{tabular}{lcc}" + "\n\\hline\n")
-        f.write(r"Initial state & Mean fidelity & Final fidelity \\" + "\n\\hline\n")
+        f.write(r"\begin{tabular}{lcc}" + "\n\\toprule\n")
+        f.write(r"Initial state & Mean fidelity & Final fidelity \\" + "\n\\midrule\n")
         for s in STATE_ORDER:
             tag = STATE_TEX[s] + (r" (trained)" if s == '|00>' else r" (held-out)")
             f.write(f"{tag} & " + fmt_pm(mean_fid[s], digits=4) + " & "
                     + fmt_pm(final_fid[s], digits=4) + r" \\" + "\n")
-        f.write(r"\hline" + "\n")
+        f.write(r"\midrule" + "\n")
         f.write(r"Average & " + fmt_pm(avg_fid, digits=4) + r" & --- \\" + "\n")
-        f.write(r"\hline" + "\n\\end{tabular}\n\\end{table}\n")
+        f.write(r"\bottomrule" + "\n\\end{tabular}\n\\end{table}\n")
 
     if verbose:
         for s in STATE_ORDER:

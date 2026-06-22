@@ -147,11 +147,11 @@ def run(config: dict = None):
                 r"plain versus a Fourier-feature density network. Mean $\pm$ 95\% CI over "
                 + f"{len(seeds)} seeds." + r"}" + "\n")
         f.write(r"\label{tab:exp3}" + "\n")
-        f.write(r"\begin{tabular}{lc}" + "\n\\hline\n")
-        f.write(r"Density network & Mean state fidelity \\" + "\n\\hline\n")
+        f.write(r"\begin{tabular}{lc}" + "\n\\toprule\n")
+        f.write(r"Density network & Mean state fidelity \\" + "\n\\midrule\n")
         f.write(r"Plain MLP & " + fmt_pm(fids_plain, digits=4) + r" \\" + "\n")
         f.write(r"Fourier time-features & " + fmt_pm(fids_fourier, digits=4) + r" \\" + "\n")
-        f.write(r"\hline" + "\n\\end{tabular}\n\\end{table}\n")
+        f.write(r"\bottomrule" + "\n\\end{tabular}\n\\end{table}\n")
 
     if verbose:
         print(f"  Plain MLP: {fmt_pm(fids_plain)} | Fourier: {fmt_pm(fids_fourier)}")

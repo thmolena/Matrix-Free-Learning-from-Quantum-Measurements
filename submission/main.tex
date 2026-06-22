@@ -130,55 +130,8 @@ Figure~\ref{fig:schematic} gives an overview. A density network maps each time p
 
 \begin{figure}[t]
 \centering
-\resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[
-    font=\sffamily\small,
-    >={Stealth[length=2mm]},
-    box/.style={rounded corners=2pt,draw,line width=0.6pt,align=center,inner sep=4pt,minimum height=8mm},
-    dens/.style={box,fill=blue!8,draw=blue!55},
-    gen/.style={box,fill=orange!12,draw=orange!70},
-    comp/.style={box,fill=teal!10,draw=teal!55},
-    loss/.style={box,fill=black!5,draw=black!55},
-    outbox/.style={box,fill=green!8,draw=green!55!black},
-    lab/.style={font=\sffamily\scriptsize\itshape,text=black!65},
-    arr/.style={->,line width=0.7pt}
-  ]
-  % Density network branch (top)
-  \node[dens] (t) {Time $t$,\\collocation grid};
-  \node[dens,right=7mm of t] (mlp) {MLP\\($+$ Fourier\\features)};
-  \node[dens,right=7mm of mlp] (chol) {Lower-triangular\\$A_\phi(t)$};
-  \node[dens,right=7mm of chol] (rho) {$\rho_\phi=\dfrac{A_\phi A_\phi^\dagger}{\Tr(A_\phi A_\phi^\dagger)}$};
-  \node[lab,below=0.5mm of rho,text width=30mm] {Hermitian, PSD,\\unit trace \emph{by construction}};
-  \draw[arr] (t) -- (mlp);
-  \draw[arr] (mlp) -- (chol);
-  \draw[arr] (chol) -- (rho);
-
-  % Generator branch (bottom)
-  \node[gen,below=16mm of t] (xi) {Raw params\\$\xi,\ H_\theta$};
-  \node[gen,right=7mm of xi] (rates) {$\gamma_k=\softplus(\xi_k)\!\ge\!0$\\ $C=BB^\dagger\succeq0$};
-  \node[gen,right=7mm of rates] (gen) {GKSL generator\\$\mathcal{L}_\Theta$ (CPTP)};
-  \draw[arr] (xi) -- (rates);
-  \draw[arr] (rates) -- (gen);
-
-  % Compiler
-  \node[comp,right=7mm of gen] (comp) {Matrix-free\\compiler:\\dense $\,|\,$ structured};
-  \draw[arr] (gen) -- (comp);
-
-  % Loss node (right, spanning)
-  \node[loss,right=7mm of rho,yshift=-8mm,text width=27mm] (loss)
-    {Physics-informed loss\\[1pt]
-     $\mathcal{J}=\lambda_{\rm data}\mathcal{J}_{\rm data}$\\
-     $+\,\lambda_{\rm phys}\lVert\dot\rho_\phi-\mathcal{L}_\Theta[\rho_\phi]\rVert^2$\\
-     $+\,\lambda_0\mathcal{J}_0$};
-  \draw[arr] (rho) -- (loss.west |- rho) -- (loss.north west);
-  \draw[arr] (comp) -- (loss.west |- comp) -- (loss.south west);
-
-  % Output
-  \node[outbox,below=10mm of loss,text width=34mm] (out)
-    {\textbf{Output:} physical trajectory $\rho_\phi(t)$, CPTP generator $\Theta$,\\ a-posteriori residual certificate};
-  \draw[arr] (loss) -- (out);
-\end{tikzpicture}}
-\caption{\textbf{Overview of the CPTP-Compiler-PINN framework.} A neural density network maps time to a lower-triangular factor $A_\phi(t)$ and outputs $\rho_\phi=A_\phi A_\phi^\dagger/\Tr(A_\phi A_\phi^\dagger)$, which is Hermitian, positive semidefinite and unit-trace at every time and every training step (Theorem~\ref{thm:physicality}). The generator is parameterized so that all Lindblad rates are nonnegative (softplus) or the Kossakowski matrix is positive semidefinite ($C=BB^\dagger$), keeping $\mathcal{L}_\Theta$ in Gorini--Kossakowski--Sudarshan--Lindblad form (Theorem~\ref{thm:cptp_generator}). A matrix-free compiler lowers a symbolic open-system specification to either a dense $d^2\times d^2$ Liouvillian or a structured residual kernel. Training minimizes a physics-informed loss combining data, the Lindblad residual and the initial condition; the outputs are a physically valid trajectory, a completely positive generator, and a trace-norm error certificate (Theorem~\ref{thm:certificate}).}
+\includegraphics[width=\textwidth]{fig1_schematic.pdf}
+\caption{\textbf{Overview of the CPTP-Compiler-PINN framework.} Two structure-preserving networks feed a physics-informed residual. The density network maps time to a lower-triangular factor $A_\phi(t)$ and outputs $\rho_\phi=A_\phi A_\phi^\dagger/\Tr(A_\phi A_\phi^\dagger)$, which is Hermitian, positive semidefinite and unit-trace at every time and every training step (Theorem~\ref{thm:physicality}); the generator is parameterized so that all Lindblad rates are nonnegative ($\gamma_k=\softplus(\xi_k)\ge0$) or the Kossakowski matrix is positive semidefinite ($C=BB^\dagger$), keeping $\mathcal{L}_\Theta$ in Gorini--Kossakowski--Sudarshan--Lindblad form (Theorem~\ref{thm:cptp_generator}). The parameterized open-quantum specification $\dot\rho=\mathcal{L}_\Theta[\rho]$ is lowered by a matrix-free compiler to either a dense $d^2\times d^2$ Liouvillian or a structured residual kernel (the two agree to floating-point precision; Theorem~\ref{thm:compiler}). Training minimizes a physics-informed loss combining the masked data term, the Lindblad residual and the initial condition; the outputs are a physically valid trajectory, a completely positive generator, and the metrics (state fidelity, trace distance, positivity-violation rate, and the trace-norm residual certificate of Theorem~\ref{thm:certificate}). The figure is generated programmatically by \texttt{ctpcpinn/plotting.py:plot\_schematic}.}
 \label{fig:schematic}
 \end{figure}
 

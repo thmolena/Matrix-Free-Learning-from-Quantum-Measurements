@@ -96,6 +96,13 @@ def main(argv=None):
     print(f"  output:  {out}")
     print("=" * 70)
 
+    # Figure 1: programmatic method-overview schematic (no training needed).
+    if not args.experiment:
+        from .plotting import plot_schematic
+        schematic_path = str(out / 'figures' / 'fig1_schematic.pdf')
+        plot_schematic(schematic_path)
+        print(f"\n--- fig1: method-overview schematic -> {schematic_path} ---")
+
     todo = [args.experiment] if args.experiment else EXPERIMENTS
     t0 = time.time()
     for name in todo:

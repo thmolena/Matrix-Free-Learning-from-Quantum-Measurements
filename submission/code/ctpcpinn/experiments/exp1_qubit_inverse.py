@@ -237,15 +237,15 @@ def run(config: dict = None):
                 r"PINN advantage appears under sparse measurements (Table~\ref{tab:exp2}).}" + "\n")
         f.write(r"\label{tab:exp1}" + "\n")
         f.write(r"\resizebox{\textwidth}{!}{%" + "\n")
-        f.write(r"\begin{tabular}{lcccccc}" + "\n\\hline\n")
+        f.write(r"\begin{tabular}{lcccccc}" + "\n\\toprule\n")
         f.write(r"Method & $\omega$ err & $\Omega$ err & $\gamma_1$ err & "
-                r"$\gamma_\phi$ err & Mean fidelity & Pos.\ viol. \\" + "\n\\hline\n")
+                r"$\gamma_\phi$ err & Mean fidelity & Pos.\ viol. \\" + "\n\\midrule\n")
         for m in methods:
             cells = [fmt_pm(err[m][p], digits=3) for p in PARAM_ORDER]
             vrate = aggregate(viol[m])['mean']
             f.write(f"{label[m]} & " + " & ".join(cells) + " & "
                     + fmt_pm(fid[m], digits=4) + f" & {vrate:.3f}" + r" \\" + "\n")
-        f.write(r"\hline" + "\n\\end{tabular}}\n\\end{table}\n")
+        f.write(r"\bottomrule" + "\n\\end{tabular}}\n\\end{table}\n")
 
     if verbose:
         for m in methods:

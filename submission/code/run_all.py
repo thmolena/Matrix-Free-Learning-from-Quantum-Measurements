@@ -80,6 +80,12 @@ def main():
     print(f"  figures -> {config['figures_dir']}")
     print(f"  tables  -> {config['tables_dir']}")
 
+    # Figure 1: programmatic method-overview schematic (no training needed).
+    from ctpcpinn.plotting import plot_schematic
+    schematic_path = os.path.join(config['figures_dir'], 'fig1_schematic.pdf')
+    plot_schematic(schematic_path)
+    print(f"  Figure 1 (schematic) -> {schematic_path}")
+
     from ctpcpinn.experiments import exp1_qubit_inverse
     from ctpcpinn.experiments import exp2_sparse_measurements
     from ctpcpinn.experiments import exp3_qutrit_leakage

@@ -24,7 +24,8 @@ Contents
   13. Theory of computation view: the intermediate representation and the
       dense-vs-structured compiler, and why complexity matters
   14. Statistics: why we use many seeds and confidence intervals
-  15. Theorems <-> code map
+  15. The metrics: how a learned trajectory is scored (each one derived)
+  16. Theorems <-> code map
 
 
 --------------------------------------------------------------------------------
@@ -309,7 +310,67 @@ fmt_pm() (the "mean $\pm$ ci" strings written into the LaTeX tables).
 
 
 --------------------------------------------------------------------------------
-15. THEOREMS <-> CODE MAP
+15. THE METRICS: HOW A LEARNED TRAJECTORY IS SCORED (each one derived)
+--------------------------------------------------------------------------------
+Five numbers turn a learned model into the tables and figures. Each is defined
+from first principles below and mapped to the function that computes it.
+
+(a) STATE FIDELITY (Uhlmann fidelity). For two states rho, sigma,
+        F(rho, sigma) = ( Tr sqrt( sqrt(rho) sigma sqrt(rho) ) )^2.
+    F = 1 iff rho = sigma and F in [0,1]; it is the standard "how close are two
+    quantum states" measure. The matrix square roots are computed by a Hermitian
+    eigendecomposition (eigenvalues clipped at 0), which is stable even for the
+    rank-deficient (pure) states that arise here. Reported as the mean over the
+    time grid (Experiments 1, 3, 4).
+    CODE: lindblad.py:fidelity_qubit_or_general; metrics.py:
+    state_fidelity_over_time (loops it over the trajectory).
+
+(b) TRACE DISTANCE. T(rho, sigma) = (1/2) || rho - sigma ||_1, where ||.||_1 is
+    the sum of singular values (= sum of |eigenvalues| for a Hermitian matrix).
+    It is the operational "distinguishability": the maximum probability of telling
+    the two states apart with one measurement is (1 + T)/2. It is the headline
+    metric of the sparse-measurement study (Experiment 2) because a CPTP map
+    contracts it (that contraction is exactly what makes the residual certificate,
+    Theorem 4, a trace-norm bound).
+    CODE: lindblad.py:trace_distance; metrics.py:trace_distance_over_time.
+
+(c) RELATIVE PARAMETER ERROR. For each generator parameter p (a Hamiltonian
+    coefficient or a rate gamma_k),  err(p) = |p_learned - p_true| / |p_true|.
+    This is the inverse-problem score: did we recover the physics, not just fit
+    the curve? Reported per parameter in Experiment 1.
+    CODE: metrics.py:parameter_relative_error.
+
+(d) POSITIVITY-VIOLATION RATE. The fraction of time points at which the model's
+    output has a negative eigenvalue (below a tiny tolerance) -- i.e. the fraction
+    of times the model leaves the physical set D(H) of section 3. By Theorem 1 the
+    Cholesky model gives EXACTLY 0; the soft/unconstrained baselines give a small
+    but nonzero rate. This single number is the quantitative form of the paper's
+    central claim that physicality should be architectural, not a penalty.
+    CODE: metrics.py:positivity_violation_rate (and the companion diagnostics
+    trace_error_over_time, hermiticity_error_over_time, and
+    lindblad.py:check_density_matrix).
+
+(e) RESIDUAL (and the a-posteriori certificate). The physics residual
+        r(t) = d rho_hat/dt - L_Theta[rho_hat(t)]
+    is what the PINN minimizes (section 10). It is also a CERTIFICATE: Theorem 4
+    bounds the trace-distance error to the true dynamics by the initial error plus
+    the time-integral of ||r(s)||_1. So a small residual is not just a training
+    signal, it is an a-posteriori guarantee on the solution -- computable without
+    knowing the true trajectory.
+    CODE: losses.py:physics_residual_loss (computes ||r||_F^2 at collocation
+    points via autograd of rho w.r.t. t).
+
+(f) COMPILER COST (memory). The analytic storage of the dense d^2 x d^2
+    Liouvillian, O(d^4), versus the structured representation (H, the m jump
+    operators, and rho), O(m d^2). This is the memory column of Experiment 5 and
+    the content of Theorem 6; the two residuals agree to floating-point precision,
+    so "structured" is a pure speed/memory win.
+    CODE: metrics.py:memory_estimate_dense_vs_structured; the timing uses
+    metrics.py:WallClockTimer and compiler.py:benchmark_residual_modes.
+
+
+--------------------------------------------------------------------------------
+16. THEOREMS <-> CODE MAP
 --------------------------------------------------------------------------------
   Thm 1  Exact physicality          models.py:DensityMatrixNet.forward
   Thm 2  Universal approximation     models.py:TimeMLP (UAT for MLPs)

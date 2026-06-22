@@ -102,15 +102,15 @@ def run(config: dict = None):
                 r"Liouvillian versus the structured operators. CPU, single machine.}" + "\n")
         f.write(r"\label{tab:exp5}" + "\n")
         f.write(r"\begin{tabular}{lccccc}" + "\n")
-        f.write(r"\hline" + "\n")
+        f.write(r"\toprule" + "\n")
         f.write(r"$d$ & Dense (s) & Structured (s) & Speedup & Dense (MB) & Structured (MB) \\" + "\n")
-        f.write(r"\hline" + "\n")
+        f.write(r"\midrule" + "\n")
         for i, d in enumerate(dims):
             speedup = times_dense[i] / max(times_structured[i], 1e-10)
             f.write(f"{d} & {times_dense[i]:.4f} & {times_structured[i]:.4f} & "
                     f"{speedup:.1f}$\\times$ & "
                     f"{memory_data[i]['dense_MB']:.3f} & {memory_data[i]['structured_MB']:.5f} \\\\\n")
-        f.write(r"\hline" + "\n")
+        f.write(r"\bottomrule" + "\n")
         f.write(r"\end{tabular}" + "\n")
         f.write(r"\end{table}" + "\n")
 
