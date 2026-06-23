@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CPTP-Compiler-PINNs — Structure-Preserving Learning for Open Quantum Dynamics</title>
-  <meta name="description" content="Structure-preserving residual learning and matrix-free compilation for Markovian open quantum systems: a hard-constrained density network, a CPTP generator parameterization, and a matrix-free Lindblad compiler, with five reproducible, 5-seed experiments." />
+  <meta name="description" content="Structure-preserving residual learning and matrix-free compilation for Markovian open quantum systems: a hard-constrained Cholesky density network, a GKSL-preserving generator parameterization, and a matrix-free Lindblad compiler, proved physical and benchmarked over five reproducible five-seed studies." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2319435b'/%3E%3Cpath d='M20 66c18-40 42-40 60 0' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='34' cy='44' r='6' fill='%23ffffff'/%3E%3Ccircle cx='66' cy='44' r='6' fill='%23ffffff'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,6 +12,7 @@
   <!-- KaTeX for mathematics -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
   <style>
     :root {
       --bg: #ffffff;
@@ -28,812 +29,705 @@
       --win: #eef6f1;
       --win-line: #bcdcc9;
       --shadow: 0 18px 34px rgba(23, 48, 66, 0.08);
-      --font-sans: "Source Sans 3", "Segoe UI", Arial, sans-serif;
-      --font-serif: "Source Serif 4", Georgia, serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
     }
-
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       background: var(--bg);
       color: var(--ink);
-      font-family: var(--font-sans);
-      line-height: 1.65;
+      font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
+      font-size: 17px;
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
     }
-
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    img { display: block; width: 100%; height: auto; }
-    code { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: 0.92em; background: var(--panel-strong); padding: 1px 5px; border-radius: 4px; }
+    .wrap { max-width: 940px; margin: 0 auto; padding: 0 22px; }
 
-    .page { max-width: 1180px; margin: 0 auto; padding: 0 24px 72px; }
+    header.hero {
+      background:
+        radial-gradient(1200px 420px at 78% -10%, rgba(47,97,123,0.20), transparent 60%),
+        linear-gradient(160deg, #112c3c 0%, #19435b 58%, #20566f 100%);
+      color: #eaf2f6;
+      padding: 58px 0 46px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero .kicker {
+      font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: #9fc4d6; font-weight: 600; margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-weight: 700; font-size: 2.05rem; line-height: 1.2;
+      margin: 0 0 14px; color: #ffffff;
+    }
+    .hero p.lead { font-size: 1.08rem; color: #d3e3eb; max-width: 760px; margin: 0 0 22px; }
+    .hero .meta { font-size: 0.95rem; color: #b6d0dc; }
+    .hero .meta strong { color: #eaf2f6; }
+    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .badge {
+      font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em;
+      background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20);
+      color: #eaf2f6; padding: 6px 12px; border-radius: 999px;
+    }
 
-    .masthead {
+    nav.toc {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,0.94); backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
-      overflow-x: auto;
-      position: sticky;
-      top: 0;
-      z-index: 20;
+      font-size: 13.5px;
+    }
+    nav.toc .wrap { display: flex; flex-wrap: wrap; gap: 4px 18px; padding-top: 11px; padding-bottom: 11px; }
+    nav.toc a { color: var(--muted); font-weight: 600; white-space: nowrap; }
+    nav.toc a:hover { color: var(--accent); text-decoration: none; }
+
+    section { padding: 40px 0 6px; border-top: 1px solid var(--line); }
+    section:first-of-type { border-top: none; }
+    h2 {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.58rem; font-weight: 700; margin: 6px 0 4px; color: var(--accent);
+    }
+    h2 .num { color: var(--accent-soft); font-size: 1.05rem; font-weight: 600; margin-right: 10px; }
+    h3 { font-size: 1.12rem; font-weight: 700; margin: 26px 0 6px; color: var(--ink); }
+    p { margin: 12px 0; }
+    .sub { color: var(--muted); font-size: 0.96rem; margin-top: -2px; }
+
+    .panel {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: 12px; padding: 18px 20px; margin: 18px 0;
+    }
+    .theorem {
+      background: var(--panel-strong); border: 1px solid var(--line);
+      border-left: 4px solid var(--accent-soft);
+      border-radius: 10px; padding: 14px 18px; margin: 16px 0;
+    }
+    .theorem .tname { font-weight: 700; color: var(--accent); display: block; margin-bottom: 4px; }
+    .theorem .interp { font-size: 0.95rem; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+
+    ol.contrib { padding-left: 22px; }
+    ol.contrib li { margin: 10px 0; }
+    ol.contrib li strong { color: var(--accent); }
+
+    ul.tight { padding-left: 20px; }
+    ul.tight li { margin: 7px 0; }
+
+    table { border-collapse: collapse; width: 100%; font-size: 14.5px; margin: 14px 0; }
+    table caption { text-align: left; font-size: 0.9rem; color: var(--muted); margin-bottom: 8px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    thead th { border-bottom: 2px solid var(--accent-soft); color: var(--accent); font-weight: 700; }
+    tr.ours td { background: var(--win); }
+    tr.ours td:first-child { font-weight: 700; }
+    .tbl-scroll { overflow-x: auto; }
+    code, .mono { font-family: var(--mono); font-size: 0.9em; }
+    code {
+      background: var(--panel-strong); border: 1px solid var(--line);
+      border-radius: 5px; padding: 1px 5px;
+    }
+    pre {
+      background: #0f2533; color: #d7e6ee; border-radius: 10px;
+      padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.55;
+    }
+    pre .c { color: #7fa8b8; }
+    pre .k { color: #8fd3a7; }
+
+    .callout {
+      border-left: 4px solid var(--warn); background: #fbf5ea;
+      padding: 12px 16px; border-radius: 8px; margin: 16px 0; font-size: 0.96rem;
     }
 
-    .masthead-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-      min-width: max-content;
+    /* Interactive demo */
+    .demo { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin: 18px 0 8px; }
+    .demo-grid { display: grid; grid-template-columns: 1fr 320px; gap: 22px; align-items: start; }
+    .demo canvas { width: 100%; height: auto; display: block; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+    .controls label { display: block; font-size: 13.5px; font-weight: 600; margin: 14px 0 4px; color: var(--ink); }
+    .controls .val { float: right; font-family: var(--mono); font-weight: 700; color: var(--accent); }
+    .controls input[type=range] { width: 100%; accent-color: var(--accent); }
+    .controls .modesel { display: flex; gap: 6px; margin-bottom: 6px; }
+    .controls .modesel button {
+      flex: 1; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+      padding: 7px 6px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--muted);
     }
+    .controls .modesel button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .readout { font-family: var(--mono); font-size: 12.5px; background: var(--panel-strong); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-top: 14px; line-height: 1.7; }
+    .readout b { color: var(--accent); }
+    .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+    .legend span::before { content: ""; display: inline-block; width: 22px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
+    .legend .l-true::before { background: #19435b; }
+    .legend .l-cert::before { background: #b5651d; }
+    .legend .l-dense::before { background: #c0392b; }
+    .legend .l-struct::before { background: #1f8a4c; }
 
-    .identity { display: flex; flex-direction: row; align-items: baseline; gap: 10px; white-space: nowrap; }
-    .identity-mark { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent-soft); font-weight: 700; }
-    .identity-title { font-family: var(--font-serif); font-size: 1.02rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+    footer { margin-top: 30px; padding: 30px 0 60px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
 
-    .masthead-nav { display: flex; gap: 12px; flex-wrap: nowrap; font-size: 0.82rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
-
-    .report-header { padding: 44px 0 26px; }
-
-    h1, h2, h3 { margin: 0 0 12px; font-family: var(--font-serif); line-height: 1.18; color: var(--ink); }
-    h1 { font-size: clamp(2.1rem, 3.9vw, 3.4rem); margin-bottom: 14px; }
-    h2 { font-size: clamp(1.6rem, 2.7vw, 2.4rem); }
-    h3 { font-size: 1.18rem; }
-
-    p { margin: 0 0 14px; color: var(--muted); font-size: 1.02rem; }
-    .lead { max-width: 820px; font-size: 1.12rem; color: var(--ink); }
-
-    .summary-grid, .application-grid, .resource-grid, .demo-grid {
-      display: grid;
-      gap: 18px;
-    }
-    .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 22px 0 10px; }
-    .application-grid, .resource-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .demo-grid { grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.45fr); align-items: start; }
-
-    .stat-card, .panel, .resource-card {
-      border: 1px solid var(--line);
-      background: #ffffff;
-      box-shadow: var(--shadow);
-    }
-    .stat-card { padding: 20px 20px 18px; background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%); }
-    .stat-label { display: block; margin-bottom: 8px; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.13em; color: var(--accent-soft); font-weight: 700; }
-    .stat-value { margin-bottom: 8px; font-size: 1.9rem; line-height: 1; font-weight: 700; color: var(--accent); }
-    .stat-card p { font-size: 0.9rem; margin-bottom: 0; }
-
-    .section { margin-top: 46px; scroll-margin-top: 70px; }
-    .section-kicker { margin-bottom: 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent-soft); font-weight: 700; }
-    .section-intro { max-width: 880px; }
-
-    .panel { overflow: hidden; }
-    .panel-head { padding: 18px 22px; border-bottom: 1px solid var(--line); background: var(--panel); }
-    .panel-head h3 { margin: 0; }
-    .panel-body { padding: 0; }
-    .panel-body.prose { padding: 20px 22px; }
-    .panel-body.prose p:last-child { margin-bottom: 0; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-    th, td { padding: 13px 16px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-    th { background: var(--panel-strong); font-size: 0.88rem; color: var(--ink); }
-    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-    tr:last-child td { border-bottom: 0; }
-    tr.win td { background: var(--win); }
-    tr.total td { font-weight: 700; border-top: 2px solid var(--line); }
-    .tbl-note { padding: 12px 16px; font-size: 0.86rem; color: var(--muted); border-top: 1px solid var(--line); background: var(--panel); }
-    .tag-win { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--success); background: var(--win); border: 1px solid var(--win-line); padding: 1px 7px; border-radius: 999px; }
-
-    .application-card, .resource-card { padding: 22px; }
-    .application-card { border: 1px solid var(--line); background: linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%); box-shadow: var(--shadow); }
-    .application-card p:last-child, .resource-card p:last-child { margin-bottom: 0; }
-    .application-card h3 { font-size: 1.06rem; }
-
-    .scope-note { padding: 16px 20px; border-left: 4px solid var(--accent); background: var(--panel); color: var(--ink); }
-    .scope-note.honest { border-left-color: var(--warn); }
-
-    .contrib-list { list-style: none; padding: 0; margin: 0; counter-reset: contrib; }
-    .contrib-list li {
-      position: relative;
-      padding: 18px 22px 18px 64px;
-      border: 1px solid var(--line);
-      background: #ffffff;
-      box-shadow: var(--shadow);
-      margin-bottom: 14px;
-    }
-    .contrib-list li::before {
-      counter-increment: contrib;
-      content: counter(contrib);
-      position: absolute;
-      left: 18px; top: 18px;
-      width: 30px; height: 30px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 999px;
-      background: var(--accent); color: #fff;
-      font-weight: 700; font-size: 0.95rem;
-    }
-    .contrib-list strong { color: var(--ink); }
-    .contrib-list p { margin: 4px 0 0; }
-
-    .math-block {
-      margin: 16px 0;
-      padding: 14px 18px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      overflow-x: auto;
-    }
-    .math-block .katex-display { margin: 6px 0; }
-    .math-caption { font-size: 0.88rem; color: var(--muted); margin: 6px 0 0; }
-
-    .demo-buttons { display: grid; gap: 10px; margin-top: 16px; }
-    .demo-button { width: 100%; text-align: left; padding: 14px 16px; border: 1px solid var(--line); background: #ffffff; color: var(--ink); cursor: pointer; font-size: 0.98rem; font-weight: 600; }
-    .demo-button.active { border-color: var(--accent); background: var(--panel); }
-    .demo-caption { margin-top: 14px; font-size: 0.96rem; }
-    .demo-card { padding: 22px; }
-
-    .demo-frame-wrap { border: 1px solid var(--line); background: #ffffff; box-shadow: var(--shadow); }
-    .demo-frame-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--panel); }
-    .demo-frame-title { font-family: var(--font-serif); font-size: 1.12rem; color: var(--ink); font-weight: 700; }
-    .demo-frame-link { font-weight: 700; white-space: nowrap; }
-    .demo-frame { width: 100%; height: 72vh; min-height: 640px; border: 0; display: block; background: #ffffff; }
-
-    .command-block { margin: 0; padding: 18px 20px; background: #0e2433; color: #e7eef3; border-radius: 6px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.86rem; line-height: 1.6; }
-    .resource-card a { font-weight: 700; }
-
-    footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.94rem; }
-
-    @media (max-width: 980px) {
-      .summary-grid, .demo-grid, .application-grid, .resource-grid { grid-template-columns: 1fr; }
-      .demo-frame-head { align-items: flex-start; flex-direction: column; }
-      .demo-frame { min-height: 420px; height: 60vh; }
-      .masthead-inner { padding: 12px 16px; gap: 10px; }
-      .identity-mark { font-size: 0.58rem; }
-      .identity-title { font-size: 0.92rem; }
-      .masthead-nav { gap: 10px; font-size: 0.76rem; }
-      .table-scroll { overflow-x: auto; }
+    @media (max-width: 760px) {
+      .hero h1 { font-size: 1.6rem; }
+      .demo-grid { grid-template-columns: 1fr; }
+      body { font-size: 16px; }
     }
   </style>
 </head>
 <body>
-  <header class="masthead">
-    <div class="masthead-inner">
-      <div class="identity">
-        <span class="identity-mark">Open Quantum Systems · Physics-Informed ML</span>
-        <div class="identity-title">CPTP-Compiler-PINNs</div>
-      </div>
-      <nav class="masthead-nav">
-        <a href="#background">Background</a>
-        <a href="#tutorial">Tutorial</a>
-        <a href="#contributions">Contributions</a>
-        <a href="#method">Method</a>
-        <a href="#design">Design</a>
-        <a href="#results">Results</a>
-        <a href="#demo">Demo</a>
-        <a href="#conclusion">Conclusion</a>
-        <a href="#paper">Paper &amp; Code</a>
-        <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Open Quantum Systems · Physics-Informed Learning · Structure-Preserving Computation</div>
+    <h1>CPTP-Compiler-PINNs: Structure-Preserving Residual Learning and Matrix-Free Compilation for Open Quantum Dynamics</h1>
+    <p class="lead">A framework for identifying Markovian open-quantum models from sparse, noisy observations in which physicality is an architectural invariant — never a penalty applied after the fact — and the Lindblad residual is evaluated by a compiler that avoids materializing the dense <span class="mono">d²×d²</span> Liouvillian.</p>
+    <p class="meta"><strong>Molena Huynh</strong> · Independent Researcher · manuscript prepared for submission to <em>Nature Machine Intelligence</em></p>
+    <div class="badges">
+      <span class="badge">Cholesky density network</span>
+      <span class="badge">GKSL-preserving generator</span>
+      <span class="badge">Matrix-free Lindblad compiler</span>
+      <span class="badge">Six exact guarantees</span>
+      <span class="badge">5 studies · 5 seeds · 95% CI</span>
+      <span class="badge">pip install ctpcpinn</span>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main class="page">
-    <!-- ===================== 1. HERO ===================== -->
-    <section class="report-header" id="top">
-      <span class="section-kicker">Structure-preserving residual learning · Matrix-free compilation · Markovian open systems</span>
-      <h1>CPTP-Compiler-PINNs: structure-preserving learning for open quantum dynamics.</h1>
-      <p class="lead">
-        We present a physics-informed framework for the identification of Markovian (GKSL) open-system models from sparse,
-        noisy observations, in which physicality constitutes an <em>architectural invariant</em> rather than an
-        after-the-fact penalty. The framework comprises a Cholesky density network that is Hermitian, positive semidefinite,
-        and unit-trace by construction; a softplus/positive-Kossakowski generator parameterization that remains
-        completely positive and trace-preserving; and a matrix-free compiler that lowers an open-system intermediate
-        representation to dense or structured Lindblad residual kernels.
-      </p>
-      <p>
-        The findings are reported conservatively. On <strong>complete</strong> single-qubit data, a classical least-squares
-        fit endowed with the exact model attains the highest accuracy, and we retain it as the candid reference. The
-        structural constraint confers its intended benefits: it guarantees physicality at every step (zero positivity
-        violations) and degrades gracefully under <strong>sparse</strong> measurements, where its error remains one to two
-        orders of magnitude below the soft and unconstrained baselines. Every reported value is the manuscript's five-seed
-        mean &plusmn; 95% confidence interval.
-      </p>
-    </section>
+<nav class="toc">
+  <div class="wrap">
+    <a href="#background">Background</a>
+    <a href="#prelim">Preliminaries</a>
+    <a href="#formulation">Formulation</a>
+    <a href="#contributions">Contributions</a>
+    <a href="#novelty">Novelty</a>
+    <a href="#theory">Guarantees</a>
+    <a href="#demo">Interactive Illustration</a>
+    <a href="#empirical">Empirical Validation</a>
+    <a href="#significance">Significance</a>
+    <a href="#repro">Reproducibility</a>
+  </div>
+</nav>
 
-    <section class="summary-grid" aria-label="Headline numbers (5-seed mean and 95% CI)">
-      <article class="stat-card">
-        <span class="stat-label">Sparse-data trace distance (ours)</span>
-        <div class="stat-value">0.004&ndash;0.010</div>
-        <p>CPTP-PINN across retained fractions 1.00&rarr;0.10, against <strong>&asymp;0.37</strong> for the soft and unconstrained baselines (Exp. 2).</p>
-      </article>
-      <article class="stat-card">
-        <span class="stat-label">Positivity violations</span>
-        <div class="stat-value">0.000</div>
-        <p>Guaranteed by the Cholesky map, against 0.4%&ndash;0.6% of time points for the soft and unconstrained networks (Exp. 1).</p>
-      </article>
-      <article class="stat-card">
-        <span class="stat-label">Two-qubit generator transfer</span>
-        <div class="stat-value">0.97&nbsp;&plusmn;&nbsp;0.005</div>
-        <p>Mean fidelity on three held-out initial states obtained by propagating the learned generator (Exp. 4).</p>
-      </article>
-      <article class="stat-card">
-        <span class="stat-label">Matrix-free compiler speedup</span>
-        <div class="stat-value">5.9&ndash;12.9&times;</div>
-        <p>Structured relative to dense Liouvillian residual evaluation, <span class="katex-inline" data-tex="d=2\ldots 8"></span>, with exact agreement (Exp. 5).</p>
-      </article>
-    </section>
+<main class="wrap">
 
-    <!-- ===================== 2. BACKGROUND ===================== -->
-    <section class="section" id="background">
-      <div class="section-kicker">Background &amp; Motivation</div>
-      <h2>The inverse problem for open quantum systems, and the structure-preservation gap</h2>
-      <p class="section-intro">
-        A physical superconducting, trapped-ion, photonic, spin, or neutral-atom processor is never characterized by its
-        ideal Hamiltonian alone; it additionally exhibits relaxation, dephasing, leakage, crosstalk, drift, and
-        control-induced dissipation. The object that must remain physical throughout this description is the density matrix,
-        which for <span class="katex-inline" data-tex="\mathcal{H}\cong\mathbb{C}^d"></span> resides in
-      </p>
-      <div class="math-block">
-        <span class="katex-display-target" data-tex="\mathcal{D}(\mathcal{H})=\{\rho\in\mathbb{C}^{d\times d}:\ \rho=\rho^\dagger,\ \rho\succeq 0,\ \operatorname{Tr}\rho=1\}."></span>
+  <!-- ===================== BACKGROUND ===================== -->
+  <section id="background">
+    <h2><span class="num">1</span>Background and Motivation</h2>
+    <p>Open quantum systems are the operational language of modern quantum hardware. A superconducting, trapped-ion, photonic, spin, or neutral-atom processor is never described only by its ideal Hamiltonian; it is also described by relaxation, dephasing, leakage, crosstalk, drift, and control-induced dissipation. The object that must remain physical throughout this description is the density matrix. For a finite Hilbert space <span class="mono">ℋ ≅ ℂ^d</span>, the admissible state space is</p>
+    <p style="text-align:center">$$\mathcal{D}(\mathcal{H})=\{\rho\in\mathbb{C}^{d\times d}:\rho=\rho^\dagger,\ \rho\succeq 0,\ \operatorname{Tr}\rho=1\}.$$</p>
+    <p>When the dynamics are Markovian and time-local, the most general generator of a completely positive trace-preserving (CPTP) semigroup is the Gorini–Kossakowski–Sudarshan–Lindblad (GKSL) generator — the backbone of quantum noise modeling, control, and calibration.</p>
+    <p>The inverse problem — inferring a physically admissible dynamical model from incomplete observations — is increasingly central to device characterization. Classical process tomography reconstructs a channel but scales poorly with system size; Hamiltonian and Lindblad learning exploit dynamical structure yet still face identifiability and optimization challenges. Physics-informed neural networks (PINNs) provide flexible function approximation with equation residuals in the objective, but a direct neural map <span class="mono">t ↦ ρ_θ(t)</span> has no reason to remain Hermitian, positive semidefinite, or unit trace.</p>
+    <p><strong>The open problem.</strong> A loss penalty for negative eigenvalues is not equivalent to physicality during training; it merely asks the optimizer to repair an invalid output after the fact. Concurrently, dense Liouvillian implementations materialize <span class="mono">d²×d²</span> superoperators even when the model is specified by a Hamiltonian and a few local jump operators. This work takes the opposite design principle on both axes: <em>make invalid states unrepresentable</em>, and lower a symbolic open-system specification to kernels that never form the dense superoperator.</p>
+  </section>
+
+  <!-- ===================== PRELIMINARIES ===================== -->
+  <section id="prelim">
+    <h2><span class="num">2</span>Mathematical Preliminaries</h2>
+    <p class="sub">The formal objects a reader must command before the formulation.</p>
+
+    <h3>Markovian generator (GKSL form)</h3>
+    <p>A time-independent Markovian master equation has the form</p>
+    <p style="text-align:center">$$\frac{d\rho}{dt}=\mathcal{L}_\Theta[\rho]=-i[H_\Theta,\rho]+\sum_{k=1}^{m}\gamma_k\!\left(L_k\rho L_k^\dagger-\tfrac12\{L_k^\dagger L_k,\rho\}\right),\qquad H_\Theta=H_\Theta^\dagger,\ \gamma_k\ge 0.$$</p>
+    <p>Using the column-major identity <span class="mono">vec(AρB)=(Bᵀ⊗A)vec(ρ)</span>, the dense Liouvillian is</p>
+    <p style="text-align:center">$$\mathbb{L}_\Theta=-i\,(I\otimes H_\Theta-H_\Theta^{T}\otimes I)+\sum_k\gamma_k\!\left(L_k^{*}\otimes L_k-\tfrac12 I\otimes L_k^\dagger L_k-\tfrac12(L_k^\dagger L_k)^{T}\otimes I\right),$$</p>
+    <p>which stores <span class="mono">d⁴</span> complex scalars, whereas direct evaluation of the generator stores <span class="mono">H</span> and the <span class="mono">L_k</span>, i.e. <span class="mono">O(md²)</span>.</p>
+
+    <h3>Hard-constrained density network (the Cholesky map)</h3>
+    <p>Let <span class="mono">B_φ:[0,T]→ℂ^{d×d}</span> be a neural network whose output is read as a lower-triangular factor <span class="mono">A_φ(t)</span> with strictly positive diagonal,</p>
+    <p style="text-align:center">$$A_\phi(t)_{ij}=0\ (i<j),\quad A_\phi(t)_{ii}=a_{\min}+\operatorname{softplus}(b_{ii}(t)),\quad A_\phi(t)_{ij}=b_{ij}(t)\ (i>j),$$</p>
+    <p>and define the state by the differentiable, architecture-level physical map</p>
+    <p style="text-align:center">$$\rho_\phi(t)=\frac{A_\phi(t)A_\phi(t)^\dagger}{\operatorname{Tr}\!\big[A_\phi(t)A_\phi(t)^\dagger\big]}.$$</p>
+    <p>The representation carries <span class="mono">d²</span> real degrees of freedom against the <span class="mono">d²−1</span> of a full-rank trace-normalized state, so it is only mildly redundant, and rank-deficient (pure) states arise as limits.</p>
+
+    <h3>Generator parameterization (GKSL by construction)</h3>
+    <p>For known jump operators with unknown rates, <span class="mono">γ_k(ξ_k)=softplus(ξ_k)+γ_min</span> with <span class="mono">γ_min ≥ 0</span>; for a full Kossakowski matrix in a fixed basis <span class="mono">{F_a}</span>, <span class="mono">C_η=B_η B_η^† ⪰ 0</span>, giving</p>
+    <p style="text-align:center">$$\mathcal{L}_\Theta[\rho]=-i[H_\Theta,\rho]+\sum_{a,b=1}^{q}(C_\eta)_{ab}\!\left(F_a\rho F_b^\dagger-\tfrac12\{F_b^\dagger F_a,\rho\}\right),\qquad H_\theta(t)=\sum_\ell\theta_\ell(t)\,G_\ell.$$</p>
+
+    <h3>Physics-informed objective</h3>
+    <p>Training minimizes a masked data term, an initial-condition term, and a Lindblad residual evaluated at collocation points <span class="mono">{τ_ℓ}</span>:</p>
+    <p style="text-align:center">$$\mathcal{J}(\phi,\Theta)=\lambda_{\mathrm{data}}\,\mathcal{J}_{\mathrm{data}}+\lambda_{\mathrm{phys}}\,\mathcal{J}_{\mathrm{phys}}+\lambda_0\,\mathcal{J}_0,\qquad \mathcal{J}_{\mathrm{phys}}=\frac{1}{N_c}\sum_\ell\big\|\dot\rho_\phi(\tau_\ell)-\mathcal{L}_\Theta[\rho_\phi(\tau_\ell)]\big\|_F^2,$$</p>
+    <p>with <span class="mono">J_data = (Σ m_ij)⁻¹ Σ m_ij (Tr[O_j ρ_φ(t_i)] − y_ij)²</span> and <span class="mono">J_0 = ‖ρ_φ(0) − ρ_0‖_F²</span>. The derivative <span class="mono">ρ̇_φ</span> is obtained by automatic differentiation of the density network with respect to time; the residual <span class="mono">L_Θ[ρ_φ]</span> is produced by the compiler, in dense or structured mode.</p>
+  </section>
+
+  <!-- ===================== FORMULATION ===================== -->
+  <section id="formulation">
+    <h2><span class="num">3</span>Problem Formulation</h2>
+    <p>Fix a Hilbert dimension <span class="mono">d</span>, an initial state <span class="mono">ρ_0 ∈ 𝒟(ℋ)</span>, and observables <span class="mono">{O_j}_{j=1}^{p}</span>. We are given noisy, possibly incomplete measurements</p>
+    <p style="text-align:center">$$y_{ij}\approx \operatorname{Tr}\!\big[O_j\,\rho(t_i)\big]+\varepsilon_{ij},\qquad m_{ij}\in\{0,1\}\ \text{(observation mask)},$$</p>
+    <p>of an unknown trajectory generated by an unknown GKSL generator <span class="mono">𝓛_{Θ*}</span>. The task is to recover jointly (i) a trajectory <span class="mono">ρ_φ:[0,T]→𝒟(ℋ)</span> consistent with the data and (ii) the generator parameters <span class="mono">Θ</span> (Hamiltonian coefficients and dissipative rates), subject to the requirement that every estimate remain a legal density matrix at every time, every iteration, and every evaluation point, and that the recovered generator remain a legal Lindbladian. The problem is generally ill-posed: a parameter direction the chosen observables do not excite cannot be recovered by any method — the content of the identifiability analysis below.</p>
+  </section>
+
+  <!-- ===================== CONTRIBUTIONS ===================== -->
+  <section id="contributions">
+    <h2><span class="num">4</span>Principal Contributions</h2>
+    <ol class="contrib">
+      <li><strong>A hard-constrained density network.</strong> The Cholesky density map enforces Hermiticity, positive semidefiniteness, and unit trace exactly at every time point, every training iteration, and every evaluation point.</li>
+      <li><strong>A CPTP generator parameterization.</strong> Nonnegative Lindblad rates are represented through softplus parameters and full Kossakowski matrices as positive semidefinite Gram matrices <span class="mono">C=BB^†</span>; the learned generator remains in GKSL form.</li>
+      <li><strong>A matrix-free open-system compiler.</strong> A symbolic open-system intermediate representation is lowered to either a dense superoperator or a structured residual kernel, with a dispatch policy selecting the mode by dimension and batch size; the two modes agree to floating-point precision.</li>
+      <li><strong>Six mathematical guarantees.</strong> Exact physicality, universal trajectory approximation, CPTP semigroup preservation, an a posteriori trace-norm residual certificate, a local identifiability bound, and a dense-versus-structured complexity separation, all proved in full.</li>
+      <li><strong>A reproducible, statistically reported study with baselines.</strong> Every figure and number is emitted by the accompanying scripts; each training experiment is repeated over five seeds and reported as mean ± 95% confidence interval, against a soft positivity penalty, an unconstrained network, and a classical model-based least-squares fit.</li>
+    </ol>
+    <p class="sub">The results are stated conservatively: they demonstrate the value of the structural constraints and the compiler path on controlled simulations; they do not claim quantum-hardware validation, universal superiority over all baselines, or production-scale GPU performance.</p>
+  </section>
+
+  <!-- ===================== NOVELTY ===================== -->
+  <section id="novelty">
+    <h2><span class="num">5</span>Methodological Novelty</h2>
+    <p>The contribution is stated against named prior art rather than in the abstract:</p>
+    <ul class="tight">
+      <li><strong>Versus completely-positive projection methods (Knee et al.).</strong> Standard pipelines repair an estimate <em>after the fact</em> by projecting onto the positive cone. Here illegal states are unrepresentable: the Cholesky map lands in <span class="mono">𝒟(ℋ)</span> by construction, removing the post-hoc projection step entirely.</li>
+      <li><strong>Versus Lindblad / Hamiltonian learning (Boulant et al.; Wang et al.).</strong> The framework keeps the structured-identification philosophy but replaces unconstrained trajectory estimation with a hard density parameterization, so the optimizer never spends capacity leaving and re-entering the physical set.</li>
+      <li><strong>Versus inverse PINNs (Raissi, Karniadakis; Wang et al.).</strong> The residual objective is shared, but the hypothesis class is restricted to physically valid states and CPTP generators, in the spirit of structure-preserving scientific networks (Hamiltonian, Lagrangian, symplectic) that constrain the model to improve learning.</li>
+      <li><strong>Versus neural quantum states / neural tomography (Carleo &amp; Troyer; Torlai et al.).</strong> Those represent wavefunctions or measurement distributions of states; this work targets the <em>generator</em> of open-system dynamics with a guaranteed-CPTP parameterization.</li>
+      <li><strong>The "compiler" framing.</strong> A model is specified in an intermediate representation (Hilbert dimension, Hamiltonian terms, jump operators, rates, observables, batching, differentiation mode) and lowered to dense, structured, sparse, or tensor-local kernels — aligning open-system identification with the design philosophy of contemporary accelerator and quantum software stacks.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== THEORY ===================== -->
+  <section id="theory">
+    <h2><span class="num">6</span>Theoretical Guarantees</h2>
+    <p class="sub">Six results, exact (not statistical), transcribed from the manuscript; each with a one-line interpretation.</p>
+
+    <div class="theorem">
+      <span class="tname">Theorem 1 — Exact density-matrix physicality.</span>
+      Let <span class="mono">A:[0,T]→ℂ^{d×d}</span> be continuous with <span class="mono">A(t)≠0</span> for all <span class="mono">t</span>, and <span class="mono">ρ_A(t)=A(t)A(t)^† / Tr(A(t)A(t)^†)</span>. Then <span class="mono">ρ_A(t)∈𝒟(ℋ)</span> for every <span class="mono">t</span>. If <span class="mono">A</span> is differentiable, <span class="mono">ρ_A</span> is differentiable, Hermitian, and <span class="mono">Tr ρ̇_A(t)=0</span>.
+      <div class="interp">No training step can output a negative-probability state unless the floating-point implementation itself fails — the source of the measured zero positivity-violation rate.</div>
+    </div>
+
+    <div class="theorem">
+      <span class="tname">Theorem 2 — Universal approximation of continuous density trajectories.</span>
+      For any continuous <span class="mono">ρ:[0,T]→𝒟(ℋ)</span> and full-rank <span class="mono">σ</span>, and every <span class="mono">ε&gt;0</span>, there exists a finite network <span class="mono">A_φ</span> with nonzero output such that <span class="mono">sup_t ‖A_φA_φ^†/Tr(A_φA_φ^†) − ρ(t)‖_F &lt; ε</span>.
+      <div class="interp">The hard constraint does not reduce expressive power: any continuous physical trajectory is approximable inside the constrained hypothesis class.</div>
+    </div>
+
+    <div class="theorem">
+      <span class="tname">Theorem 3 — GKSL preservation.</span>
+      With <span class="mono">H_θ=H_θ^†</span> and <span class="mono">γ_k(ξ_k)=softplus(ξ_k)+γ_min, γ_min≥0</span>, the generator is a GKSL generator and <span class="mono">e^{t𝓛_Θ}</span> is CPTP for all <span class="mono">t≥0</span>. The Kossakowski parameterization with <span class="mono">C=BB^†</span> is likewise a GKSL generator.
+      <div class="interp">The learned generator is always a legal Lindbladian, so it can be propagated to held-out initial states with an exact solver.</div>
+    </div>
+
+    <div class="theorem">
+      <span class="tname">Theorem 4 — A posteriori residual certificate.</span>
+      Let <span class="mono">ρ</span> solve <span class="mono">ρ̇=𝓛[ρ], ρ(0)=ρ_0</span> with <span class="mono">𝓛</span> generating a CPTP semigroup, and let <span class="mono">ρ̂</span> be a differentiable Hermitian trace-one path with residual <span class="mono">r(t)=ρ̂̇(t)−𝓛[ρ̂(t)]</span>. Then
+      <span style="display:block;text-align:center;margin:8px 0">$$\tfrac12\|\hat\rho(t)-\rho(t)\|_1\le\tfrac12\|\hat\rho(0)-\rho_0\|_1+\tfrac12\int_0^t\|r(s)\|_1\,ds.$$</span>
+      <div class="interp">The bound references only the learned path, so a small training residual is a computable, trajectory-free guarantee on the trace distance to the true dynamics.</div>
+    </div>
+
+    <div class="theorem">
+      <span class="tname">Theorem 5 — Local identifiability.</span>
+      For a smooth GKSL generator with observation Jacobian <span class="mono">J(Θ*)</span> of full column rank and smallest singular value <span class="mono">s_min&gt;0</span>, any estimate with <span class="mono">‖f(Θ̂)−f(Θ*)‖₂≤δ</span> obeys <span class="mono">‖Θ̂−Θ*‖₂ ≤ 2δ/s_min</span> on a suitable neighborhood.
+      <div class="interp">Hard constraints cannot overcome uninformative observables: if the sensitivity Gramian is near-singular, the recovery bound degrades — the regime where the qutrit rates are hard to pin.</div>
+    </div>
+
+    <div class="theorem">
+      <span class="tname">Theorem 6 — Dense versus structured residual complexity.</span>
+      For a <span class="mono">d</span>-dimensional system with <span class="mono">m</span> dense Lindblad operators: dense Liouvillian storage is <span class="mono">O(d⁴)</span>, construction <span class="mono">O(md⁴)</span>, and <span class="mono">O(d⁴)</span> per dense matvec; structured evaluation costs <span class="mono">O(md³)</span> arithmetic and <span class="mono">O(md²)</span> storage. Over <span class="mono">N</span> collocation states, dense is <span class="mono">O(md⁴+Nd⁴)</span> and structured <span class="mono">O(Nmd³)</span>.
+      <div class="interp">A per-evaluation ratio of <span class="mono">Θ(d/m)</span> and storage ratio <span class="mono">Θ(d²/m)</span>: the structured route is asymptotically cheaper in both arithmetic and memory as <span class="mono">d</span> grows.</div>
+    </div>
+    <p class="sub">Auxiliary results extend physicality to low-rank-plus-isotropic variants (Corollary) and give a Frobenius analogue of the certificate via Grönwall's inequality (Proposition).</p>
+  </section>
+
+  <!-- ===================== DEMO ===================== -->
+  <section id="demo">
+    <h2><span class="num">7</span>Interactive Illustration</h2>
+    <p class="sub">A self-contained, client-side illustration of the paper's core mechanisms. This is a qualitative illustration of the governing relations, not a re-run of the reported experiments.</p>
+
+    <div class="demo">
+      <div class="controls modesel" style="margin-bottom:14px">
+        <button id="mode-cert" class="active" type="button">Residual certificate (Thm 4)</button>
+        <button id="mode-comp" type="button">Compiler scaling (Thm 6)</button>
       </div>
-      <p class="section-intro">
-        When the dynamics are Markovian and time-local, the generator of the completely positive trace-preserving (CPTP)
-        semigroup assumes the Gorini&ndash;Kossakowski&ndash;Sudarshan&ndash;Lindblad (GKSL) form. The <em>inverse</em>
-        problem — the inference of a physically admissible generator from incomplete, noisy observations — underlies device
-        characterization, noise modeling, and control. Process tomography reconstructs a channel yet scales unfavorably,
-        whereas Hamiltonian and Lindblad learning exploit dynamical structure but confront identifiability and optimization
-        difficulties.
-      </p>
-      <p class="section-intro">
-        Physics-informed neural networks augment the training objective with equation residuals, yet a direct map
-        <span class="katex-inline" data-tex="t\mapsto\rho_\theta(t)"></span> is not guaranteed to remain Hermitian, positive
-        semidefinite, or unit-trace. <strong>A penalty on negative eigenvalues is not equivalent to physicality during
-        training</strong>; it merely requests that the optimizer repair an invalid output after the fact. On the Bloch ball,
-        a qubit state is admissible if and only if <span class="katex-inline" data-tex="\lVert\mathbf{r}\rVert_2\le 1"></span>,
-        yet an unconstrained <span class="katex-inline" data-tex="\mathbf{r}(t)"></span> may depart the ball during
-        optimization, corrupting residuals and parameter estimates. The present framework adopts the opposite design
-        principle: <strong>render invalid states unrepresentable.</strong>
-      </p>
-    </section>
-
-    <!-- ===================== 2B. TUTORIAL & BACKGROUND ===================== -->
-    <section class="section" id="tutorial">
-      <div class="section-kicker">Tutorial &amp; Background</div>
-      <h2>How to read the CPTP-PINN contribution</h2>
-      <p class="section-intro">
-        The task is inverse modeling: infer the generator of an open quantum system from partial observations while
-        ensuring that every learned state remains physically admissible. A density matrix must be Hermitian, positive
-        semidefinite, and of unit trace. An admissible Markovian generator must reside in GKSL/Lindblad form so that it
-        produces completely positive, trace-preserving dynamics. The present work encodes these requirements within the
-        model rather than treating them as optional penalties.
-      </p>
-
-      <div class="application-grid">
-        <article class="application-card">
-          <h3>Input</h3>
-          <p>Sparse, noisy time-series observations of open-system trajectories, spanning qubit, two-qubit, and qutrit settings employed as reproducible validation problems.</p>
-        </article>
-        <article class="application-card">
-          <h3>Mathematical core</h3>
-          <p>The density map \(\rho=A A^\dagger/\mathrm{Tr}(A A^\dagger)\) renders invalid states unrepresentable, while softplus rates and positive semidefinite Kossakowski matrices maintain the generator in CPTP form.</p>
-        </article>
-        <article class="application-card">
-          <h3>Statistical result</h3>
-          <p>The hard-constrained model attains 0 positivity violations, sparse-data trace distance 0.004-0.010, two-qubit held-out fidelity 0.97 +/- 0.005, and a 5.9-12.9x matrix-free compiler speedup.</p>
-        </article>
-      </div>
-
-      <div class="scope-note" style="margin-top:18px;">
-        The contribution extends beyond a neural-network fit: it integrates mathematical invariants, inverse-problem
-        design, compiler implementation, reproducible experiments, explicitly stated limitations, and an interactive
-        notebook viewer.
-      </div>
-    </section>
-
-    <!-- ===================== 3. CONTRIBUTIONS ===================== -->
-    <section class="section" id="contributions">
-      <div class="section-kicker">Contributions &amp; Novelty</div>
-      <h2>What is new</h2>
-      <p class="section-intro">
-        The contribution is a mathematically constrained, accelerator-aware formulation for open-system identification;
-        it furnishes neither hardware data nor a state-of-the-art claim. Three constructions are novel, supported by six
-        exact (deterministic, rather than statistical) guarantees and a reproducible, statistically reported study.
-      </p>
-      <ol class="contrib-list">
-        <li>
-          <strong>A hard-constrained density network.</strong>
-          <p>A Cholesky density map <span class="katex-inline" data-tex="\rho_\phi=A_\phi A_\phi^\dagger/\operatorname{Tr}(A_\phi A_\phi^\dagger)"></span>
-          enforces Hermiticity, positive semidefiniteness, and unit trace <em>exactly</em>, at every time point, every
-          training iteration, and every evaluation point. Physicality is architectural rather than penalized.</p>
-        </li>
-        <li>
-          <strong>A CPTP generator parameterization.</strong>
-          <p>Nonnegative Lindblad rates are represented via softplus (<span class="katex-inline" data-tex="\gamma_k=\operatorname{softplus}(\xi_k)+\gamma_{\min}\ge 0"></span>),
-          and full Kossakowski matrices as positive semidefinite Gram matrices (<span class="katex-inline" data-tex="C=BB^\dagger\succeq 0"></span>).
-          The learned generator thus remains in GKSL form, whence <span class="katex-inline" data-tex="e^{t\mathcal{L}_\Theta}"></span> is CPTP for all <span class="katex-inline" data-tex="t\ge 0"></span>.</p>
-        </li>
-        <li>
-          <strong>A matrix-free open-system compiler.</strong>
-          <p>A symbolic intermediate representation (Hilbert dimension, Hamiltonian terms, jump operators, rates,
-          observables, batching, and differentiation mode) is lowered to either a dense <span class="katex-inline" data-tex="d^2\times d^2"></span> Liouvillian or a structured
-          residual kernel that stores only <span class="katex-inline" data-tex="H"></span> and the <span class="katex-inline" data-tex="m"></span> jump operators.
-          The two representations agree to floating-point precision, and a complexity theorem quantifies the gap.</p>
-        </li>
-        <li>
-          <strong>Six mathematical guarantees.</strong>
-          <p>Exact physicality of the density map; universal approximation of continuous density trajectories; GKSL/CPTP
-          preservation of the learned generator; an a-posteriori trace-norm residual-to-error certificate; a local
-          identifiability bound derived from the sensitivity Gramian; and a dense-versus-structured compiler complexity theorem.</p>
-        </li>
-        <li>
-          <strong>A reproducible, statistically reported study with baselines.</strong>
-          <p>Five simulation studies, each repeated over five seeds and reported as mean &plusmn; 95% CI, evaluated against a
-          soft-positivity-penalty PINN, an unconstrained network, and a classical model-based least-squares fit.</p>
-        </li>
-      </ol>
-    </section>
-
-    <!-- ===================== 4. MATHEMATICS & METHOD ===================== -->
-    <section class="section" id="method">
-      <div class="section-kicker">Mathematics &amp; Method</div>
-      <h2>The Lindblad master equation, the hard parameterization, the loss, and the compiler</h2>
-
-      <h3 style="margin-top:22px;">GKSL master equation</h3>
-      <p>For a time-independent Markovian system, the generator acts as</p>
-      <div class="math-block">
-        <span class="katex-display-target" data-tex="\frac{\mathrm{d}\rho}{\mathrm{d}t}=\mathcal{L}_\Theta[\rho]=-\mathrm{i}[H_\Theta,\rho]+\sum_{k=1}^{m}\gamma_k\!\left(L_k\rho L_k^\dagger-\tfrac12\{L_k^\dagger L_k,\rho\}\right),\qquad H_\Theta=H_\Theta^\dagger,\ \gamma_k\ge 0."></span>
-        <p class="math-caption">Vectorization via <span class="katex-inline" data-tex="\operatorname{vec}(A\rho B)=(B^{T}\!\otimes A)\operatorname{vec}(\rho)"></span> yields the dense Liouvillian <span class="katex-inline" data-tex="\mathbb{L}_\Theta\in\mathbb{C}^{d^2\times d^2}"></span>, which stores <span class="katex-inline" data-tex="d^4"></span> scalars, whereas direct evaluation stores only <span class="katex-inline" data-tex="H"></span> and the <span class="katex-inline" data-tex="L_k"></span>, namely <span class="katex-inline" data-tex="O(md^2)"></span>.</p>
-      </div>
-
-      <h3 style="margin-top:22px;">Hard-constrained density parameterization</h3>
-      <p>A network outputs a lower-triangular complex factor with strictly positive diagonal:</p>
-      <div class="math-block">
-        <span class="katex-display-target" data-tex="A_\phi(t)_{ij}=0\ (i<j),\quad A_\phi(t)_{ii}=a_{\min}+\operatorname{softplus}(b_{ii}(t)),\quad A_\phi(t)_{ij}=b_{ij}(t)\ (i>j),"></span>
-        <span class="katex-display-target" data-tex="\rho_\phi(t)=\frac{A_\phi(t)A_\phi(t)^\dagger}{\operatorname{Tr}\!\big[A_\phi(t)A_\phi(t)^\dagger\big]}\in\mathcal{D}(\mathcal{H})."></span>
-        <p class="math-caption">Since <span class="katex-inline" data-tex="v^\dagger(AA^\dagger)v=\lVert A^\dagger v\rVert_2^2\ge 0"></span> and <span class="katex-inline" data-tex="A\ne 0\Rightarrow\operatorname{Tr}(AA^\dagger)=\lVert A\rVert_F^2>0"></span>, the map is Hermitian, positive semidefinite, and unit-trace by construction; it is differentiable, and <span class="katex-inline" data-tex="\operatorname{Tr}\dot\rho_\phi=0"></span>. Rank-deficient (pure) states arise as limits, and a low-rank-plus-isotropic floor <span class="katex-inline" data-tex="(AA^\dagger+\alpha I/d)/(\operatorname{Tr}(AA^\dagger)+\alpha)"></span> constitutes a full-rank variant.</p>
-      </div>
-
-      <h3 style="margin-top:22px;">CPTP generator parameterization</h3>
-      <p>Rates and Kossakowski matrices are constrained at the source:</p>
-      <div class="math-block">
-        <span class="katex-display-target" data-tex="\gamma_k(\xi_k)=\operatorname{softplus}(\xi_k)+\gamma_{\min}\ \ (\gamma_{\min}\ge0),\qquad C_\eta=B_\eta B_\eta^\dagger\succeq 0,"></span>
-        <span class="katex-display-target" data-tex="\mathcal{L}_\Theta[\rho]=-\mathrm{i}[H_\Theta,\rho]+\sum_{a,b}(C_\eta)_{ab}\!\left(F_a\rho F_b^\dagger-\tfrac12\{F_b^\dagger F_a,\rho\}\right),\quad H_\theta(t)=\sum_\ell\theta_\ell(t)G_\ell."></span>
-        <p class="math-caption">Diagonalizing <span class="katex-inline" data-tex="C=U\Lambda U^\dagger"></span> and setting <span class="katex-inline" data-tex="\tilde L_r=\sum_a U_{ar}\sqrt{\Lambda_r}\,F_a"></span> recovers the standard GKSL form, whence the generator is CPTP by construction.</p>
-      </div>
-
-      <h3 style="margin-top:22px;">Physics-informed loss</h3>
-      <p>The objective couples a masked data term, the Lindblad residual evaluated at collocation points, and an initial-condition term:</p>
-      <div class="math-block">
-        <span class="katex-display-target" data-tex="\mathcal{J}(\phi,\Theta)=\lambda_{\mathrm{data}}\,\mathcal{J}_{\mathrm{data}}+\lambda_{\mathrm{phys}}\,\mathcal{J}_{\mathrm{phys}}+\lambda_0\,\mathcal{J}_0,"></span>
-        <span class="katex-display-target" data-tex="\mathcal{J}_{\mathrm{phys}}=\frac{1}{N_c}\sum_\ell\big\lVert\dot\rho_\phi(\tau_\ell)-\mathcal{L}_\Theta[\rho_\phi(\tau_\ell)]\big\rVert_F^2,\quad \mathcal{J}_{\mathrm{data}}=\frac{\sum_{ij}m_{ij}\big(\operatorname{Tr}[O_j\rho_\phi(t_i)]-y_{ij}\big)^2}{\sum_{ij}m_{ij}},\quad \mathcal{J}_0=\lVert\rho_\phi(0)-\rho_0\rVert_F^2."></span>
-        <p class="math-caption">Here <span class="katex-inline" data-tex="\dot\rho_\phi"></span> is obtained by automatic differentiation of the density network with respect to time (a centered finite-difference surrogate constitutes an alternative). The trained run employs <span class="katex-inline" data-tex="\lambda_{\mathrm{data}}=1,\ \lambda_{\mathrm{phys}}=0.5,\ \lambda_0=10"></span>, the Adam optimizer, and <span class="katex-inline" data-tex="3000"></span> epochs.</p>
-      </div>
-
-      <h3 style="margin-top:22px;">A-posteriori residual certificate</h3>
-      <p>For any differentiable Hermitian trace-one path with residual <span class="katex-inline" data-tex="r(t)=\dot{\hat\rho}(t)-\mathcal{L}[\hat\rho(t)]"></span>, the contractivity of CPTP maps in trace norm yields</p>
-      <div class="math-block">
-        <span class="katex-display-target" data-tex="\tfrac12\lVert\hat\rho(t)-\rho(t)\rVert_1\ \le\ \tfrac12\lVert\hat\rho(0)-\rho_0\rVert_1+\tfrac12\int_0^t\lVert r(s)\rVert_1\,\mathrm{d}s."></span>
-        <p class="math-caption">An accompanying local-identifiability bound <span class="katex-inline" data-tex="\lVert\hat\Theta-\Theta_*\rVert_2\le 2\delta/s_{\min}"></span> derived from the sensitivity Gramian explains why certain inverse problems remain ill-conditioned even under hard constraints: should the measurements fail to excite a rate, that Gramian is singular.</p>
-      </div>
-
-      <h3 style="margin-top:22px;">Matrix-free compiler</h3>
-      <p>The compiler lowers the intermediate representation <span class="katex-inline" data-tex="(d,\{G_\ell\},\{F_a\},\Theta,\{O_j\},\mathsf{batch},\mathsf{mode})"></span> to dense or structured kernels, with the cost gap quantified by:</p>
-      <div class="math-block">
-        <span class="katex-display-target" data-tex="\text{dense: } O(d^4)\ \text{storage},\ O(md^4)\ \text{construction},\ O(d^4)\ \text{per matvec};\quad \text{structured: } O(md^3)\ \text{arithmetic},\ O(md^2)\ \text{storage}."></span>
-        <p class="math-caption">For <span class="katex-inline" data-tex="N"></span> collocation states, dense evaluation costs <span class="katex-inline" data-tex="O(md^4+Nd^4)"></span> and structured evaluation <span class="katex-inline" data-tex="O(Nmd^3)"></span>. With <span class="katex-inline" data-tex="d=2^n"></span>, dense storage scales as <span class="katex-inline" data-tex="16^n"></span>, whereas the structured route avoids squaring the density-vector dimension.</p>
-      </div>
-    </section>
-
-    <!-- ===================== 5. EXPERIMENTAL DESIGN ===================== -->
-    <section class="section" id="design">
-      <div class="section-kicker">Experimental Design &amp; Statistics</div>
-      <h2>Five reproducible studies, five seeds, 95% confidence intervals</h2>
-      <p class="section-intro">
-        All numerical values are produced by the scripts in <code>submission/code</code> and written directly to the table and
-        figure files; none are entered manually. Simulations execute on CPU (PyTorch and SciPy), with Adam for the physics-informed runs.
-      </p>
-      <div class="application-grid">
-        <article class="application-card">
-          <h3>Seeds &amp; intervals</h3>
-          <p>Each training experiment is repeated over seeds <code>{0,1,2,3,4}</code>, and every seed redraws both the network
-          initialization <em>and</em> the measurement-noise realization. We report the mean &plusmn; a 95% Student-<span class="katex-inline" data-tex="t"></span>
-          confidence interval over the five seeds. The compiler benchmark reports the median over 50 repeated timings.</p>
-        </article>
-        <article class="application-card">
-          <h3>Invariant checks</h3>
-          <p>Hermiticity, positive semidefiniteness, and unit trace are verified at every output (the positivity-violation rate is reported as a column).
-          The compiler's dense and structured paths are verified to agree to floating-point precision,
-          <span class="katex-inline" data-tex="\lVert\mathcal{L}_{\mathrm{dense}}-\mathcal{L}_{\mathrm{struct}}\rVert_F/\lVert\mathcal{L}_{\mathrm{dense}}\rVert_F"></span> at machine precision.</p>
-        </article>
-        <article class="application-card">
-          <h3>Baselines &amp; ablations</h3>
-          <p>Four methods are compared where applicable: the hard-constrained <strong>CPTP-PINN</strong>; a <strong>soft-penalty PINN</strong>
-          (eigenvalue-negativity penalty, <span class="katex-inline" data-tex="\lambda_{\mathrm{pos}}=10"></span>); an <strong>unconstrained</strong>
-          network; and a <strong>classical least-squares</strong> fit employing the exact model. The sparse-measurement ablation
-          masks a random fraction (1.0, 0.5, 0.25, 0.10) of the observation entries.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- ===================== 6. RESULTS ===================== -->
-    <section class="section" id="results">
-      <div class="section-kicker">Results</div>
-      <h2>Where the structure-preserving PINN prevails, stated transparently</h2>
-
-      <div class="scope-note transparent">
-        Candid framing: on <strong>complete single-qubit data</strong>, a classical least-squares fit endowed with the exact
-        model structure is the strongest method, recovering the dissipative rates to <strong>&asymp;2%</strong>. The value of the
-        CPTP-PINN lies not in surpassing that fit on dense data, but in guaranteed physicality and graceful degradation under
-        <strong>sparse</strong> measurements. The qutrit result is reported as the principal open problem rather than a success.
-      </div>
-
-      <!-- Exp 1 -->
-      <div class="panel" style="margin-top: 18px;">
-        <div class="panel-head"><h3>Experiment 1 &mdash; Single-qubit parameter recovery (5 seeds, mean &plusmn; 95% CI)</h3></div>
-        <div class="panel-body table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Method</th>
-                <th class="num"><span class="katex-inline" data-tex="\omega"></span> err</th>
-                <th class="num"><span class="katex-inline" data-tex="\Omega"></span> err</th>
-                <th class="num"><span class="katex-inline" data-tex="\gamma_1"></span> err</th>
-                <th class="num"><span class="katex-inline" data-tex="\gamma_\phi"></span> err</th>
-                <th class="num">Mean fidelity</th>
-                <th class="num">Pos. viol.</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="advantage">
-                <td>CPTP-PINN (ours)</td>
-                <td class="num">0.001 &plusmn; 0.001</td>
-                <td class="num">0.026 &plusmn; 0.013</td>
-                <td class="num">0.079 &plusmn; 0.027</td>
-                <td class="num">0.131 &plusmn; 0.050</td>
-                <td class="num">1.0000 &plusmn; 0.0000</td>
-                <td class="num"><strong>0.000</strong></td>
-              </tr>
-              <tr>
-                <td>Soft-penalty PINN</td>
-                <td class="num">0.158 &plusmn; 0.195</td>
-                <td class="num">0.358 &plusmn; 0.287</td>
-                <td class="num">0.266 &plusmn; 0.288</td>
-                <td class="num">1.455 &plusmn; 1.184</td>
-                <td class="num">0.9507 &plusmn; 0.1163</td>
-                <td class="num">0.004</td>
-              </tr>
-              <tr>
-                <td>Unconstrained</td>
-                <td class="num">0.157 &plusmn; 0.195</td>
-                <td class="num">0.362 &plusmn; 0.284</td>
-                <td class="num">0.276 &plusmn; 0.283</td>
-                <td class="num">1.439 &plusmn; 1.185</td>
-                <td class="num">0.9511 &plusmn; 0.1165</td>
-                <td class="num">0.006</td>
-              </tr>
-              <tr>
-                <td>Classical LSQ <span class="tag-advantage">strongest on complete data</span></td>
-                <td class="num">0.001 &plusmn; 0.001</td>
-                <td class="num">0.016 &plusmn; 0.012</td>
-                <td class="num">0.019 &plusmn; 0.008</td>
-                <td class="num">0.020 &plusmn; 0.019</td>
-                <td class="num">1.0000 &plusmn; 0.0000</td>
-                <td class="num">0.000</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="tbl-note">
-            Relative parameter-recovery error (ground truth <span class="katex-inline" data-tex="\omega=3.1416,\ \Omega=0.6283,\ \gamma_1=0.3000,\ \gamma_\phi=0.1500"></span>). Among the neural methods, the hard
-            constraint is decisive (for instance, <span class="katex-inline" data-tex="\gamma_\phi"></span> to 13% versus more than 140%), attains fidelity 1.0000, and never departs the physical set.
-            The classical LSQ fit, endowed with the exact model, is the strongest method on this dense-data task and serves as the candid reference.
-          </p>
-        </div>
-      </div>
-
-      <!-- Exp 2 -->
-      <div class="panel" style="margin-top: 18px;">
-        <div class="panel-head"><h3>Experiment 2 &mdash; Sparse-measurement ablation: mean trace distance to the exact trajectory</h3></div>
-        <div class="panel-body table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Retained fraction</th>
-                <th class="num">CPTP-PINN (ours)</th>
-                <th class="num">Soft-penalty PINN</th>
-                <th class="num">Unconstrained</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="advantage"><td>1.00</td><td class="num"><strong>0.0044 &plusmn; 0.0038</strong></td><td class="num">0.3668 &plusmn; 0.3497</td><td class="num">0.3688 &plusmn; 0.3482</td></tr>
-              <tr class="advantage"><td>0.50</td><td class="num"><strong>0.0052 &plusmn; 0.0037</strong></td><td class="num">0.3683 &plusmn; 0.3469</td><td class="num">0.3717 &plusmn; 0.3436</td></tr>
-              <tr class="advantage"><td>0.25</td><td class="num"><strong>0.0050 &plusmn; 0.0018</strong></td><td class="num">0.3682 &plusmn; 0.3490</td><td class="num">0.3709 &plusmn; 0.3467</td></tr>
-              <tr class="advantage"><td>0.10</td><td class="num"><strong>0.0100 &plusmn; 0.0062</strong></td><td class="num">0.3572 &plusmn; 0.3616</td><td class="num">0.3572 &plusmn; 0.3626</td></tr>
-            </tbody>
-          </table>
-          <p class="tbl-note">
-            <span class="tag-advantage">regime in which the constraint prevails</span> The CPTP-PINN maintains a trace distance between 0.004 and 0.010 across all fractions —
-            one to two orders of magnitude below the soft and unconstrained baselines (both <span class="katex-inline" data-tex="\approx 0.37"></span>, with confidence intervals as wide as their
-            means, reflecting frequent failures) — and degrades only marginally down to 10% observation.
-          </p>
-        </div>
-      </div>
-
-      <!-- Exp 3 -->
-      <div class="panel" style="margin-top: 18px;">
-        <div class="panel-head"><h3>Experiment 3 &mdash; Qutrit (leakage) reconstruction: the principal open problem</h3></div>
-        <div class="panel-body table-scroll">
-          <table>
-            <thead>
-              <tr><th>Density network</th><th class="num">Mean state fidelity</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Plain MLP (<span class="katex-inline" data-tex="K=0"></span>)</td><td class="num">0.7657 &plusmn; 0.3463</td></tr>
-              <tr><td>Fourier time-features (<span class="katex-inline" data-tex="K=48"></span>)</td><td class="num">0.5238 &plusmn; 0.4897</td></tr>
-            </tbody>
-          </table>
-          <p class="tbl-note">
-            Reported candidly as a <strong>negative</strong>, open result: a Fourier network can fit a favorable run accurately (single-seed mean fidelity up to 0.95),
-            yet <em>across five seeds the Fourier advantage does not survive seed averaging</em>; the intervals are sufficiently wide that neither encoding reliably
-            reconstructs the fast dynamics. The Cholesky map nonetheless keeps every output an admissible density matrix, but physicality alone does not confer accuracy here.
-            A least-squares fit to the <em>exact</em> trajectory recovers the rates to below 1%, indicating that this is a problem of optimization and derivative quality rather than identifiability.
-            Single-run reporting would have concealed this fragility.
-          </p>
-        </div>
-      </div>
-
-      <!-- Exp 4 -->
-      <div class="panel" style="margin-top: 18px;">
-        <div class="panel-head"><h3>Experiment 4 &mdash; Two-qubit dissipative gate: the learned generator generalizes</h3></div>
-        <div class="panel-body table-scroll">
-          <table>
-            <thead>
-              <tr><th>Initial state</th><th class="num">Mean fidelity</th><th class="num">Final fidelity</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><span class="katex-inline" data-tex="|00\rangle"></span> (trained)</td><td class="num">0.9944 &plusmn; 0.0014</td><td class="num">0.9998 &plusmn; 0.0001</td></tr>
-              <tr><td><span class="katex-inline" data-tex="|01\rangle"></span> (held-out)</td><td class="num">0.9504 &plusmn; 0.0065</td><td class="num">0.9731 &plusmn; 0.0092</td></tr>
-              <tr><td><span class="katex-inline" data-tex="|10\rangle"></span> (held-out)</td><td class="num">0.9551 &plusmn; 0.0087</td><td class="num">0.9808 &plusmn; 0.0086</td></tr>
-              <tr><td><span class="katex-inline" data-tex="|{+}0\rangle"></span> (held-out)</td><td class="num">0.9743 &plusmn; 0.0043</td><td class="num">0.9808 &plusmn; 0.0045</td></tr>
-              <tr class="total advantage"><td>Average</td><td class="num">0.9685 &plusmn; 0.0047</td><td class="num">&mdash;</td></tr>
-            </tbody>
-          </table>
-          <p class="tbl-note">
-            <span class="tag-advantage">positive transfer</span> The scientifically meaningful test propagates the <em>learned generator</em> (rather than the trained trajectory) to held-out
-            initial states using an exact solver. The mean held-out fidelities are 0.95 / 0.96 / 0.97 (overall 0.97 &plusmn; 0.005); the intervals are narrow and the result is stable across seeds,
-            yielding a transferable open-system model rather than a memorized curve, which is the property of consequence for device characterization.
-          </p>
-        </div>
-      </div>
-
-      <!-- Exp 5 -->
-      <div class="panel" style="margin-top: 18px;">
-        <div class="panel-head"><h3>Experiment 5 &mdash; Matrix-free compiler runtime and memory scaling</h3></div>
-        <div class="panel-body table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th class="num"><span class="katex-inline" data-tex="d"></span></th>
-                <th class="num">Dense (s)</th>
-                <th class="num">Structured (s)</th>
-                <th class="num">Speedup</th>
-                <th class="num">Dense (MB)</th>
-                <th class="num">Structured (MB)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="num">2</td><td class="num">0.0069</td><td class="num">0.0012</td><td class="num">5.9&times;</td><td class="num">0.000</td><td class="num">0.00024</td></tr>
-              <tr><td class="num">3</td><td class="num">0.0095</td><td class="num">0.0016</td><td class="num">6.1&times;</td><td class="num">0.001</td><td class="num">0.00069</td></tr>
-              <tr><td class="num">4</td><td class="num">0.0099</td><td class="num">0.0015</td><td class="num">6.5&times;</td><td class="num">0.004</td><td class="num">0.00122</td></tr>
-              <tr><td class="num">6</td><td class="num">0.0125</td><td class="num">0.0016</td><td class="num">7.7&times;</td><td class="num">0.020</td><td class="num">0.00275</td></tr>
-              <tr class="advantage"><td class="num">8</td><td class="num">0.0238</td><td class="num">0.0019</td><td class="num"><strong>12.9&times;</strong></td><td class="num">0.062</td><td class="num">0.00488</td></tr>
-            </tbody>
-          </table>
-          <p class="tbl-note">
-            Median residual-evaluation wall time over 50 repeats, batch of 100 states, single CPU; memory denotes the analytic storage for the dense
-            <span class="katex-inline" data-tex="d^2\times d^2"></span> Liouvillian relative to the structured operators. The structured path is faster at every dimension (approaching an order of
-            magnitude by <span class="katex-inline" data-tex="d=8"></span>) and consumes substantially less memory; the two residuals agree to floating-point precision. Timing is hardware-dependent, and the
-            robust conclusion is the asymptotic <span class="katex-inline" data-tex="d^4"></span>-versus-<span class="katex-inline" data-tex="d^2"></span> memory scaling.
-          </p>
-        </div>
-      </div>
-
-      <p style="margin-top:18px;">
-        Source figures (PDF, not embedded here):
-        <a href="submission/figures/exp1_parameter_recovery.pdf" target="_blank" rel="noopener noreferrer">Exp 1 recovery</a> &middot;
-        <a href="submission/figures/exp2_sparse_measurements.pdf" target="_blank" rel="noopener noreferrer">Exp 2 sparse</a> &middot;
-        <a href="submission/figures/exp3_qutrit_leakage.pdf" target="_blank" rel="noopener noreferrer">Exp 3 qutrit</a> &middot;
-        <a href="submission/figures/exp4_gate_fidelity.pdf" target="_blank" rel="noopener noreferrer">Exp 4 gate</a> &middot;
-        <a href="submission/figures/exp5_compiler_scaling.pdf" target="_blank" rel="noopener noreferrer">Exp 5 compiler</a> &middot;
-        <a href="submission/figures/fig1_schematic.pdf" target="_blank" rel="noopener noreferrer">Framework schematic</a>
-      </p>
-    </section>
-
-    <!-- ===================== 7. INTERACTIVE DEMO (PRESERVED) ===================== -->
-    <section class="section" id="demo">
-      <div class="section-kicker">Interactive Demo</div>
-      <h2>Inspect the executed evaluation notebooks in place</h2>
-      <p class="section-intro">
-        The viewer below embeds the executed notebooks underlying the physics-informed PINN studies — the
-        harmonic-oscillator, time-dependent Schr&ouml;dinger, and combined benchmark reports — without introducing
-        unsupported claims. These constitute complementary structure-preserving demonstrations (normalization, eigenvalue
-        consistency, and noise robustness on canonical model problems); the open-system results above remain the primary
-        contribution. Reports may be switched without leaving the page.
-      </p>
-
       <div class="demo-grid">
-        <article class="panel demo-card">
-          <h3>Select a report</h3>
-          <p>Select one of the exported studies to inspect the underlying figures, computational output, and reported comparisons in place.</p>
-          <div class="demo-buttons" role="tablist" aria-label="Study report selector">
-            <button class="demo-button active" type="button" data-src="notebooks/pinn_harmonic_oscillator.html" data-title="Harmonic-oscillator report" data-link="notebooks/pinn_harmonic_oscillator.html">Harmonic-oscillator report</button>
-            <button class="demo-button" type="button" data-src="notebooks/pinn_schrodinger.html" data-title="Time-dependent Schrodinger report" data-link="notebooks/pinn_schrodinger.html">Time-dependent Schrodinger report</button>
-            <button class="demo-button" type="button" data-src="notebooks/quantum_pinn_combined.html" data-title="Combined benchmark report" data-link="notebooks/quantum_pinn_combined.html">Combined benchmark report</button>
-          </div>
-          <p id="demo-caption" class="demo-caption">Currently showing the harmonic-oscillator report, which contains the strongest comparative result reported in the study.</p>
-        </article>
-
-        <div class="demo-frame-wrap">
-          <div class="demo-frame-head">
-            <div id="demo-frame-title" class="demo-frame-title">Harmonic-oscillator report</div>
-            <a id="demo-frame-link" class="demo-frame-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" rel="noopener noreferrer">Open report in a separate tab</a>
-          </div>
-          <iframe id="demo-frame" class="demo-frame" src="notebooks/pinn_harmonic_oscillator.html" title="Embedded study report"></iframe>
+        <div>
+          <canvas id="demoCanvas" width="600" height="380" role="img" aria-label="Interactive plot of the governing relation"></canvas>
+          <div class="legend" id="legend"></div>
         </div>
+        <div class="controls" id="controls"></div>
       </div>
-    </section>
+      <p class="sub" id="demoCaption" style="margin-top:14px"></p>
+    </div>
+  </section>
 
-    <!-- ===================== 8. CONCLUSION & IMPACT ===================== -->
-    <section class="section" id="conclusion">
-      <div class="section-kicker">Conclusion &amp; Impact</div>
-      <h2>Physicality as an architectural invariant — meaning, limits, outlook</h2>
-      <p class="section-intro">
-        The central conceptual point is that physicality should be enforced by the architecture rather than requested through a
-        penalty, and the mathematics establishes that this invariant sacrifices nothing essential: universal approximation
-        continues to hold, the learned generator remains CPTP, residuals furnish an a-posteriori trace-norm certificate, and
-        structured compilation avoids materializing a dense Liouvillian. The experiments are deliberately modest yet authentic
-        and statistically reported.
-      </p>
+  <!-- ===================== EMPIRICAL ===================== -->
+  <section id="empirical">
+    <h2><span class="num">8</span>Empirical Validation</h2>
+    <p>Five reproducible simulation studies, each repeated over five seeds (redrawing both network initialization and measurement-noise realization) and reported as mean ± 95% Student-<em>t</em> confidence interval. Methods compared: the hard-constrained <strong>CPTP-PINN</strong> (this work), a <strong>soft-penalty PINN</strong> (eigenvalue-negativity penalty), a fully <strong>unconstrained</strong> network, and a <strong>classical least-squares</strong> fit using the exact model structure.</p>
 
-      <div class="application-grid">
-        <article class="application-card">
-          <h3>What the hard constraint confers</h3>
-          <p>It eliminates the competition among data fit, residual fit, and a positivity penalty. The benefit is most evident in two
-          regimes that the experiments isolate: a physical trajectory at every step (zero violations), and graceful degradation under
-          sparse measurements. In larger systems, where the positive cone constitutes a vanishingly small subset of the Hermitian trace-one matrices, the
-          gap is anticipated to widen.</p>
-        </article>
-        <article class="application-card">
-          <h3>What the compiler confers</h3>
-          <p>It determines whether the residual can be evaluated without forming an object of size <span class="katex-inline" data-tex="d^4=16^n"></span>.
-          Structured kernels still confront exponential Hilbert-space growth yet avoid an unnecessary square of the density-vector
-          dimension — the distinction between a prototype confined to toy models and a path that can exploit locality, batching, sparsity, and the GPU
-          memory hierarchy.</p>
-        </article>
-        <article class="application-card">
-          <h3>Transparent limitations</h3>
-          <p>Fast multi-level (qutrit) reconstruction is the <strong>principal open problem</strong>, lacking reliability across seeds.
-          The study employs <strong>synthetic CPU simulations</strong> (hardware data is deferred to future work). The framework assumes <strong>Markovian/GKSL</strong>
-          dynamics. Identifiability is measurement-dependent. The study constitutes a small proof of concept (five seeds) rather than a
-          state-of-the-art claim.</p>
-        </article>
-      </div>
+    <h3>Single-qubit system identification (Experiment 1)</h3>
+    <div class="tbl-scroll">
+    <table>
+      <caption>Parameter-recovery relative error, mean state fidelity, and positivity-violation rate. True values: ω=3.1416, Ω=0.6283, γ₁=0.3000, γ_φ=0.1500.</caption>
+      <thead>
+        <tr><th>Method</th><th>ω err</th><th>Ω err</th><th>γ₁ err</th><th>γ_φ err</th><th>Mean fidelity</th><th>Pos. viol.</th></tr>
+      </thead>
+      <tbody>
+        <tr class="ours"><td>CPTP-PINN (ours)</td><td>0.001 ± 0.001</td><td>0.026 ± 0.013</td><td>0.079 ± 0.027</td><td>0.131 ± 0.050</td><td>1.0000 ± 0.0000</td><td>0.000</td></tr>
+        <tr><td>Soft-penalty PINN</td><td>0.158 ± 0.195</td><td>0.358 ± 0.287</td><td>0.266 ± 0.288</td><td>1.455 ± 1.184</td><td>0.9507 ± 0.1163</td><td>0.004</td></tr>
+        <tr><td>Unconstrained</td><td>0.157 ± 0.195</td><td>0.362 ± 0.284</td><td>0.276 ± 0.283</td><td>1.439 ± 1.185</td><td>0.9511 ± 0.1165</td><td>0.006</td></tr>
+        <tr><td>Classical LSQ</td><td>0.001 ± 0.001</td><td>0.016 ± 0.012</td><td>0.019 ± 0.008</td><td>0.020 ± 0.019</td><td>1.0000 ± 0.0000</td><td>0.000</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub">The hard constraint is decisive among the neural methods (γ_φ to 13% versus &gt;140%) and never leaves the physical set (0 violations versus 0.4–0.6% of time points). A classical least-squares fit that already knows the exact model is the strongest method on this dense-data task — the honest reference point, reported rather than omitted.</p>
 
-      <div class="scope-note" style="margin-top:18px;">
-        Outlook: larger multi-qubit systems, hardware-calibration datasets, non-Markovian embeddings (extended state spaces,
-        memory kernels, process tensors), interaction-picture residuals and derivative denoising for the fast-dynamics regime,
-        and a compiler that accepts a high-level noise model and emits fused, batched, differentiable accelerator kernels.
-      </div>
-    </section>
+    <h3>Robustness under sparse measurements (Experiment 2)</h3>
+    <div class="tbl-scroll">
+    <table>
+      <caption>Mean trace distance to the exact single-qubit trajectory versus retained observation fraction.</caption>
+      <thead>
+        <tr><th>Fraction</th><th>CPTP-PINN (ours)</th><th>Soft-penalty PINN</th><th>Unconstrained</th></tr>
+      </thead>
+      <tbody>
+        <tr class="ours"><td>1.00</td><td>0.0044 ± 0.0038</td><td>0.3668 ± 0.3497</td><td>0.3688 ± 0.3482</td></tr>
+        <tr class="ours"><td>0.50</td><td>0.0052 ± 0.0037</td><td>0.3683 ± 0.3469</td><td>0.3717 ± 0.3436</td></tr>
+        <tr class="ours"><td>0.25</td><td>0.0050 ± 0.0018</td><td>0.3682 ± 0.3490</td><td>0.3709 ± 0.3467</td></tr>
+        <tr class="ours"><td>0.10</td><td>0.0100 ± 0.0062</td><td>0.3572 ± 0.3616</td><td>0.3572 ± 0.3626</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub">The constrained model keeps the mean trace distance between 0.004 and 0.010 across all fractions — one to two orders of magnitude below the soft and unconstrained baselines (≈0.37, with intervals as wide as their means) — and degrades only mildly down to 10% of observations.</p>
 
-    <!-- ===================== 9. PAPER & CODE ===================== -->
-    <section class="section" id="paper">
-      <div class="section-kicker">Paper &amp; Code</div>
-      <h2>Reproduce every table and figure</h2>
-      <p class="section-intro">
-        Every value on this page is produced by the scripts in <code>submission/code</code> and written directly to the
-        table and figure files. The experiments are deliberately reproducible and modest in scale.
-      </p>
+    <h3>Two-qubit dissipative gate: generalization across initial states (Experiment 4)</h3>
+    <div class="tbl-scroll">
+    <table>
+      <caption>State fidelity for the trained |00⟩ trajectory and three held-out initial states obtained by propagating the <em>learned generator</em>.</caption>
+      <thead>
+        <tr><th>Initial state</th><th>Mean fidelity</th><th>Final fidelity</th></tr>
+      </thead>
+      <tbody>
+        <tr class="ours"><td>|00⟩ (trained)</td><td>0.9944 ± 0.0014</td><td>0.9998 ± 0.0001</td></tr>
+        <tr><td>|01⟩ (held-out)</td><td>0.9504 ± 0.0065</td><td>0.9731 ± 0.0092</td></tr>
+        <tr><td>|10⟩ (held-out)</td><td>0.9551 ± 0.0087</td><td>0.9808 ± 0.0086</td></tr>
+        <tr><td>|+0⟩ (held-out)</td><td>0.9743 ± 0.0043</td><td>0.9808 ± 0.0045</td></tr>
+        <tr><td>Average</td><td>0.9685 ± 0.0047</td><td>—</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub">The recovered generator generalizes to held-out states at ≈0.97 mean fidelity with narrow confidence intervals — the property that matters for device characterization, since the test propagates the learned generator with an exact solver rather than reading off a memorized neural curve.</p>
 
-      <div class="section-grid demo-grid">
-        <article class="panel">
-          <div class="panel-head"><h3>Quick start</h3></div>
-          <div class="panel-body" style="padding:18px 20px;">
-            <pre class="command-block"># Install the package (editable)
-cd submission/code
-pip install -e .
+    <h3>Dense-versus-structured compiler scaling (Experiment 5)</h3>
+    <div class="tbl-scroll">
+    <table>
+      <caption>Median residual-evaluation time (50 repeats, batch of 100 states) and analytic storage; CPU, single machine. Extended runs reach a 276.65× speedup at d=24 with relative error ~10⁻¹⁶.</caption>
+      <thead>
+        <tr><th>d</th><th>Dense (s)</th><th>Structured (s)</th><th>Speedup</th><th>Dense (MB)</th><th>Structured (MB)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2</td><td>0.0069</td><td>0.0012</td><td>5.9×</td><td>0.000</td><td>0.00024</td></tr>
+        <tr><td>3</td><td>0.0095</td><td>0.0016</td><td>6.1×</td><td>0.001</td><td>0.00069</td></tr>
+        <tr><td>4</td><td>0.0099</td><td>0.0015</td><td>6.5×</td><td>0.004</td><td>0.00122</td></tr>
+        <tr><td>6</td><td>0.0125</td><td>0.0016</td><td>7.7×</td><td>0.020</td><td>0.00275</td></tr>
+        <tr><td>8</td><td>0.0238</td><td>0.0019</td><td>12.9×</td><td>0.062</td><td>0.00488</td></tr>
+      </tbody>
+    </table>
+    </div>
 
-# Regenerate all tables and figures (5 seeds each)
-python run_all.py
+    <h3>Residual certificate, verified numerically (Theorem 4)</h3>
+    <div class="tbl-scroll">
+    <table>
+      <caption>Physical perturbations of the exact qubit trajectory: attained trace distance, the certificate bound computed from the residual alone, and their ratio.</caption>
+      <thead>
+        <tr><th>Perturbation amplitude</th><th>Max trace distance</th><th>Certificate (Thm 4)</th><th>Certificate / error</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0.010</td><td>0.0039</td><td>0.0092</td><td>2.37</td></tr>
+        <tr><td>0.025</td><td>0.0097</td><td>0.0228</td><td>2.35</td></tr>
+        <tr><td>0.050</td><td>0.0193</td><td>0.0454</td><td>2.35</td></tr>
+        <tr><td>0.100</td><td>0.0387</td><td>0.0908</td><td>2.35</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub">The ratio exceeds one at every amplitude (a valid upper bound) and stays at a near-constant ≈2.35 (not loose by orders of magnitude).</p>
+  </section>
 
-# Or run a single experiment
-python run_one.py exp1   # ... exp2 / exp3 / exp4 / exp5</pre>
-          </div>
-        </article>
+  <!-- ===================== SIGNIFICANCE ===================== -->
+  <section id="significance">
+    <h2><span class="num">9</span>Significance and Impact</h2>
+    <p>The conceptual point is that physicality should be an <em>architectural invariant</em> rather than a penalty applied after the fact, and the mathematics shows that this invariant costs nothing in expressivity (Theorem 2), keeps the learned generator CPTP (Theorem 3), supplies an a posteriori trace-norm certificate (Theorem 4), and admits structured compilation that avoids dense Liouvillian storage (Theorem 6). For device characterization, the decisive deliverable is a transferable open-system model — a generator that propagates to held-out preparations at ≈0.97 fidelity — rather than a memorized curve. The constraint pays off most where it matters operationally: guaranteed physical trajectories at every step, graceful degradation under sparse measurements, and a compiler path that avoids squaring the density-vector dimension as <span class="mono">d=2^n</span> grows.</p>
+    <div class="callout">
+      <strong>Honest limitations, kept visible.</strong>
+      <ul class="tight" style="margin-top:6px">
+        <li><strong>Fast multi-level regimes are the principal open problem.</strong> Direct reconstruction of fast qutrit (leakage) trajectories is not reliable across seeds: a single-seed Fourier-feature advantage does not survive seed averaging (mean fidelity 0.77 ± 0.35 plain MLP versus 0.52 ± 0.49 Fourier). A least-squares fit of the linear-in-rates dissipator to the <em>exact</em> trajectory recovers the rates to better than 1%, so the difficulty is derivative quality under noise, not identifiability.</li>
+        <li><strong>No hardware data.</strong> The experiments are synthetic CPU simulations; they test implementation and theory, not device performance.</li>
+        <li><strong>Markovian assumption.</strong> The framework assumes GKSL dynamics; non-Markovian systems require extended state spaces, memory kernels, or process tensors.</li>
+        <li><strong>Identifiability is measurement-dependent.</strong> A rank-deficient sensitivity Gramian defeats any optimizer (Theorem 5).</li>
+        <li><strong>Scope.</strong> A small, fully reproducible proof of concept (five seeds per experiment); not a state-of-the-art benchmark sweep.</li>
+      </ul>
+    </div>
+    <p>The most promising engineering direction is a compiler that takes a high-level noise model and emits fused, batched, differentiable kernels for accelerator execution; the natural scientific next steps are interaction-picture residuals, derivative denoising, richer measurement designs, non-Markovian embeddings, and hardware-calibration datasets.</p>
+  </section>
 
-        <div class="resource-grid" style="grid-template-columns:1fr;">
-          <article class="resource-card">
-            <h3>Manuscript &amp; theory</h3>
-            <p><a href="submission/main.tex">Manuscript source (main.tex)</a></p>
-            <p><a href="submission/code/ctpcpinn/theory.py">Theory / guarantees (theory.py)</a></p>
-            <p><a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/tree/main/submission" target="_blank" rel="noopener noreferrer">submission/ on GitHub</a></p>
-          </article>
-          <article class="resource-card">
-            <h3>Code &amp; experiments</h3>
-            <p><a href="submission/code/run_all.py">run_all.py</a> &middot; <a href="submission/code/run_one.py">run_one.py</a></p>
-            <p><a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/tree/main/submission/code/ctpcpinn/experiments" target="_blank" rel="noopener noreferrer">Experiment scripts</a></p>
-            <p><a href="website/index.html">Local inference interface</a></p>
-          </article>
-        </div>
-      </div>
-    </section>
+  <!-- ===================== REPRODUCIBILITY ===================== -->
+  <section id="repro">
+    <h2><span class="num">10</span>Reproducibility</h2>
+    <p>Every numerical value in the manuscript is written directly to the figure and table files by the scripts in <code>submission/code</code>; none is entered by hand. The artifact is a pip-installable package, <code>ctpcpinn</code> (version 1.0.0, MIT, Python ≥ 3.10).</p>
+    <pre><span class="c"># 1. Obtain the source tree and install the package</span>
+<span class="k">cd</span> submission/code
+pip install .                 <span class="c"># runtime deps: numpy, scipy, torch, matplotlib, cycler</span>
 
-    <!-- ===================== 10. FOOTER ===================== -->
-    <footer>
-      <p style="margin-bottom:6px;"><strong>CPTP-Compiler-PINNs</strong> &mdash; structure-preserving residual learning and matrix-free compilation for open quantum dynamics. Molena Huynh.</p>
-      All quantitative claims are the manuscript's five-seed mean &plusmn; 95% confidence intervals, produced directly by the committed scripts and tables.
-      The study constitutes a reproducible, modest-scale proof of concept; it furnishes neither hardware data nor a state-of-the-art claim.
-    </footer>
-  </main>
+<span class="c"># 2. Regenerate every committed table and figure in place</span>
+python run_all.py             <span class="c"># or the console entry point:</span>
+ctpcpinn-reproduce
+ctpcpinn-validate             <span class="c"># checks regenerated numbers against the manuscript</span>
 
-  <!-- KaTeX render: targets in-page math spans/blocks -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      function renderTex(selector, displayMode) {
-        document.querySelectorAll(selector).forEach(function (el) {
-          var tex = el.getAttribute("data-tex");
-          if (!tex || typeof katex === "undefined") return;
-          try {
-            katex.render(tex, el, { displayMode: displayMode, throwOnError: false });
-          } catch (e) { /* leave raw on failure */ }
-        });
-      }
-      function renderAll() {
-        renderTex(".katex-inline", false);
-        renderTex(".katex-display-target", true);
-      }
-      if (typeof katex !== "undefined") {
-        renderAll();
-      } else {
-        // KaTeX is deferred; retry until it loads
-        var tries = 0;
-        var iv = setInterval(function () {
-          if (typeof katex !== "undefined" || tries++ > 50) {
-            clearInterval(iv);
-            renderAll();
-          }
-        }, 100);
-      }
+<span class="c"># 3. For bit-identical numbers, pin the exact environment</span>
+pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplotlib 3.10.8</span></pre>
+    <p class="sub">Each training experiment runs over seeds {0,1,2,3,4} and reports mean ± 95% Student-<em>t</em> CI; the compiler benchmark reports the median over repeated timings. Configuration: 3000 Adam epochs at learning rate 10⁻³, 100 time points, noise standard deviation 0.02. The <code>ctpcpinn/foundations.py</code> module provides a from-scratch theory-to-code map; <code>run_one.py</code> reproduces a single experiment. Simulations run on CPU; they are intentionally modest in scale and are neither hardware data nor state-of-the-art claims.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CPTP-Compiler-PINNs — Structure-Preserving Residual Learning and Matrix-Free Compilation for Open Quantum Dynamics. Molena Huynh, Independent Researcher. Manuscript prepared for submission to <em>Nature Machine Intelligence</em>. Numbers, theorems, and figures on this page are transcribed from the manuscript source (<code>submission/main.tex</code>); the interactive panel is a qualitative illustration of the governing relations, not a re-run of the experiments.</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   Render LaTeX with KaTeX auto-render after the library loads.
+   ============================================================ */
+window.addEventListener("load", function () {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false }
+      ],
+      throwOnError: false
     });
-  </script>
+  }
+});
 
-  <!-- ===== PRESERVED INTERACTIVE DEMO SCRIPT (verbatim) ===== -->
-  <script>
-    const demoButtons = Array.from(document.querySelectorAll('.demo-button'));
-    const demoFrame = document.getElementById('demo-frame');
-    const demoFrameTitle = document.getElementById('demo-frame-title');
-    const demoFrameLink = document.getElementById('demo-frame-link');
-    const demoCaption = document.getElementById('demo-caption');
+/* ============================================================
+   Interactive illustration. Two governed views:
+     (A) A posteriori residual certificate (Theorem 4):
+         (1/2)||rho_hat(t)-rho(t)||_1
+            <= (1/2)||e0||_1 + (1/2) * INT_0^t ||r(s)||_1 ds.
+         With a per-time residual magnitude delta and initial
+         error e0, the certificate grows as e0/2 + (delta/2) t.
+         The true error is illustrated as a CPTP-contracted band
+         (trace distance is non-expansive under the semigroup),
+         using the empirically observed ~2.35 tightness factor
+         from the manuscript (Thm 4 numerical verification).
+     (B) Dense vs structured compiler cost (Theorem 6):
+         dense ~ C_d * d^4 , structured ~ C_s * m * d^3.
+         Ratio Theta(d/m). Constants anchored to the reported
+         small-d timings.
+   No backend; pure canvas + vanilla JS; degrades gracefully.
+   ============================================================ */
+(function () {
+  var canvas = document.getElementById("demoCanvas");
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+  var W = canvas.width, H = canvas.height;
+  var controls = document.getElementById("controls");
+  var legendEl = document.getElementById("legend");
+  var captionEl = document.getElementById("demoCaption");
+  var btnCert = document.getElementById("mode-cert");
+  var btnComp = document.getElementById("mode-comp");
 
-    const demoCaptions = {
-      'notebooks/pinn_harmonic_oscillator.html': 'Currently showing the harmonic-oscillator report, which contains the strongest comparative result reported in the study.',
-      'notebooks/pinn_schrodinger.html': 'Currently showing the time-dependent report, which documents transport behavior and robustness under corrupted inputs.',
-      'notebooks/quantum_pinn_combined.html': 'Currently showing the combined report, which assembles the shared architecture, noise, and transfer comparisons.'
-    };
+  var mode = "cert";
+  var st = { delta: 0.05, e0: 0.02, T: 3.0 };   // certificate-view state
+  var cp = { d: 8, m: 4 };                       // compiler-view state
 
-    for (const button of demoButtons) {
-      button.addEventListener('click', () => {
-        for (const item of demoButtons) {
-          item.classList.remove('active');
-        }
+  var PAD = { l: 64, r: 18, t: 22, b: 46 };
 
-        button.classList.add('active');
-        demoFrame.src = button.dataset.src;
-        demoFrameTitle.textContent = button.dataset.title;
-        demoFrameLink.href = button.dataset.link;
-        demoCaption.textContent = demoCaptions[button.dataset.src] || '';
-      });
+  function clear() { ctx.clearRect(0, 0, W, H); }
+
+  function fmtLog(v) { return v >= 1 ? String(v) : v.toPrecision(1); }
+
+  function axes(xlabel, ylabel, xmin, xmax, ymin, ymax, xt, yt, logy) {
+    var x0 = PAD.l, x1 = W - PAD.r, y0 = H - PAD.b, y1 = PAD.t;
+    ctx.font = "12px 'Source Sans 3', sans-serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    for (var i = 0; i < xt.length; i++) {
+      var fx = (xt[i] - xmin) / (xmax - xmin);
+      var px = x0 + fx * (x1 - x0);
+      ctx.strokeStyle = "#eef2f5"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke();
+      ctx.fillStyle = "#566976"; ctx.fillText(String(xt[i]), px, y0 + 6);
     }
-  </script>
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    for (var j = 0; j < yt.length; j++) {
+      var v = yt[j];
+      var fy = logy ? (Math.log(v) - Math.log(ymin)) / (Math.log(ymax) - Math.log(ymin))
+                    : (v - ymin) / (ymax - ymin);
+      var py = y0 - fy * (y0 - y1);
+      ctx.strokeStyle = "#eef2f5"; ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x1, py); ctx.stroke();
+      ctx.fillStyle = "#566976"; ctx.fillText(logy ? fmtLog(v) : String(v), x0 - 8, py);
+    }
+    ctx.strokeStyle = "#9aabb5"; ctx.beginPath();
+    ctx.moveTo(x0, y1); ctx.lineTo(x0, y0); ctx.lineTo(x1, y0); ctx.stroke();
+    ctx.fillStyle = "#173042"; ctx.font = "600 12.5px 'Source Sans 3', sans-serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+    ctx.fillText(xlabel, (x0 + x1) / 2, H - 6);
+    ctx.save();
+    ctx.translate(16, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
+    ctx.textBaseline = "top"; ctx.fillText(ylabel, 0, 0);
+    ctx.restore();
+    return { x0: x0, x1: x1, y0: y0, y1: y1, xmin: xmin, xmax: xmax, ymin: ymin, ymax: ymax, logy: logy };
+  }
+
+  function X(ax, x) { return ax.x0 + (x - ax.xmin) / (ax.xmax - ax.xmin) * (ax.x1 - ax.x0); }
+  function Y(ax, y) {
+    var fy = ax.logy ? (Math.log(Math.max(y, ax.ymin)) - Math.log(ax.ymin)) / (Math.log(ax.ymax) - Math.log(ax.ymin))
+                     : (y - ax.ymin) / (ax.ymax - ax.ymin);
+    return ax.y0 - fy * (ax.y0 - ax.y1);
+  }
+
+  function curve(ax, f, color, width, dash) {
+    ctx.save();
+    ctx.strokeStyle = color; ctx.lineWidth = width || 2.2;
+    ctx.setLineDash(dash || []);
+    ctx.beginPath();
+    var N = 240, first = true;
+    for (var i = 0; i <= N; i++) {
+      var x = ax.xmin + (ax.xmax - ax.xmin) * i / N;
+      var px = X(ax, x), py = Y(ax, f(x));
+      if (first) { ctx.moveTo(px, py); first = false; } else ctx.lineTo(px, py);
+    }
+    ctx.stroke(); ctx.restore();
+  }
+
+  function bandFill(ax, fLo, fHi, fill) {
+    ctx.save(); ctx.fillStyle = fill; ctx.beginPath();
+    var N = 240, i, x, px, py;
+    for (i = 0; i <= N; i++) { x = ax.xmin + (ax.xmax - ax.xmin) * i / N; px = X(ax, x); py = Y(ax, fHi(x)); if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }
+    for (i = N; i >= 0; i--) { x = ax.xmin + (ax.xmax - ax.xmin) * i / N; px = X(ax, x); py = Y(ax, fLo(x)); ctx.lineTo(px, py); }
+    ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+
+  function dot(ax, x, y, color) {
+    ctx.fillStyle = color; ctx.beginPath();
+    ctx.arc(X(ax, x), Y(ax, y), 4.2, 0, 2 * Math.PI); ctx.fill();
+  }
+
+  /* ---------- View A: certificate ---------- */
+  function drawCert() {
+    clear();
+    var d = st.delta, e0 = st.e0, T = st.T;
+    var certT = e0 / 2 + (d / 2) * T;
+    var ymax = Math.max(0.02, Math.ceil(certT * 110) / 100);
+    var yt = [0], step = ymax / 4;
+    for (var k = 1; k <= 4; k++) yt.push(Math.round(step * k * 1000) / 1000);
+    var xt = []; for (var x = 0; x <= T + 1e-9; x += T / 6) xt.push(Math.round(x * 10) / 10);
+
+    var ax = axes("time  t", "trace distance  (1/2)||.||_1", 0, T, 0, ymax, xt, yt, false);
+
+    function cert(t) { return e0 / 2 + (d / 2) * t; }
+    function err(t)  { return cert(t) / 2.35; }
+    function errLo(t){ return Math.max(0, err(t) * 0.78); }
+    function errHi(t){ return Math.min(cert(t), err(t) * 1.22); }
+
+    bandFill(ax, errLo, errHi, "rgba(25,67,91,0.14)");
+    curve(ax, cert, "#b5651d", 2.6);
+    curve(ax, err,  "#19435b", 2.4);
+    dot(ax, T, cert(T), "#b5651d");
+    dot(ax, T, err(T), "#19435b");
+
+    legendEl.innerHTML =
+      '<span class="l-cert">Certificate bound (1/2)||e0||_1 + (1/2)∫||r||_1</span>' +
+      '<span class="l-true">Illustrative true error (band = seed spread)</span>';
+
+    var ratio = cert(T) / Math.max(err(T), 1e-9);
+    document.getElementById("readout").innerHTML =
+      "residual ||r(s)||_1 ≈ <b>" + d.toFixed(3) + "</b> per unit time<br>" +
+      "initial error (1/2)||e0||_1 = <b>" + (e0 / 2).toFixed(3) + "</b><br>" +
+      "certificate at t=T : <b>" + cert(T).toFixed(3) + "</b><br>" +
+      "true error at t=T : <b>" + err(T).toFixed(3) + "</b><br>" +
+      "bound / error ratio : <b>" + ratio.toFixed(2) + "</b>  (paper: ≈2.35)";
+
+    captionEl.textContent =
+      "Theorem 4. The certificate (1/2)||e0||_1 + (1/2)∫_0^t ||r(s)||_1 ds is computed from the learned path alone and bounds the trace distance to the true CPTP dynamics for all t. Raising the per-time residual magnitude or the initial error lifts the bound linearly in t; the true error stays below it, at a small near-constant factor matching the ≈2.35 reported numerically.";
+  }
+
+  /* ---------- View B: compiler scaling ---------- */
+  function drawComp() {
+    clear();
+    var Cd = 0.0069 / Math.pow(2, 4);          // anchor to dense d=2 timing
+    var Cs = 0.0012 / (2 * Math.pow(2, 3));     // anchor to structured d=2, m=2
+    var m = cp.m, dSel = cp.d;
+    var dmin = 2, dmax = 32;
+    var xt = [2, 4, 8, 16, 32];
+    var ymin = 1e-4, ymax = 1e2;
+    var yt = [1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2];
+    var ax = axes("Hilbert dimension  d", "residual-eval time (s, log)", dmin, dmax, ymin, ymax, xt, yt, true);
+
+    function dense(d) { return Cd * Math.pow(d, 4); }
+    function struct(d) { return Cs * m * Math.pow(d, 3); }
+
+    curve(ax, dense, "#c0392b", 2.6);
+    curve(ax, struct, "#1f8a4c", 2.6);
+    dot(ax, dSel, dense(dSel), "#c0392b");
+    dot(ax, dSel, struct(dSel), "#1f8a4c");
+
+    ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = "#9aabb5";
+    ctx.beginPath(); ctx.moveTo(X(ax, dSel), ax.y0); ctx.lineTo(X(ax, dSel), ax.y1); ctx.stroke(); ctx.restore();
+
+    legendEl.innerHTML =
+      '<span class="l-dense">Dense Liouvillian  Θ(d^4)</span>' +
+      '<span class="l-struct">Structured matrix-free  Θ(m·d^3)</span>';
+
+    var speed = dense(dSel) / struct(dSel);
+    var denseMB = Math.pow(dSel, 4) * 16 / 1e6;     // d^4 complex128 -> MB
+    var structMB = m * dSel * dSel * 16 / 1e6;      // m operators
+    document.getElementById("readout").innerHTML =
+      "dimension d = <b>" + dSel + "</b> , jump operators m = <b>" + m + "</b><br>" +
+      "dense eval ≈ <b>" + dense(dSel).toExponential(2) + "</b> s<br>" +
+      "structured eval ≈ <b>" + struct(dSel).toExponential(2) + "</b> s<br>" +
+      "speedup ≈ <b>" + speed.toFixed(1) + "×</b>  (ratio Θ(d/m))<br>" +
+      "dense storage ≈ <b>" + denseMB.toFixed(3) + "</b> MB vs structured <b>" + structMB.toFixed(4) + "</b> MB";
+
+    captionEl.textContent =
+      "Theorem 6. Dense Liouvillian evaluation scales as Θ(d^4) in time and storage; the structured kernel evaluates the commutator and dissipator directly from H and the m jump operators at Θ(m·d^3) time and Θ(m·d^2) storage. The per-evaluation ratio is Θ(d/m), so the structured path separates further as d grows, consistent with the measured 5.9× (d=2) to 276.65× (d=24) speedups.";
+  }
+
+  function draw() { if (mode === "cert") drawCert(); else drawComp(); }
+
+  function slider(id, label, min, max, stepv, value, fmt) {
+    return '<label>' + label + '<span class="val" id="' + id + 'v">' + fmt(value) + '</span></label>' +
+           '<input type="range" id="' + id + '" min="' + min + '" max="' + max + '" step="' + stepv + '" value="' + value + '">';
+  }
+
+  function bind(id, setter, fmt) {
+    var el = document.getElementById(id);
+    var lbl = document.getElementById(id + "v");
+    el.addEventListener("input", function () {
+      var v = parseFloat(el.value);
+      setter(v); lbl.textContent = fmt(v); draw();
+    });
+  }
+
+  function buildControls() {
+    if (mode === "cert") {
+      controls.innerHTML =
+        slider("delta", "Residual magnitude ||r(s)||_1", 0.005, 0.30, 0.005, st.delta, function (v) { return (+v).toFixed(3); }) +
+        slider("e0", "Initial error ||e0||_1", 0.0, 0.20, 0.005, st.e0, function (v) { return (+v).toFixed(3); }) +
+        slider("T", "Horizon T", 0.5, 6.0, 0.5, st.T, function (v) { return (+v).toFixed(1); }) +
+        '<div class="readout" id="readout"></div>';
+      bind("delta", function (v) { st.delta = v; }, function (v) { return v.toFixed(3); });
+      bind("e0", function (v) { st.e0 = v; }, function (v) { return v.toFixed(3); });
+      bind("T", function (v) { st.T = v; }, function (v) { return v.toFixed(1); });
+    } else {
+      controls.innerHTML =
+        slider("d", "Hilbert dimension d", 2, 32, 1, cp.d, function (v) { return String(v | 0); }) +
+        slider("m", "Jump operators m", 1, 12, 1, cp.m, function (v) { return String(v | 0); }) +
+        '<div class="readout" id="readout"></div>';
+      bind("d", function (v) { cp.d = v | 0; }, function (v) { return String(v | 0); });
+      bind("m", function (v) { cp.m = v | 0; }, function (v) { return String(v | 0); });
+    }
+    draw();
+  }
+
+  function setMode(m) {
+    mode = m;
+    btnCert.classList.toggle("active", m === "cert");
+    btnComp.classList.toggle("active", m === "comp");
+    buildControls();
+  }
+
+  btnCert.addEventListener("click", function () { setMode("cert"); });
+  btnComp.addEventListener("click", function () { setMode("comp"); });
+
+  buildControls();
+})();
+</script>
+
 </body>
 </html>
