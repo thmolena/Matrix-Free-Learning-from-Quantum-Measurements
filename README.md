@@ -56,7 +56,7 @@ committed CSV artifacts in `outputs/`.
    reported as mean ± 95% confidence interval against a soft-positivity penalty,
    an unconstrained network, and a classical model-based least-squares fit.
 
-## Headline results
+## Main results
 
 All values are transcribed verbatim from the committed tables.
 
