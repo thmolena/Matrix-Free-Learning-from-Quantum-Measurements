@@ -48,29 +48,29 @@
 
     header.hero {
       background:
-        radial-gradient(1200px 420px at 78% -10%, rgba(47,97,123,0.20), transparent 60%),
-        linear-gradient(160deg, #112c3c 0%, #19435b 58%, #20566f 100%);
-      color: #eaf2f6;
+        radial-gradient(1200px 420px at 78% -10%, rgba(47,97,123,0.10), transparent 60%),
+        linear-gradient(160deg, #eef4f8 0%, #f6f9fb 58%, #ffffff 100%);
+      color: var(--ink);
       padding: 58px 0 46px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid var(--line);
     }
     .hero .kicker {
       font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
-      color: #9fc4d6; font-weight: 600; margin-bottom: 14px;
+      color: var(--accent-soft); font-weight: 600; margin-bottom: 14px;
     }
     .hero h1 {
       font-family: "Source Serif 4", Georgia, serif;
       font-weight: 700; font-size: 2.05rem; line-height: 1.2;
-      margin: 0 0 14px; color: #ffffff;
+      margin: 0 0 14px; color: var(--accent);
     }
-    .hero p.lead { font-size: 1.08rem; color: #d3e3eb; max-width: 760px; margin: 0 0 22px; }
-    .hero .meta { font-size: 0.95rem; color: #b6d0dc; }
-    .hero .meta strong { color: #eaf2f6; }
+    .hero p.lead { font-size: 1.08rem; color: var(--muted); max-width: 760px; margin: 0 0 22px; }
+    .hero .meta { font-size: 0.95rem; color: var(--muted); }
+    .hero .meta strong { color: var(--ink); }
     .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     .badge {
       font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em;
-      background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20);
-      color: #eaf2f6; padding: 6px 12px; border-radius: 999px;
+      background: var(--panel); border: 1px solid var(--line);
+      color: var(--accent); padding: 6px 12px; border-radius: 999px;
     }
 
     nav.toc {
@@ -127,11 +127,11 @@
       border-radius: 5px; padding: 1px 5px;
     }
     pre {
-      background: #0f2533; color: #d7e6ee; border-radius: 10px;
+      background: #eef2f7; color: #1b2330; border: 1px solid var(--line); border-radius: 10px;
       padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.55;
     }
-    pre .c { color: #7fa8b8; }
-    pre .k { color: #8fd3a7; }
+    pre .c { color: #6e7781; }
+    pre .k { color: #1f7a4d; }
 
     .callout {
       border-left: 4px solid var(--warn); background: #fbf5ea;
@@ -173,10 +173,10 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">Open Quantum Systems · Physics-Informed Learning · Structure-Preserving Computation</div>
+    <div class="kicker">Open Quantum Systems · Physics-Informed Learning · Structure-Preserving Computation · Part of a unified graph-learning program for quantum computation</div>
     <h1>CPTP-Compiler-PINNs: Structure-Preserving Residual Learning and Matrix-Free Compilation for Open Quantum Dynamics</h1>
-    <p class="lead">A framework for identifying Markovian open-quantum models from sparse, noisy observations in which physicality is an architectural invariant — never a penalty applied after the fact — and the Lindblad residual is evaluated by a compiler that avoids materializing the dense <span class="mono">d²×d²</span> Liouvillian.</p>
-    <p class="meta"><strong>Molena Huynh</strong> · Independent Researcher · manuscript prepared for submission to <em>Nature Machine Intelligence</em></p>
+    <p class="lead">Identification of Markovian open-quantum models from sparse, noisy data, founded on two design principles: physicality is an invariant of the architecture rather than a penalty applied after the fact, and the Lindblad residual is evaluated by a compiler that bypasses the dense <span class="mono">d²×d²</span> Liouvillian. The hard constraint is proved free of expressive cost and yields a transferable, certified generator.</p>
+    <p class="meta"><strong>Molena Huynh</strong> · North Carolina State University · <a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a> · manuscript prepared for submission to <em>Nature Machine Intelligence</em></p>
     <div class="badges">
       <span class="badge">Cholesky density network</span>
       <span class="badge">GKSL-preserving generator</span>
@@ -208,124 +208,124 @@
   <!-- ===================== BACKGROUND ===================== -->
   <section id="background">
     <h2><span class="num">1</span>Background and Motivation</h2>
-    <p>Open quantum systems are the operational language of modern quantum hardware. A superconducting, trapped-ion, photonic, spin, or neutral-atom processor is never described only by its ideal Hamiltonian; it is also described by relaxation, dephasing, leakage, crosstalk, drift, and control-induced dissipation. The object that must remain physical throughout this description is the density matrix. For a finite Hilbert space <span class="mono">ℋ ≅ ℂ^d</span>, the admissible state space is</p>
+    <p>Open quantum systems are the working language of quantum hardware. Every superconducting, trapped-ion, photonic, spin, and neutral-atom processor extends beyond its ideal Hamiltonian into relaxation, dephasing, leakage, crosstalk, drift, and control-induced dissipation. Throughout this description, one object must stay physical at all times: the density matrix. For a finite Hilbert space <span class="mono">ℋ ≅ ℂ^d</span>, its admissible values form the state space</p>
     <p style="text-align:center">$$\mathcal{D}(\mathcal{H})=\{\rho\in\mathbb{C}^{d\times d}:\rho=\rho^\dagger,\ \rho\succeq 0,\ \operatorname{Tr}\rho=1\}.$$</p>
-    <p>When the dynamics are Markovian and time-local, the most general generator of a completely positive trace-preserving (CPTP) semigroup is the Gorini–Kossakowski–Sudarshan–Lindblad (GKSL) generator — the backbone of quantum noise modeling, control, and calibration.</p>
-    <p>The inverse problem — inferring a physically admissible dynamical model from incomplete observations — is increasingly central to device characterization. Classical process tomography reconstructs a channel but scales poorly with system size; Hamiltonian and Lindblad learning exploit dynamical structure yet still face identifiability and optimization challenges. Physics-informed neural networks (PINNs) provide flexible function approximation with equation residuals in the objective, but a direct neural map <span class="mono">t ↦ ρ_θ(t)</span> has no reason to remain Hermitian, positive semidefinite, or unit trace.</p>
-    <p><strong>The open problem.</strong> A loss penalty for negative eigenvalues is not equivalent to physicality during training; it merely asks the optimizer to repair an invalid output after the fact. Concurrently, dense Liouvillian implementations materialize <span class="mono">d²×d²</span> superoperators even when the model is specified by a Hamiltonian and a few local jump operators. This work takes the opposite design principle on both axes: <em>make invalid states unrepresentable</em>, and lower a symbolic open-system specification to kernels that never form the dense superoperator.</p>
+    <p>For Markovian, time-local dynamics, the most general generator of a completely positive trace-preserving (CPTP) semigroup is the Gorini–Kossakowski–Sudarshan–Lindblad (GKSL) generator. It is the backbone of quantum noise modeling, control, and calibration.</p>
+    <p>Recovering such a generator from data is the inverse problem at the heart of device characterization, and existing approaches each pay a price. Classical process tomography reconstructs a channel but scales poorly with system size; Hamiltonian and Lindblad learning exploit dynamical structure yet still confront identifiability and optimization obstacles. Physics-informed neural networks (PINNs) add flexible approximation and place the equation residual in the objective, yet a direct neural map <span class="mono">t ↦ ρ_θ(t)</span> is free to leave the manifold of Hermitian, positive semidefinite, unit-trace operators — the very properties that define a state.</p>
+    <p><strong>The open problem.</strong> Penalizing negative eigenvalues differs from enforcing physicality during training: a penalty merely asks the optimizer to repair an already-invalid output. In parallel, dense Liouvillian implementations assemble the full <span class="mono">d²×d²</span> superoperator even when the model is fixed by a Hamiltonian and a handful of local jump operators. This work inverts both design choices: it renders invalid states <em>unrepresentable</em>, and lowers a symbolic open-system specification to kernels that bypass the dense superoperator entirely.</p>
   </section>
 
   <!-- ===================== PRELIMINARIES ===================== -->
   <section id="prelim">
     <h2><span class="num">2</span>Mathematical Preliminaries</h2>
-    <p class="sub">The formal objects a reader must command before the formulation.</p>
+    <p class="sub">The formal objects the formulation depends on, stated once and reused throughout.</p>
 
     <h3>Markovian generator (GKSL form)</h3>
-    <p>A time-independent Markovian master equation has the form</p>
+    <p>A time-independent Markovian master equation reads</p>
     <p style="text-align:center">$$\frac{d\rho}{dt}=\mathcal{L}_\Theta[\rho]=-i[H_\Theta,\rho]+\sum_{k=1}^{m}\gamma_k\!\left(L_k\rho L_k^\dagger-\tfrac12\{L_k^\dagger L_k,\rho\}\right),\qquad H_\Theta=H_\Theta^\dagger,\ \gamma_k\ge 0.$$</p>
     <p>Using the column-major identity <span class="mono">vec(AρB)=(Bᵀ⊗A)vec(ρ)</span>, the dense Liouvillian is</p>
     <p style="text-align:center">$$\mathbb{L}_\Theta=-i\,(I\otimes H_\Theta-H_\Theta^{T}\otimes I)+\sum_k\gamma_k\!\left(L_k^{*}\otimes L_k-\tfrac12 I\otimes L_k^\dagger L_k-\tfrac12(L_k^\dagger L_k)^{T}\otimes I\right),$$</p>
-    <p>which stores <span class="mono">d⁴</span> complex scalars, whereas direct evaluation of the generator stores <span class="mono">H</span> and the <span class="mono">L_k</span>, i.e. <span class="mono">O(md²)</span>.</p>
+    <p>This form stores <span class="mono">d⁴</span> complex scalars; evaluating the generator directly instead stores only <span class="mono">H</span> and the <span class="mono">L_k</span>, i.e. <span class="mono">O(md²)</span> — the gap the compiler exploits.</p>
 
     <h3>Hard-constrained density network (the Cholesky map)</h3>
-    <p>Let <span class="mono">B_φ:[0,T]→ℂ^{d×d}</span> be a neural network whose output is read as a lower-triangular factor <span class="mono">A_φ(t)</span> with strictly positive diagonal,</p>
+    <p>Let <span class="mono">B_φ:[0,T]→ℂ^{d×d}</span> be a neural network whose output is interpreted as a lower-triangular factor <span class="mono">A_φ(t)</span> with strictly positive diagonal,</p>
     <p style="text-align:center">$$A_\phi(t)_{ij}=0\ (i<j),\quad A_\phi(t)_{ii}=a_{\min}+\operatorname{softplus}(b_{ii}(t)),\quad A_\phi(t)_{ij}=b_{ij}(t)\ (i>j),$$</p>
-    <p>and define the state by the differentiable, architecture-level physical map</p>
+    <p>and define the state through the differentiable, architecture-level map that is physical by construction,</p>
     <p style="text-align:center">$$\rho_\phi(t)=\frac{A_\phi(t)A_\phi(t)^\dagger}{\operatorname{Tr}\!\big[A_\phi(t)A_\phi(t)^\dagger\big]}.$$</p>
-    <p>The representation carries <span class="mono">d²</span> real degrees of freedom against the <span class="mono">d²−1</span> of a full-rank trace-normalized state, so it is only mildly redundant, and rank-deficient (pure) states arise as limits.</p>
+    <p>The map carries <span class="mono">d²</span> real degrees of freedom against the <span class="mono">d²−1</span> of a full-rank trace-normalized state, so its redundancy is mild, and rank-deficient (pure) states are recovered as limits.</p>
 
     <h3>Generator parameterization (GKSL by construction)</h3>
-    <p>For known jump operators with unknown rates, <span class="mono">γ_k(ξ_k)=softplus(ξ_k)+γ_min</span> with <span class="mono">γ_min ≥ 0</span>; for a full Kossakowski matrix in a fixed basis <span class="mono">{F_a}</span>, <span class="mono">C_η=B_η B_η^† ⪰ 0</span>, giving</p>
+    <p>Two parameterizations keep the generator in GKSL form. When the jump operators are known but the rates are not, <span class="mono">γ_k(ξ_k)=softplus(ξ_k)+γ_min</span> with <span class="mono">γ_min ≥ 0</span>; for a full Kossakowski matrix in a fixed basis <span class="mono">{F_a}</span>, the positive semidefinite factorization <span class="mono">C_η=B_η B_η^† ⪰ 0</span> gives</p>
     <p style="text-align:center">$$\mathcal{L}_\Theta[\rho]=-i[H_\Theta,\rho]+\sum_{a,b=1}^{q}(C_\eta)_{ab}\!\left(F_a\rho F_b^\dagger-\tfrac12\{F_b^\dagger F_a,\rho\}\right),\qquad H_\theta(t)=\sum_\ell\theta_\ell(t)\,G_\ell.$$</p>
 
     <h3>Physics-informed objective</h3>
-    <p>Training minimizes a masked data term, an initial-condition term, and a Lindblad residual evaluated at collocation points <span class="mono">{τ_ℓ}</span>:</p>
+    <p>Training minimizes three terms: a masked data fit, an initial-condition match, and the Lindblad residual evaluated at collocation points <span class="mono">{τ_ℓ}</span>:</p>
     <p style="text-align:center">$$\mathcal{J}(\phi,\Theta)=\lambda_{\mathrm{data}}\,\mathcal{J}_{\mathrm{data}}+\lambda_{\mathrm{phys}}\,\mathcal{J}_{\mathrm{phys}}+\lambda_0\,\mathcal{J}_0,\qquad \mathcal{J}_{\mathrm{phys}}=\frac{1}{N_c}\sum_\ell\big\|\dot\rho_\phi(\tau_\ell)-\mathcal{L}_\Theta[\rho_\phi(\tau_\ell)]\big\|_F^2,$$</p>
-    <p>with <span class="mono">J_data = (Σ m_ij)⁻¹ Σ m_ij (Tr[O_j ρ_φ(t_i)] − y_ij)²</span> and <span class="mono">J_0 = ‖ρ_φ(0) − ρ_0‖_F²</span>. The derivative <span class="mono">ρ̇_φ</span> is obtained by automatic differentiation of the density network with respect to time; the residual <span class="mono">L_Θ[ρ_φ]</span> is produced by the compiler, in dense or structured mode.</p>
+    <p>with <span class="mono">J_data = (Σ m_ij)⁻¹ Σ m_ij (Tr[O_j ρ_φ(t_i)] − y_ij)²</span> and <span class="mono">J_0 = ‖ρ_φ(0) − ρ_0‖_F²</span>. The time derivative <span class="mono">ρ̇_φ</span> comes from automatic differentiation of the density network; the residual term <span class="mono">L_Θ[ρ_φ]</span> is supplied by the compiler in either its dense or structured mode.</p>
   </section>
 
   <!-- ===================== FORMULATION ===================== -->
   <section id="formulation">
     <h2><span class="num">3</span>Problem Formulation</h2>
-    <p>Fix a Hilbert dimension <span class="mono">d</span>, an initial state <span class="mono">ρ_0 ∈ 𝒟(ℋ)</span>, and observables <span class="mono">{O_j}_{j=1}^{p}</span>. We are given noisy, possibly incomplete measurements</p>
+    <p>Fix a Hilbert dimension <span class="mono">d</span>, an initial state <span class="mono">ρ_0 ∈ 𝒟(ℋ)</span>, and observables <span class="mono">{O_j}_{j=1}^{p}</span>. The data are noisy, possibly incomplete measurements</p>
     <p style="text-align:center">$$y_{ij}\approx \operatorname{Tr}\!\big[O_j\,\rho(t_i)\big]+\varepsilon_{ij},\qquad m_{ij}\in\{0,1\}\ \text{(observation mask)},$$</p>
-    <p>of an unknown trajectory generated by an unknown GKSL generator <span class="mono">𝓛_{Θ*}</span>. The task is to recover jointly (i) a trajectory <span class="mono">ρ_φ:[0,T]→𝒟(ℋ)</span> consistent with the data and (ii) the generator parameters <span class="mono">Θ</span> (Hamiltonian coefficients and dissipative rates), subject to the requirement that every estimate remain a legal density matrix at every time, every iteration, and every evaluation point, and that the recovered generator remain a legal Lindbladian. The problem is generally ill-posed: a parameter direction the chosen observables do not excite cannot be recovered by any method — the content of the identifiability analysis below.</p>
+    <p>sampled from an unknown trajectory generated by an unknown GKSL generator <span class="mono">𝓛_{Θ*}</span>. The task is to recover two things jointly: (i) a trajectory <span class="mono">ρ_φ:[0,T]→𝒟(ℋ)</span> consistent with the data, and (ii) the generator parameters <span class="mono">Θ</span> — the Hamiltonian coefficients and dissipative rates. The recovery is constrained throughout: every estimate must be a legal density matrix at every time, every iteration, and every evaluation point, and the recovered generator must be a legal Lindbladian. The problem is generally ill-posed, since recovery of a parameter direction requires that the chosen observables excite it — precisely what the identifiability analysis below quantifies.</p>
   </section>
 
   <!-- ===================== CONTRIBUTIONS ===================== -->
   <section id="contributions">
     <h2><span class="num">4</span>Principal Contributions</h2>
     <ol class="contrib">
-      <li><strong>A hard-constrained density network.</strong> The Cholesky density map enforces Hermiticity, positive semidefiniteness, and unit trace exactly at every time point, every training iteration, and every evaluation point.</li>
-      <li><strong>A CPTP generator parameterization.</strong> Nonnegative Lindblad rates are represented through softplus parameters and full Kossakowski matrices as positive semidefinite Gram matrices <span class="mono">C=BB^†</span>; the learned generator remains in GKSL form.</li>
-      <li><strong>A matrix-free open-system compiler.</strong> A symbolic open-system intermediate representation is lowered to either a dense superoperator or a structured residual kernel, with a dispatch policy selecting the mode by dimension and batch size; the two modes agree to floating-point precision.</li>
-      <li><strong>Six mathematical guarantees.</strong> Exact physicality, universal trajectory approximation, CPTP semigroup preservation, an a posteriori trace-norm residual certificate, a local identifiability bound, and a dense-versus-structured complexity separation, all proved in full.</li>
-      <li><strong>A reproducible, statistically reported study with baselines.</strong> Every figure and number is emitted by the accompanying scripts; each training experiment is repeated over five seeds and reported as mean ± 95% confidence interval, against a soft positivity penalty, an unconstrained network, and a classical model-based least-squares fit.</li>
+      <li><strong>A hard-constrained density network.</strong> The Cholesky density map enforces Hermiticity, positive semidefiniteness, and unit trace exactly — not approximately — at every time point, every training iteration, and every evaluation point.</li>
+      <li><strong>A CPTP-by-construction generator parameterization.</strong> Nonnegative Lindblad rates pass through softplus, and full Kossakowski matrices are factored as positive semidefinite Gram matrices <span class="mono">C=BB^†</span>, so the learned generator can never leave GKSL form.</li>
+      <li><strong>A matrix-free open-system compiler.</strong> A symbolic open-system intermediate representation is lowered to either a dense superoperator or a structured residual kernel; a dispatch policy picks the mode by dimension and batch size, and the two modes agree to floating-point precision.</li>
+      <li><strong>Six exact mathematical guarantees.</strong> Exact physicality, universal trajectory approximation, CPTP semigroup preservation, an a posteriori trace-norm residual certificate, a local identifiability bound, and a dense-versus-structured complexity separation — each proved in full.</li>
+      <li><strong>A fully reproducible study with statistics and baselines.</strong> Every figure and number is emitted by the accompanying scripts; each training experiment is repeated over five seeds and reported as mean ± 95% confidence interval, against a soft positivity penalty, an unconstrained network, and a classical model-based least-squares fit.</li>
     </ol>
-    <p class="sub">The results are stated conservatively: they demonstrate the value of the structural constraints and the compiler path on controlled simulations; they do not claim quantum-hardware validation, universal superiority over all baselines, or production-scale GPU performance.</p>
+    <p class="sub">The claims are deliberately bounded: the experiments establish the value of the structural constraints and the compiler path on controlled simulations. Their scope stops short of quantum-hardware validation, universal superiority over every baseline, and production-scale GPU performance.</p>
   </section>
 
   <!-- ===================== NOVELTY ===================== -->
   <section id="novelty">
     <h2><span class="num">5</span>Methodological Novelty</h2>
-    <p>The contribution is stated against named prior art rather than in the abstract:</p>
+    <p>The novelty is best read against named prior art, one comparison at a time:</p>
     <ul class="tight">
-      <li><strong>Versus completely-positive projection methods (Knee et al.).</strong> Standard pipelines repair an estimate <em>after the fact</em> by projecting onto the positive cone. Here illegal states are unrepresentable: the Cholesky map lands in <span class="mono">𝒟(ℋ)</span> by construction, removing the post-hoc projection step entirely.</li>
-      <li><strong>Versus Lindblad / Hamiltonian learning (Boulant et al.; Wang et al.).</strong> The framework keeps the structured-identification philosophy but replaces unconstrained trajectory estimation with a hard density parameterization, so the optimizer never spends capacity leaving and re-entering the physical set.</li>
-      <li><strong>Versus inverse PINNs (Raissi, Karniadakis; Wang et al.).</strong> The residual objective is shared, but the hypothesis class is restricted to physically valid states and CPTP generators, in the spirit of structure-preserving scientific networks (Hamiltonian, Lagrangian, symplectic) that constrain the model to improve learning.</li>
-      <li><strong>Versus neural quantum states / neural tomography (Carleo &amp; Troyer; Torlai et al.).</strong> Those represent wavefunctions or measurement distributions of states; this work targets the <em>generator</em> of open-system dynamics with a guaranteed-CPTP parameterization.</li>
-      <li><strong>The "compiler" framing.</strong> A model is specified in an intermediate representation (Hilbert dimension, Hamiltonian terms, jump operators, rates, observables, batching, differentiation mode) and lowered to dense, structured, sparse, or tensor-local kernels — aligning open-system identification with the design philosophy of contemporary accelerator and quantum software stacks.</li>
+      <li><strong>Versus completely-positive projection methods (Knee et al.).</strong> Standard pipelines repair an invalid estimate <em>after the fact</em> by projecting onto the positive cone. Here invalid states fall outside the model's expressive range: the Cholesky map lands in <span class="mono">𝒟(ℋ)</span> by construction, eliminating the projection step entirely.</li>
+      <li><strong>Versus Lindblad / Hamiltonian learning (Boulant et al.; Wang et al.).</strong> The framework retains structured identification while replacing unconstrained trajectory estimation with a hard density parameterization, so optimizer capacity stays inside the physical set throughout training.</li>
+      <li><strong>Versus inverse PINNs (Raissi, Karniadakis; Wang et al.).</strong> The residual objective is shared, while the hypothesis class is narrowed to physically valid states and CPTP generators — the same structure-preserving principle behind Hamiltonian, Lagrangian, and symplectic networks, which constrain the model to improve learning.</li>
+      <li><strong>Versus neural quantum states / neural tomography (Carleo &amp; Troyer; Torlai et al.).</strong> Those parameterize wavefunctions or measurement distributions of states; this work parameterizes the <em>generator</em> of open-system dynamics, with a CPTP guarantee built in.</li>
+      <li><strong>The "compiler" framing.</strong> A model is written as an intermediate representation — Hilbert dimension, Hamiltonian terms, jump operators, rates, observables, batching, differentiation mode — and lowered to dense, structured, sparse, or tensor-local kernels, aligning open-system identification with the design philosophy of modern accelerator and quantum software stacks.</li>
     </ul>
   </section>
 
   <!-- ===================== THEORY ===================== -->
   <section id="theory">
     <h2><span class="num">6</span>Theoretical Guarantees</h2>
-    <p class="sub">Six results, exact (not statistical), transcribed from the manuscript; each with a one-line interpretation.</p>
+    <p class="sub">Six exact results — not empirical trends — transcribed verbatim from the manuscript, each followed by a one-line reading of what it buys.</p>
 
     <div class="theorem">
       <span class="tname">Theorem 1 — Exact density-matrix physicality.</span>
       Let <span class="mono">A:[0,T]→ℂ^{d×d}</span> be continuous with <span class="mono">A(t)≠0</span> for all <span class="mono">t</span>, and <span class="mono">ρ_A(t)=A(t)A(t)^† / Tr(A(t)A(t)^†)</span>. Then <span class="mono">ρ_A(t)∈𝒟(ℋ)</span> for every <span class="mono">t</span>. If <span class="mono">A</span> is differentiable, <span class="mono">ρ_A</span> is differentiable, Hermitian, and <span class="mono">Tr ρ̇_A(t)=0</span>.
-      <div class="interp">No training step can output a negative-probability state unless the floating-point implementation itself fails — the source of the measured zero positivity-violation rate.</div>
+      <div class="interp">Every training step emits a legal state short of a floating-point failure — the mechanism behind the measured zero positivity-violation rate.</div>
     </div>
 
     <div class="theorem">
       <span class="tname">Theorem 2 — Universal approximation of continuous density trajectories.</span>
       For any continuous <span class="mono">ρ:[0,T]→𝒟(ℋ)</span> and full-rank <span class="mono">σ</span>, and every <span class="mono">ε&gt;0</span>, there exists a finite network <span class="mono">A_φ</span> with nonzero output such that <span class="mono">sup_t ‖A_φA_φ^†/Tr(A_φA_φ^†) − ρ(t)‖_F &lt; ε</span>.
-      <div class="interp">The hard constraint does not reduce expressive power: any continuous physical trajectory is approximable inside the constrained hypothesis class.</div>
+      <div class="interp">The hard constraint costs no expressive power: every continuous physical trajectory remains approximable inside the constrained hypothesis class.</div>
     </div>
 
     <div class="theorem">
       <span class="tname">Theorem 3 — GKSL preservation.</span>
       With <span class="mono">H_θ=H_θ^†</span> and <span class="mono">γ_k(ξ_k)=softplus(ξ_k)+γ_min, γ_min≥0</span>, the generator is a GKSL generator and <span class="mono">e^{t𝓛_Θ}</span> is CPTP for all <span class="mono">t≥0</span>. The Kossakowski parameterization with <span class="mono">C=BB^†</span> is likewise a GKSL generator.
-      <div class="interp">The learned generator is always a legal Lindbladian, so it can be propagated to held-out initial states with an exact solver.</div>
+      <div class="interp">Because the learned generator is always a legal Lindbladian, it can be propagated to held-out initial states with an exact solver.</div>
     </div>
 
     <div class="theorem">
       <span class="tname">Theorem 4 — A posteriori residual certificate.</span>
       Let <span class="mono">ρ</span> solve <span class="mono">ρ̇=𝓛[ρ], ρ(0)=ρ_0</span> with <span class="mono">𝓛</span> generating a CPTP semigroup, and let <span class="mono">ρ̂</span> be a differentiable Hermitian trace-one path with residual <span class="mono">r(t)=ρ̂̇(t)−𝓛[ρ̂(t)]</span>. Then
       <span style="display:block;text-align:center;margin:8px 0">$$\tfrac12\|\hat\rho(t)-\rho(t)\|_1\le\tfrac12\|\hat\rho(0)-\rho_0\|_1+\tfrac12\int_0^t\|r(s)\|_1\,ds.$$</span>
-      <div class="interp">The bound references only the learned path, so a small training residual is a computable, trajectory-free guarantee on the trace distance to the true dynamics.</div>
+      <div class="interp">The bound depends only on the learned path, so a small training residual is itself a computable guarantee on the trace distance to the true dynamics, computed without a reference trajectory.</div>
     </div>
 
     <div class="theorem">
       <span class="tname">Theorem 5 — Local identifiability.</span>
       For a smooth GKSL generator with observation Jacobian <span class="mono">J(Θ*)</span> of full column rank and smallest singular value <span class="mono">s_min&gt;0</span>, any estimate with <span class="mono">‖f(Θ̂)−f(Θ*)‖₂≤δ</span> obeys <span class="mono">‖Θ̂−Θ*‖₂ ≤ 2δ/s_min</span> on a suitable neighborhood.
-      <div class="interp">Hard constraints cannot overcome uninformative observables: if the sensitivity Gramian is near-singular, the recovery bound degrades — the regime where the qutrit rates are hard to pin.</div>
+      <div class="interp">Hard constraints cannot rescue uninformative observables: a near-singular sensitivity Gramian degrades the recovery bound — exactly the regime in which the qutrit rates are hard to pin down.</div>
     </div>
 
     <div class="theorem">
       <span class="tname">Theorem 6 — Dense versus structured residual complexity.</span>
       For a <span class="mono">d</span>-dimensional system with <span class="mono">m</span> dense Lindblad operators: dense Liouvillian storage is <span class="mono">O(d⁴)</span>, construction <span class="mono">O(md⁴)</span>, and <span class="mono">O(d⁴)</span> per dense matvec; structured evaluation costs <span class="mono">O(md³)</span> arithmetic and <span class="mono">O(md²)</span> storage. Over <span class="mono">N</span> collocation states, dense is <span class="mono">O(md⁴+Nd⁴)</span> and structured <span class="mono">O(Nmd³)</span>.
-      <div class="interp">A per-evaluation ratio of <span class="mono">Θ(d/m)</span> and storage ratio <span class="mono">Θ(d²/m)</span>: the structured route is asymptotically cheaper in both arithmetic and memory as <span class="mono">d</span> grows.</div>
+      <div class="interp">The per-evaluation ratio is <span class="mono">Θ(d/m)</span> and the storage ratio <span class="mono">Θ(d²/m)</span>, so the structured route wins by a widening margin in both arithmetic and memory as <span class="mono">d</span> grows.</div>
     </div>
-    <p class="sub">Auxiliary results extend physicality to low-rank-plus-isotropic variants (Corollary) and give a Frobenius analogue of the certificate via Grönwall's inequality (Proposition).</p>
+    <p class="sub">Two auxiliary results round out the theory: a Corollary extending physicality to low-rank-plus-isotropic variants, and a Proposition giving a Frobenius-norm analogue of the certificate via Grönwall's inequality.</p>
   </section>
 
   <!-- ===================== DEMO ===================== -->
   <section id="demo">
     <h2><span class="num">7</span>Interactive Illustration</h2>
-    <p class="sub">A self-contained, client-side illustration of the paper's core mechanisms. This is a qualitative illustration of the governing relations, not a re-run of the reported experiments.</p>
+    <p class="sub">A self-contained, client-side rendering of the paper's two core mechanisms. It illustrates the governing relations qualitatively; it does not re-run the reported experiments.</p>
 
     <div class="demo">
       <div class="controls modesel" style="margin-bottom:14px">
@@ -346,7 +346,7 @@
   <!-- ===================== EMPIRICAL ===================== -->
   <section id="empirical">
     <h2><span class="num">8</span>Empirical Validation</h2>
-    <p>Five reproducible simulation studies, each repeated over five seeds (redrawing both network initialization and measurement-noise realization) and reported as mean ± 95% Student-<em>t</em> confidence interval. Methods compared: the hard-constrained <strong>CPTP-PINN</strong> (this work), a <strong>soft-penalty PINN</strong> (eigenvalue-negativity penalty), a fully <strong>unconstrained</strong> network, and a <strong>classical least-squares</strong> fit using the exact model structure.</p>
+    <p>Five reproducible simulation studies anchor the claims. Each is repeated over five seeds — redrawing both the network initialization and the measurement-noise realization — and reported as mean ± 95% Student-<em>t</em> confidence interval. Four methods compete throughout: the hard-constrained <strong>CPTP-PINN</strong> (this work), a <strong>soft-penalty PINN</strong> (eigenvalue-negativity penalty), a fully <strong>unconstrained</strong> network, and a <strong>classical least-squares</strong> fit that is given the exact model structure.</p>
 
     <h3>Single-qubit system identification (Experiment 1)</h3>
     <div class="tbl-scroll">
@@ -363,7 +363,7 @@
       </tbody>
     </table>
     </div>
-    <p class="sub">The hard constraint is decisive among the neural methods (γ_φ to 13% versus &gt;140%) and never leaves the physical set (0 violations versus 0.4–0.6% of time points). A classical least-squares fit that already knows the exact model is the strongest method on this dense-data task — the honest reference point, reported rather than omitted.</p>
+    <p class="sub">Among the neural methods the hard constraint is decisive (γ_φ error to 13% against &gt;140%) and the model remains in the physical set throughout (0 violations against 0.4–0.6% of time points). On this dense-data task the classical least-squares fit, which already knows the exact model, is the strongest method; it is reported as the candid reference point.</p>
 
     <h3>Robustness under sparse measurements (Experiment 2)</h3>
     <div class="tbl-scroll">
@@ -380,7 +380,7 @@
       </tbody>
     </table>
     </div>
-    <p class="sub">The constrained model keeps the mean trace distance between 0.004 and 0.010 across all fractions — one to two orders of magnitude below the soft and unconstrained baselines (≈0.37, with intervals as wide as their means) — and degrades only mildly down to 10% of observations.</p>
+    <p class="sub">The constrained model holds the mean trace distance between 0.004 and 0.010 across every fraction — one to two orders of magnitude below the soft and unconstrained baselines (≈0.37, whose confidence intervals are as wide as their means) — and degrades only mildly even at 10% of observations.</p>
 
     <h3>Two-qubit dissipative gate: generalization across initial states (Experiment 4)</h3>
     <div class="tbl-scroll">
@@ -398,7 +398,7 @@
       </tbody>
     </table>
     </div>
-    <p class="sub">The recovered generator generalizes to held-out states at ≈0.97 mean fidelity with narrow confidence intervals — the property that matters for device characterization, since the test propagates the learned generator with an exact solver rather than reading off a memorized neural curve.</p>
+    <p class="sub">The recovered generator transfers to held-out states at ≈0.97 mean fidelity with narrow confidence intervals. This is the property device characterization demands, since the test propagates the learned generator with an exact solver rather than replaying a memorized neural curve.</p>
 
     <h3>Dense-versus-structured compiler scaling (Experiment 5)</h3>
     <div class="tbl-scroll">
@@ -432,30 +432,30 @@
       </tbody>
     </table>
     </div>
-    <p class="sub">The ratio exceeds one at every amplitude (a valid upper bound) and stays at a near-constant ≈2.35 (not loose by orders of magnitude).</p>
+    <p class="sub">The ratio stays above one at every amplitude — confirming a valid upper bound — and holds near a constant ≈2.35, so the certificate is tight rather than loose by orders of magnitude.</p>
   </section>
 
   <!-- ===================== SIGNIFICANCE ===================== -->
   <section id="significance">
     <h2><span class="num">9</span>Significance and Impact</h2>
-    <p>The conceptual point is that physicality should be an <em>architectural invariant</em> rather than a penalty applied after the fact, and the mathematics shows that this invariant costs nothing in expressivity (Theorem 2), keeps the learned generator CPTP (Theorem 3), supplies an a posteriori trace-norm certificate (Theorem 4), and admits structured compilation that avoids dense Liouvillian storage (Theorem 6). For device characterization, the decisive deliverable is a transferable open-system model — a generator that propagates to held-out preparations at ≈0.97 fidelity — rather than a memorized curve. The constraint pays off most where it matters operationally: guaranteed physical trajectories at every step, graceful degradation under sparse measurements, and a compiler path that avoids squaring the density-vector dimension as <span class="mono">d=2^n</span> grows.</p>
+    <p>The central claim is that physicality belongs in the architecture as an <em>invariant</em> rather than in the loss as an afterthought, and the mathematics shows this invariant is nearly free: it costs nothing in expressivity (Theorem 2), keeps the learned generator CPTP (Theorem 3), supplies an a posteriori trace-norm certificate (Theorem 4), and admits structured compilation that sidesteps dense Liouvillian storage (Theorem 6). Device characterization ultimately requires a transferable open-system model rather than a fitted curve — a generator that propagates to held-out preparations at ≈0.97 fidelity. The constraint earns its keep exactly where practice demands it: physical trajectories guaranteed at every step, graceful degradation under sparse measurements, and a compiler path that holds storage and arithmetic below the squared density-vector dimension as <span class="mono">d=2^n</span> grows.</p>
     <div class="callout">
-      <strong>Honest limitations, kept visible.</strong>
+      <strong>Limitations, stated plainly and kept visible.</strong>
       <ul class="tight" style="margin-top:6px">
-        <li><strong>Fast multi-level regimes are the principal open problem.</strong> Direct reconstruction of fast qutrit (leakage) trajectories is not reliable across seeds: a single-seed Fourier-feature advantage does not survive seed averaging (mean fidelity 0.77 ± 0.35 plain MLP versus 0.52 ± 0.49 Fourier). A least-squares fit of the linear-in-rates dissipator to the <em>exact</em> trajectory recovers the rates to better than 1%, so the difficulty is derivative quality under noise, not identifiability.</li>
-        <li><strong>No hardware data.</strong> The experiments are synthetic CPU simulations; they test implementation and theory, not device performance.</li>
-        <li><strong>Markovian assumption.</strong> The framework assumes GKSL dynamics; non-Markovian systems require extended state spaces, memory kernels, or process tensors.</li>
+        <li><strong>Fast multi-level regimes remain the principal open problem.</strong> Direct reconstruction of fast qutrit (leakage) trajectories varies across seeds: an apparent single-seed Fourier-feature advantage dissolves under seed averaging (mean fidelity 0.77 ± 0.35 plain MLP against 0.52 ± 0.49 Fourier). Since a least-squares fit of the linear-in-rates dissipator to the <em>exact</em> trajectory recovers the rates to better than 1%, the bottleneck is derivative quality under noise rather than identifiability.</li>
+        <li><strong>Simulation scope.</strong> The experiments are synthetic CPU simulations; they validate the implementation and the theory, leaving device performance to future hardware studies.</li>
+        <li><strong>Markovian assumption.</strong> The framework presumes GKSL dynamics; non-Markovian systems require extended state spaces, memory kernels, or process tensors.</li>
         <li><strong>Identifiability is measurement-dependent.</strong> A rank-deficient sensitivity Gramian defeats any optimizer (Theorem 5).</li>
-        <li><strong>Scope.</strong> A small, fully reproducible proof of concept (five seeds per experiment); not a state-of-the-art benchmark sweep.</li>
+        <li><strong>Scale.</strong> This is a small, fully reproducible proof of concept (five seeds per experiment), distinct from a state-of-the-art benchmark sweep.</li>
       </ul>
     </div>
-    <p>The most promising engineering direction is a compiler that takes a high-level noise model and emits fused, batched, differentiable kernels for accelerator execution; the natural scientific next steps are interaction-picture residuals, derivative denoising, richer measurement designs, non-Markovian embeddings, and hardware-calibration datasets.</p>
+    <p>The clearest engineering path forward is a compiler that ingests a high-level noise model and emits fused, batched, differentiable kernels for accelerator execution. The scientific path forward follows naturally from the limitations above: interaction-picture residuals, derivative denoising, richer measurement designs, non-Markovian embeddings, and hardware-calibration datasets.</p>
   </section>
 
   <!-- ===================== REPRODUCIBILITY ===================== -->
   <section id="repro">
     <h2><span class="num">10</span>Reproducibility</h2>
-    <p>Every numerical value in the manuscript is written directly to the figure and table files by the scripts in <code>submission/code</code>; none is entered by hand. The artifact is a pip-installable package, <code>ctpcpinn</code> (version 1.0.0, MIT, Python ≥ 3.10).</p>
+    <p>Every number in the manuscript is written directly to its figure and table file by the scripts in <code>submission/code</code>, with none entered by hand. The artifact ships as a pip-installable package, <code>ctpcpinn</code> (version 1.0.0, MIT, Python ≥ 3.10).</p>
     <pre><span class="c"># 1. Obtain the source tree and install the package</span>
 <span class="k">cd</span> submission/code
 pip install .                 <span class="c"># runtime deps: numpy, scipy, torch, matplotlib, cycler</span>
@@ -467,14 +467,14 @@ ctpcpinn-validate             <span class="c"># checks regenerated numbers again
 
 <span class="c"># 3. For bit-identical numbers, pin the exact environment</span>
 pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplotlib 3.10.8</span></pre>
-    <p class="sub">Each training experiment runs over seeds {0,1,2,3,4} and reports mean ± 95% Student-<em>t</em> CI; the compiler benchmark reports the median over repeated timings. Configuration: 3000 Adam epochs at learning rate 10⁻³, 100 time points, noise standard deviation 0.02. The <code>ctpcpinn/foundations.py</code> module provides a from-scratch theory-to-code map; <code>run_one.py</code> reproduces a single experiment. Simulations run on CPU; they are intentionally modest in scale and are neither hardware data nor state-of-the-art claims.</p>
+    <p class="sub">Each training experiment runs over seeds {0,1,2,3,4} and reports mean ± 95% Student-<em>t</em> CI; the compiler benchmark reports the median over repeated timings. Configuration: 3000 Adam epochs at learning rate 10⁻³, 100 time points, noise standard deviation 0.02. The <code>ctpcpinn/foundations.py</code> module gives a from-scratch theory-to-code map, and <code>run_one.py</code> reproduces a single experiment. All simulations run on CPU; they are deliberately modest in scale and stand as a controlled proof of concept, separate from hardware data or state-of-the-art claims.</p>
   </section>
 
 </main>
 
 <footer>
   <div class="wrap">
-    <p>CPTP-Compiler-PINNs — Structure-Preserving Residual Learning and Matrix-Free Compilation for Open Quantum Dynamics. Molena Huynh, Independent Researcher. Manuscript prepared for submission to <em>Nature Machine Intelligence</em>. Numbers, theorems, and figures on this page are transcribed from the manuscript source (<code>submission/main.tex</code>); the interactive panel is a qualitative illustration of the governing relations, not a re-run of the experiments.</p>
+    <p>CPTP-Compiler-PINNs — Structure-Preserving Residual Learning and Matrix-Free Compilation for Open Quantum Dynamics. Molena Huynh, North Carolina State University (<a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a>). Manuscript prepared for submission to <em>Nature Machine Intelligence</em>. Numbers, theorems, and figures on this page are transcribed from the manuscript source (<code>submission/main.tex</code>); the interactive panel is a qualitative illustration of the governing relations, not a re-run of the experiments.</p>
   </div>
 </footer>
 

@@ -5,17 +5,40 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ctpcpinn"
 version = "1.0.0"
-description = "CPTP-Compiler-PINNs: structure-preserving residual learning and matrix-free compilation for open quantum dynamics. Reproduces every table and figure of the manuscript."
-readme = { text = "CPTP-Compiler-PINNs code artifact. Run python run_all.py for in-place manuscript artifacts; see ctpcpinn/foundations.py for the from-scratch theory-to-code map.", content-type = "text/plain" }
+description = "CPTP-Compiler-PINNs: structure-preserving residual learning and matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. Regenerates every table and figure of the manuscript deterministically."
+readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Molena Huynh" }]
-keywords = ["quantum", "open-quantum-systems", "lindblad", "physics-informed-neural-networks", "PINN", "reproducibility"]
+authors = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
+maintainers = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
+keywords = [
+    "quantum",
+    "open-quantum-systems",
+    "lindblad",
+    "gksl",
+    "physics-informed-neural-networks",
+    "PINN",
+    "structure-preserving",
+    "reproducibility",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
-# Broad floors so the package imports widely. For bit-identical reproduction of
-# the manuscript numbers, use an environment containing the exact dependency
-# versions listed in the optional group below, then run from the source tree with
-# PYTHONPATH=. so no editable-install metadata is generated.
+# Lower-bound floors keep the package broadly installable across recent
+# scientific-Python environments. For bit-identical reproduction of the
+# committed table and figure values, install the pinned ``exact`` group below
+# and run single-threaded as documented in README.md.
 dependencies = [
     "numpy>=1.24",
     "scipy>=1.10",
@@ -25,14 +48,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Exact versions used to generate the committed tables/figures (conda env 'qaoa').
+# Exact versions used to generate the committed tables and figures.
 exact = [
     "numpy==2.4.2",
     "scipy==1.17.1",
     "torch==2.10.0",
     "matplotlib==3.10.8",
 ]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "build>=1.0"]
 
 [project.scripts]
 ctpcpinn-reproduce = "ctpcpinn.reproduce:main"
@@ -40,6 +63,7 @@ ctpcpinn-validate = "ctpcpinn.validate:main"
 
 [project.urls]
 Repository = "https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling"
+Homepage = "https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/"
 
 [tool.setuptools.packages.find]
 include = ["ctpcpinn*"]

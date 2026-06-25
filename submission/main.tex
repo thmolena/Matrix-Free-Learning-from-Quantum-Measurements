@@ -69,7 +69,7 @@
 \title{\bfseries CPTP-Compiler-PINNs: Structure-Preserving Residual Learning\\ and Matrix-Free Compilation for Open Quantum Dynamics}
 
 \author{Molena Huynh\\[3pt]
-\normalsize Independent Researcher\\
+\normalsize North Carolina State University\\
 \normalsize \texttt{molena.huynh@jmp.com}}
 
 \date{\today}
@@ -105,6 +105,17 @@ The word ``compiler'' is used deliberately. A quantum model is specified in an i
 
 \paragraph{Relation to prior work.}
 The method follows the structured-identification philosophy of Lindblad and Hamiltonian learning~\cite{boulant2003robust,wang2017experimental} but replaces unconstrained trajectory estimation by a hard density-matrix parameterization, in contrast to completely-positive \emph{projection} methods that repair an estimate only after the fact~\cite{knee2018quantum}. It is closest to inverse PINNs~\cite{raissi2019physics,karniadakis2021physics,wang2022respecting}, with which it shares the residual objective, and to structure-preserving scientific networks (Hamiltonian, Lagrangian, symplectic) that restrict the hypothesis class to improve learning~\cite{greydanus2019hamiltonian,cranmer2020lagrangian,hairer2006geometric}. It is complementary to neural quantum states and neural tomography, which represent wavefunctions, density operators, or measurement distributions with flexible models~\cite{carleo2017solving,torlai2018neural,yoshioka2020variational}, and to operator-learning models that target solution \emph{families} rather than a single trajectory~\cite{chen2018neural,lu2021learning,li2021fourier}. We deliberately start with the Markovian case; non-Markovian systems require extended state spaces, memory kernels, or process tensors~\cite{denisov2019open,wolf2008assessing,banchi2018modelling,luchnikov2020machine}, and dissipation can itself be a computational resource~\cite{verstraete2009quantum}.
+
+Within the ordered series, this paper inherits the same resource-accounted
+discipline used in graph-conditioned QAOA, topology-conditioned QAOA, and
+commutator-graph Hamiltonian simulation~\cite{huynh2026uqqaoa,huynh2026topoqaoa,huynh2026topoham},
+and it uses the residual-learning perspective developed for Trotter
+corrections as a closed-system counterpart~\cite{huynh2026liergtc}.  The
+Hamiltonian-simulation papers of Nguyen and Jing provide additional fixed-depth
+and representation-theoretic context for non-commutative
+dynamics~\cite{nguyen2025zassenhaus,jing2026complexity}; the present contribution moves
+to open-system, CPTP-constrained identification rather than product-formula
+simulation.
 
 \subsection{Contributions}
 \label{sec:contributions}
@@ -292,12 +303,12 @@ The two-qubit experiment uses a time-dependent exchange coupling $J(t)=J_0\exp[-
 \subsection{Dense-versus-structured compiler scaling}
 \label{sec:experiment_compiler}
 
-The compiler experiment compares dense superoperator evaluation against structured matrix-free residual evaluation on random Lindblad systems: dense mode forms the $d^2\times d^2$ Liouvillian, structured mode evaluates commutator and dissipator terms directly from $H$ and the jump operators. In the CPU benchmark (Extended Data Table~\ref{tab:exp5}, Figure~\ref{fig:compiler}) the structured evaluation is faster than dense at every tested dimension---a several-fold speedup at small $d$ that grows toward an order of magnitude by $d=8$---and uses substantially less memory as $d$ grows, while the two residuals agree to floating-point precision. This matches Theorem~\ref{thm:compiler}: dense storage scales as $d^4$, whereas the structured representation stores only $H$, the $m$ jump operators, and $\rho$. Timing is hardware dependent; we report the median over repeated runs on a single CPU and emphasize the asymptotic memory scaling as the robust conclusion.
+The compiler experiment compares dense superoperator evaluation against structured matrix-free residual evaluation on random Lindblad systems: dense mode forms the $d^2\times d^2$ Liouvillian, structured mode evaluates commutator and dissipator terms directly from $H$ and the jump operators. The robust, hardware-independent conclusion is the \emph{memory} separation (Extended Data Table~\ref{tab:exp5}, Figure~\ref{fig:compiler}): consistent with Theorem~\ref{thm:compiler}, dense storage scales as $d^4$, whereas the structured representation stores only $H$, the $m$ jump operators, and $\rho$, i.e.\ $O(md^2)$, so its memory advantage widens with $d$. The two residuals agree to floating-point precision, so structured evaluation is exact, not an approximation. We deliberately do \emph{not} claim a speed advantage: our benchmark's dense path reconstructs the full Liouvillian on every state evaluation (an $O(md^4)$ build paid per state), so the wall-clock gap it reports reflects that implementation artifact rather than an intrinsic per-matvec speedup, and amortizing the Liouvillian build across states would largely remove it. We therefore report timing only as an implementation detail and treat the $O(d^4)$-versus-$O(md^2)$ memory scaling as the genuine, asymptotic separation.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.55\textwidth]{exp5_compiler_scaling.pdf}
-    \caption{\textbf{Matrix-free compiler scaling.} Dense superoperator residual-evaluation time versus structured matrix-free evaluation (median over 50 repeats, log scale). The structured path is faster at all tested dimensions and avoids materializing the $d^2\times d^2$ Liouvillian; see Extended Data Table~\ref{tab:exp5}.}
+    \caption{\textbf{Matrix-free compiler scaling.} Dense superoperator residual-evaluation time versus structured matrix-free evaluation (median over 50 repeats, log scale). The structured path avoids materializing the $d^2\times d^2$ Liouvillian; its robust advantage is memory ($O(md^2)$ versus $O(d^4)$), not speed---the dense timings shown rebuild the Liouvillian per state and so overstate any wall-clock gap (see text and Extended Data Table~\ref{tab:exp5}).}
     \label{fig:compiler}
 \end{figure}
 
@@ -531,7 +542,7 @@ We count storage and arithmetic for the two evaluators using the standard model 
 
 \emph{Structured (matrix-free) evaluation.} Structured mode never forms $\mathbb{L}_\Theta$. Evaluating $\calL_\Theta[\rho]$ directly from~\eqref{eq:gksl_rates} requires: the commutator via $H\rho$ and $\rho H$ (two $d\times d$ products); and for each jump $k$, the products $L_k\rho$, $(L_k\rho)L_k^\dagger$, $C_k:=L_k^\dagger L_k$, $C_k\rho$, $\rho C_k$. Each is a $d\times d$ matrix product costing $\Theta(d^3)$, and there is a constant number of them per jump, so one residual evaluation costs $O(md^3)$. Storage is the Hamiltonian $H$ and the $m$ jump operators $L_k$ (and the running $\rho$ and accumulator), i.e.\ $O(md^2)$. For $N$ collocation states (the $C_k$ can be precomputed once, an $O(md^3)$ term absorbed into the per-state cost), the structured cost is $O(Nmd^3)$.
 
-\emph{Comparison.} The per-evaluation ratio is $\Theta(d^4)/\Theta(md^3)=\Theta(d/m)$, and the storage ratio is $\Theta(d^4)/\Theta(md^2)=\Theta(d^2/m)$, so for fixed small $m$ the structured route is asymptotically cheaper in both arithmetic and memory as $d$ grows. This $d^4$-versus-$md^3$ separation is exactly what the benchmark measures: the structured evaluator is faster at every tested $d$ and its memory advantage widens with $d$ (Experiment~5, Extended Data Tables~\ref{tab:exp5} and~\ref{tab:compiler_scaling}), while the two evaluators agree to floating-point precision so the speedup is exact, not an approximation.
+\emph{Comparison.} The per-evaluation ratio is $\Theta(d^4)/\Theta(md^3)=\Theta(d/m)$, and the storage ratio is $\Theta(d^4)/\Theta(md^2)=\Theta(d^2/m)$, so for fixed small $m$ the structured route is asymptotically cheaper in both arithmetic and memory as $d$ grows. The robust empirical separation is the \emph{memory} one (Experiment~5, Extended Data Tables~\ref{tab:exp5} and~\ref{tab:compiler_scaling}): the analytic $O(d^4)$-versus-$O(md^2)$ storage gap widens with $d$, and the two evaluators agree to floating-point precision so the structured route is exact, not an approximation. We do not claim the arithmetic ratio as a wall-clock speedup: our benchmark's dense path rebuilds $\mathbb{L}_\Theta$ on every state (paying the $O(md^4)$ construction once per evaluation rather than amortizing it), so any measured timing gap is dominated by repeated Liouvillian construction and is an implementation artifact, not an intrinsic per-matvec advantage.
 \end{proof}
 
 \begin{corollary}[Low-rank physicality]
@@ -628,11 +639,11 @@ Average & 0.9685 $\pm$ 0.0047 & --- \\
 
 \begin{table}[ht]
 \centering
-\caption{\textbf{Dense-versus-structured compiler scaling (Experiment~5).} Runtime and memory of the two residual evaluators as a function of Hilbert-space dimension $d$. Times are the median residual-evaluation wall time over 50 repeats (warm-up excluded) for a batch of 100 states; memory is the analytic storage for the dense $d^2\times d^2$ Liouvillian versus the structured operators. CPU, single machine.}
+\caption{\textbf{Dense-versus-structured compiler scaling (Experiment~5).} Runtime and memory of the two residual evaluators as a function of Hilbert-space dimension $d$. Times are the median residual-evaluation wall time over 50 repeats (warm-up excluded) for a batch of 100 states; memory is the analytic storage for the dense $d^2\times d^2$ Liouvillian versus the structured operators. CPU, single machine. The genuine separation is the analytic memory columns ($O(d^4)$ versus $O(md^2)$); the time-ratio column is an implementation artifact (the dense path rebuilds the Liouvillian on every state) and is not claimed as an intrinsic speedup---see the main text and Table~\ref{tab:compiler_scaling}.}
 \label{tab:exp5}
 \begin{tabular}{lccccc}
 \toprule
-$d$ & Dense (s) & Structured (s) & Speedup & Dense (MB) & Structured (MB) \\
+$d$ & Dense (s) & Structured (s) & Time ratio (artifact) & Dense (MB) & Structured (MB) \\
 \midrule
 2 & 0.0069 & 0.0012 & 5.9$\times$ & 0.000 & 0.00024 \\
 3 & 0.0095 & 0.0016 & 6.1$\times$ & 0.001 & 0.00069 \\
@@ -661,12 +672,12 @@ Perturbation amplitude & Max trace distance & Certificate (Thm.~\ref{thm:certifi
 
 \begin{table}[t]
 \centering
-\caption{\textbf{Extended dense-versus-structured compiler scaling to larger $d$ (Theorem~\ref{thm:compiler}).} Analytic storage and measured residual-evaluation time for the dense $d^2\times d^2$ Liouvillian versus the structured matrix-free kernel, on random Lindblad systems with $m$ jump operators, extended to $d=24$. Columns: Hilbert dimension $d$; number of jump operators $m$; dense and structured storage (MB, analytic); dense and structured residual-evaluation time (ms, median over repeated runs on a single CPU); evaluation speedup (dense/structured); and the relative Frobenius difference between the two residual outputs. The speedup grows with $d$ (reaching $\approx277\times$ at $d=24$), consistent with the $d^4$-versus-$md^3$ separation of Theorem~\ref{thm:compiler}, while the relative error stays at floating-point precision ($\sim10^{-16}$), so the structured route is exact, not an approximation. Bold marks the faster evaluator (structured) in each row. Timings are hardware dependent; the analytic memory columns and the floating-point agreement are not.}
+\caption{\textbf{Extended dense-versus-structured compiler scaling to larger $d$ (Theorem~\ref{thm:compiler}).} Analytic storage and measured residual-evaluation time for the dense $d^2\times d^2$ Liouvillian versus the structured matrix-free kernel, on random Lindblad systems with $m$ jump operators, extended to $d=24$. Columns: Hilbert dimension $d$; number of jump operators $m$; dense and structured storage (MB, analytic); dense and structured residual-evaluation time (ms, median over repeated runs on a single CPU); the measured time ratio (dense/structured); and the relative Frobenius difference between the two residual outputs. The genuine, hardware-independent separation is in the analytic memory columns ($O(d^4)$ versus $O(md^2)$), which widen with $d$, together with the floating-point agreement (relative error $\sim10^{-16}$, so the structured route is exact, not an approximation). The time ratio (reaching $\approx277\times$ at $d=24$) is \emph{not} an intrinsic speedup: in this benchmark the dense path reconstructs the full Liouvillian on every state evaluation, so the ratio is dominated by repeated $O(md^4)$ Liouvillian construction and would largely vanish if the build were amortized across states. We therefore report it only as an implementation artifact, not as a per-matvec advantage. Bold marks the faster evaluator (structured) in each row. Timings are hardware- and implementation-dependent; the analytic memory columns and the floating-point agreement are not.}
 \label{tab:compiler_scaling}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccccc}
 \toprule
-$d$ & $m$ & Dense (MB) & Structured (MB) & Dense eval (ms) & Structured eval (ms) & Eval speedup & Relative error \\
+$d$ & $m$ & Dense (MB) & Structured (MB) & Dense eval (ms) & Structured eval (ms) & Time ratio (artifact) & Relative error \\
 \midrule
 2 & 2 & 0.000 & 0.000 & 0.090 & \textbf{0.012} & 7.55$\times$ & 3.1e-17 \\
 4 & 4 & 0.004 & 0.001 & 0.133 & \textbf{0.021} & 6.26$\times$ & 2.1e-16 \\
@@ -741,7 +752,7 @@ Rather than output $\rho$ directly and hope it is legal, the network outputs $A_
 To keep the learned dynamics CPTP (S5) we parameterize the rates as $\gamma_k=\softplus(\xi_k)+\gamma_{\min}\ge0$ (with $\softplus(x)=\ln(1+e^x)$ smooth and positive), the Hamiltonian as $H_\theta=\sum_l\theta_l G_l$ in a Hermitian basis $\{G_l\}$, and---in the general case---a full Kossakowski matrix $C=BB^\dagger\succeq0$. The learned generator is therefore always a legal GKSL generator (Theorem~\ref{thm:cptp_generator}). \emph{Code:} \texttt{ctpcpinn/models.py:PositiveParameter}; each experiment builds $H$ and the $L_k$ from these.
 
 \paragraph{S13. Theory-of-computation view: the IR and the dense-vs-structured compiler.}
-The physics residual $\calL_\Theta[\rho]$ is evaluated millions of times during training, so its computational representation matters. \emph{Dense} mode vectorizes $\rho$ into a length-$d^2$ vector and multiplies by the $d^2\times d^2$ Liouvillian (built once via Kronecker products): storage $\calO(d^4)$, each evaluation $\calO(d^4)$. \emph{Structured} (matrix-free) mode never forms $\calL$; it evaluates the commutator and each dissipator term directly as small $d\times d$ products: storage $\calO(m d^2)$ (just $H$ and the $m$ jump operators), each evaluation $\calO(m d^3)$. This is a classic compiler idea: keep the model in a high-level intermediate representation (IR)---dimension, Hamiltonian terms, jump operators, rates, observables, batching, mode---and lower it to whichever kernel is cheaper for the regime. The asymptotic gap $d^4$ versus $m d^3$ is Theorem~\ref{thm:compiler}, measured in Experiment~5, where the two kernels agree to floating-point precision, so the structured route is a pure speed and memory win, not an approximation. \emph{Code:} \texttt{ctpcpinn/compiler.py} (\texttt{QuantumModelIR}; \texttt{CompiledLindbladModel} with \texttt{mode='dense'|'structured'}; \texttt{benchmark\_residual\_modes}), \texttt{ctpcpinn/lindblad.py} (\texttt{liouvillian\_dense} vs \texttt{lindblad\_rhs}), \texttt{ctpcpinn/metrics.py:memory\_estimate\_dense\_vs\_structured}.
+The physics residual $\calL_\Theta[\rho]$ is evaluated millions of times during training, so its computational representation matters. \emph{Dense} mode vectorizes $\rho$ into a length-$d^2$ vector and multiplies by the $d^2\times d^2$ Liouvillian (built once via Kronecker products): storage $\calO(d^4)$, each evaluation $\calO(d^4)$. \emph{Structured} (matrix-free) mode never forms $\calL$; it evaluates the commutator and each dissipator term directly as small $d\times d$ products: storage $\calO(m d^2)$ (just $H$ and the $m$ jump operators), each evaluation $\calO(m d^3)$. This is a classic compiler idea: keep the model in a high-level intermediate representation (IR)---dimension, Hamiltonian terms, jump operators, rates, observables, batching, mode---and lower it to whichever kernel is cheaper for the regime. The asymptotic gap $d^4$ versus $m d^3$ in arithmetic, and $d^4$ versus $m d^2$ in storage, is Theorem~\ref{thm:compiler}; Experiment~5 confirms the \emph{memory} separation (the robust, hardware-independent conclusion) and that the two kernels agree to floating-point precision, so the structured route is exact, not an approximation. We do not claim a wall-clock speedup: in our benchmark the dense path rebuilds the Liouvillian on every state, so its measured timing reflects repeated $O(md^4)$ construction rather than an intrinsic per-evaluation advantage. \emph{Code:} \texttt{ctpcpinn/compiler.py} (\texttt{QuantumModelIR}; \texttt{CompiledLindbladModel} with \texttt{mode='dense'|'structured'}; \texttt{benchmark\_residual\_modes}), \texttt{ctpcpinn/lindblad.py} (\texttt{liouvillian\_dense} vs \texttt{lindblad\_rhs}), \texttt{ctpcpinn/metrics.py:memory\_estimate\_dense\_vs\_structured}.
 
 \paragraph{S14. Statistics: why many seeds and confidence intervals.}
 A single training run depends on a random seed (network initialization and noise draw), so one run can mislead: a lucky seed can look excellent while the method is unreliable---exactly what happens to the qutrit Fourier result in Experiment~3. We therefore repeat each experiment over the fixed seeds $[0,1,2,3,4]$ and report mean $\pm$ a 95\% Student-$t$ confidence interval (appropriate for small samples). When the interval is wide relative to the mean the result is not robust, and we say so. \emph{Code:} \texttt{ctpcpinn/stats.py:aggregate} (mean, sample std, Student-$t$ CI) and \texttt{fmt\_pm} (the ``mean $\pm$ CI'' strings written into the tables).
@@ -767,7 +778,7 @@ Every training experiment is repeated over the fixed seeds $[0,1,2,3,4]$ and rep
 On macOS\,+\,conda (and some Linux setups) PyTorch and NumPy/SciPy can load two copies of the OpenMP runtime, which can cause a hard crash (``OMP: Error \#15'', ``pthread\_mutex\_init failed'') or a silent hang, especially when several processes run at once or one process uses $\ge3$ BLAS/OMP threads. Everything is therefore run single-threaded, which is robust and---because the matrices are tiny ($d=2$--$8$)---costs almost nothing. The recommended settings (also what \texttt{run\_all.py} sets internally) are \texttt{OMP\_NUM\_THREADS=1}, \texttt{MKL\_THREADING\_LAYER=SEQUENTIAL}, and \texttt{KMP\_DUPLICATE\_LIB\_OK=TRUE}. Do not run several experiments concurrently on such an environment unless a single OpenMP runtime is confirmed; run them sequentially (as \texttt{run\_all.py} does).
 
 \paragraph{S21. Expected results.}
-With the full configuration above one should obtain, as mean $\pm$ 95\% CI over five seeds: \textbf{Experiment~1} (Table~\ref{tab:exp1}), CPTP-PINN errors $\omega\,0.001$, $\Omega\,0.026$, $\gamma_1\,0.079$, $\gamma_\phi\,0.131$, mean fidelity $1.0000$, zero positivity violations, while the soft-penalty and unconstrained networks have $\gamma_\phi$ error $>140\%$ and a small nonzero violation rate, and the classical least-squares fit (which knows the exact model) recovers the rates to $\approx2\%$---i.e.\ the hard constraint is decisive \emph{among the neural methods} and the CPTP-PINN is competitive with, not superior to, the model-based fit on this dense-data task. \textbf{Experiment~2} (Table~\ref{tab:exp2}), CPTP-PINN mean trace distance $0.004$--$0.010$ across observation fractions $1.0$--$0.10$ versus $\approx0.37$ for the baselines (one to two orders of magnitude lower, with intervals as wide as their means). \textbf{Experiment~3} (Table~\ref{tab:exp3}), the open problem: plain MLP $\approx0.77\pm0.35$ and Fourier features $\approx0.52\pm0.49$ mean fidelity---high variance, and the single-seed Fourier advantage does not survive seed averaging. \textbf{Experiment~4} (Table~\ref{tab:exp4}), trained $\ket{00}$ at $0.994$ and held-out $\ket{01},\ket{10},\ket{+0}$ at $\approx0.95,0.96,0.97$ (average $\approx0.969$). \textbf{Experiment~5} (Table~\ref{tab:exp5}), the structured residual is faster than dense at every $d$ (several-fold at small $d$, approaching an order of magnitude by $d=8$) with dense memory growing as $d^4$ and structured as $\approx m d^2$, the two residuals agreeing to floating-point precision.
+With the full configuration above one should obtain, as mean $\pm$ 95\% CI over five seeds: \textbf{Experiment~1} (Table~\ref{tab:exp1}), CPTP-PINN errors $\omega\,0.001$, $\Omega\,0.026$, $\gamma_1\,0.079$, $\gamma_\phi\,0.131$, mean fidelity $1.0000$, zero positivity violations, while the soft-penalty and unconstrained networks have $\gamma_\phi$ error $>140\%$ and a small nonzero violation rate, and the classical least-squares fit (which knows the exact model) recovers the rates to $\approx2\%$---i.e.\ the hard constraint is decisive \emph{among the neural methods} and the CPTP-PINN is competitive with, not superior to, the model-based fit on this dense-data task. \textbf{Experiment~2} (Table~\ref{tab:exp2}), CPTP-PINN mean trace distance $0.004$--$0.010$ across observation fractions $1.0$--$0.10$ versus $\approx0.37$ for the baselines (one to two orders of magnitude lower, with intervals as wide as their means). \textbf{Experiment~3} (Table~\ref{tab:exp3}), the open problem: plain MLP $\approx0.77\pm0.35$ and Fourier features $\approx0.52\pm0.49$ mean fidelity---high variance, and the single-seed Fourier advantage does not survive seed averaging. \textbf{Experiment~4} (Table~\ref{tab:exp4}), trained $\ket{00}$ at $0.994$ and held-out $\ket{01},\ket{10},\ket{+0}$ at $\approx0.95,0.96,0.97$ (average $\approx0.969$). \textbf{Experiment~5} (Table~\ref{tab:exp5}), dense memory grows as $d^4$ and structured as $\approx m d^2$ (the genuine, hardware-independent separation), with the two residuals agreeing to floating-point precision; the reported time ratio is an implementation artifact (the dense path rebuilds the Liouvillian per state) and is not claimed as an intrinsic speedup.
 
 \paragraph{S22. Tests and reading order.}
 A dependency-free invariant check (Hermiticity, positivity, unit trace, trace preservation, dense$\,=\,$structured residual) is \texttt{ctpcpinn-validate} (equivalently \texttt{python -m ctpcpinn.validate} from \texttt{submission/code}); pytest-style tests live under \texttt{code/ctpcpinn/tests/}. A good reading order for the source is \texttt{operators.py} (linear-algebra primitives), \texttt{lindblad.py} (master equation, fidelity, trace distance), \texttt{solvers.py} (ground-truth ODE integration), \texttt{models.py} (the networks, including the Cholesky density map), \texttt{losses.py} (the three loss terms), \texttt{compiler.py} (the IR and the two residual kernels), \texttt{metrics.py} (the diagnostics), \texttt{stats.py} (multi-seed aggregation), and finally each \texttt{experiments/exp*.py} end to end. The same from-scratch narrative is mirrored, with live pointers, in the importable modules \texttt{ctpcpinn/foundations.py} and \texttt{ctpcpinn/theory.py}.
@@ -1053,6 +1064,44 @@ George Cybenko.
 Kurt Hornik.
 \newblock Approximation capabilities of multilayer feedforward networks.
 \newblock \emph{Neural Networks}, 4\penalty0 (2):\penalty0 251--257, 1991.
+
+\bibitem[Huynh(2026{\natexlab{a}})]{huynh2026uqqaoa}
+Molena Huynh.
+\newblock Query-efficient quantum approximate optimization via
+  graph-conditioned trust regions.
+\newblock \emph{arXiv preprint arXiv:2604.24803}, 2026.
+\newblock \doi{10.48550/arXiv.2604.24803}.
+
+\bibitem[Huynh(2026{\natexlab{b}})]{huynh2026topoqaoa}
+Molena Huynh.
+\newblock Topology-conditioned warm starts match spectral initialization for
+  depth-one {QAOA}.
+\newblock Manuscript in preparation, 2026.
+
+\bibitem[Huynh(2026{\natexlab{c}})]{huynh2026topoham}
+Molena Huynh.
+\newblock Commutator-graph term ordering reduces first-order {Trotter} error at
+  matched gate cost.
+\newblock Manuscript in preparation, 2026.
+
+\bibitem[Huynh(2026{\natexlab{d}})]{huynh2026liergtc}
+Molena Huynh.
+\newblock Provable operator learning of size-transferable {Trotter}
+  corrections for {Hamiltonian} simulation.
+\newblock Manuscript in preparation, 2026.
+
+\bibitem[Nguyen and Jing(2025)]{nguyen2025zassenhaus}
+Molena Nguyen and Naihuan Jing.
+\newblock Zassenhaus expansion in solving the {Schr\"odinger} equation.
+\newblock \emph{arXiv preprint arXiv:2505.09441}, 2025.
+\newblock \doi{10.48550/arXiv.2505.09441}.
+
+\bibitem[Jing and Nguyen(2026)]{jing2026complexity}
+Naihuan Jing and Molena Nguyen.
+\newblock Complexity bounds for {Hamiltonian} simulation in unitary
+  representations.
+\newblock \emph{arXiv preprint arXiv:2603.07231}, 2026.
+\newblock \doi{10.48550/arXiv.2603.07231}.
 
 \end{thebibliography}
 
