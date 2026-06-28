@@ -223,7 +223,8 @@ The Bloch-sphere picture shows why a penalty is not a guarantee: a qubit matrix 
 We consider a driven qubit with amplitude damping and pure dephasing,
 \begin{align}
     H &= \tfrac{\omega}{2}\sigma_z+\tfrac{\Omega}{2}\sigma_x,\\
-    \calL[\rho] &= -\ii[H,\rho]+\gamma_1\!\left(\sigma_-\rho\sigma_+-\tfrac12\{\sigma_+\sigma_-,\rho\}\right)+\tfrac{\gamma_\phi}{2}\!\left(\sigma_z\rho\sigma_z-\rho\right),
+    \calL[\rho] &= -\ii[H,\rho]+\gamma_1\!\left(\sigma_-\rho\sigma_+-\tfrac12\{\sigma_+\sigma_-,\rho\}\right)\notag\\
+    &\quad+\tfrac{\gamma_\phi}{2}\!\left(\sigma_z\rho\sigma_z-\rho\right),
 \end{align}
 with ground truth $\omega=2\pi(0.5)$, $\Omega=2\pi(0.1)$, $\gamma_1=0.30$, $\gamma_\phi=0.15$, initial state $\rho_0=\ket{+}\bra{+}$, and noisy samples of $\langle\sigma_x\rangle,\langle\sigma_y\rangle,\langle\sigma_z\rangle$ on a uniform grid over $t\in[0,3]$ with additive Gaussian noise of standard deviation $0.02$. All four methods jointly fit the four generator parameters and the trajectory.
 
@@ -397,8 +398,10 @@ with $H_\theta(t)=\sum_\ell\theta_\ell(t)G_\ell$, $G_\ell=G_\ell^\dagger$.
 \label{sec:loss}
 With observables $\{O_j\}_{j=1}^{p}$, measurements $y_{ij}$ at time $t_i$, and masks $m_{ij}\in\{0,1\}$,
 \begin{equation}
-    \calJ_{\rm data}(\phi)=\frac{1}{\sum_{i,j}m_{ij}}\sum_{i,j}m_{ij}\!\left(\Tr[O_j\rhophi(t_i)]-y_{ij}\right)^2,\quad
+\begin{gathered}
+    \calJ_{\rm data}(\phi)=\frac{1}{\sum_{i,j}m_{ij}}\sum_{i,j}m_{ij}\!\left(\Tr[O_j\rhophi(t_i)]-y_{ij}\right)^2,\\
     \calJ_0(\phi)=\norm{\rhophi(0)-\rho_0}_F^2,
+\end{gathered}
     \label{eq:data_ic_loss}
 \end{equation}
 and $\calJ_{\rm phys}$ as in Eq.~\eqref{eq:pinn_general_loss}. The derivative $\dot\rhophi$ is obtained by automatic differentiation; the centered finite-difference surrogate $\dot\rhophi(t)\approx[\rhophi(t+h)-\rhophi(t-h)]/2h$ is an alternative. The soft-penalty baseline adds $\lambda_{\rm pos}\sum_i\mathrm{ReLU}(-\lambda_i(\rho))$ to the loss. We use Adam~\cite{kingma2015adam}; L-BFGS is a natural second stage~\cite{liu1989limited}.
@@ -534,21 +537,30 @@ Each term on the right is Hermitian [$\dot M$ is Hermitian because $(\dot A A^\d
 The proof has three steps: (1) regularize the target trajectory so it is uniformly positive definite; (2) extract a continuous Cholesky factor; (3) approximate that factor by a network and push the approximation through the (locally Lipschitz) density map.
 
 \emph{Step 1: regularization.} Fix $\eta\in(0,1)$ and define $\rho_\eta(t)=(1-\eta)\rho(t)+\eta\sigma$. As a convex combination of the state $\rho(t)\succeq0$ and $\sigma\succeq0$ with weights summing to one, $\rho_\eta(t)\in\calD(\hilb)$. Moreover for any unit vector $v$, $v^\dagger\rho_\eta(t)v\ge\eta\, v^\dagger\sigma v\ge\eta\,\lambda_{\min}(\sigma)=:c>0$ because $\sigma$ is full rank; hence $\rho_\eta(t)\succeq cI$ uniformly in $t$, i.e.\ $\rho_\eta$ is uniformly positive definite. Its deviation from the target is bounded by
-\[
-\sup_t\norm{\rho_\eta(t)-\rho(t)}_F=\sup_t\norm{\eta(\sigma-\rho(t))}_F=\eta\sup_t\norm{\sigma-\rho(t)}_F=:\eta\,K,
-\]
+\begin{equation*}
+\begin{aligned}
+\sup_t\norm{\rho_\eta(t)-\rho(t)}_F&=\sup_t\norm{\eta(\sigma-\rho(t))}_F\\
+&=\eta\sup_t\norm{\sigma-\rho(t)}_F=:\eta\,K,
+\end{aligned}
+\end{equation*}
 where $K<\infty$ because $\rho$ is continuous on the compact interval $[0,T]$ and $\calD(\hilb)$ is bounded. Choose $\eta=\min\{1/2,\ \eps/(2K+1)\}$, so that $\sup_t\norm{\rho_\eta-\rho}_F<\eps/2$.
 
 \emph{Step 2: continuous Cholesky factor.} For each $t$, $\rho_\eta(t)$ is Hermitian positive definite, so it has a unique Cholesky factorization $\rho_\eta(t)=C_\eta(t)C_\eta(t)^\dagger$ with $C_\eta(t)$ lower triangular and strictly positive real diagonal. The Cholesky factor of a Hermitian positive-definite matrix is a smooth (in particular continuous) function of the matrix entries on the open cone of positive-definite matrices, because each entry of $C_\eta$ is obtained from entries of $\rho_\eta$ by the recursive Cholesky formulas, which involve only additions, multiplications, divisions by the strictly positive computed diagonal entries, and square roots of strictly positive computed quantities---all continuous operations on that domain. Since $t\mapsto\rho_\eta(t)$ is continuous and stays in this cone, $t\mapsto C_\eta(t)$ is continuous on $[0,T]$. Collecting the real and imaginary parts of the (at most $d^2$) free lower-triangular entries gives a continuous map $g:[0,T]\to\R^{d^2}$.
 
 \emph{Step 3: network approximation and Lipschitz transfer.} By the universal approximation theorem for feedforward networks with a nonpolynomial activation~\cite{cybenko1989approximation,hornik1991approximation}, for every $\eps'>0$ there is a finite network $\widehat g:[0,T]\to\R^{d^2}$ with $\sup_t\norm{\widehat g(t)-g(t)}_2<\eps'$. Reassembling $\widehat g(t)$ into a lower-triangular complex matrix $A_\phi(t)$ (the same way $g$ was assembled from $C_\eta$) yields a network with $\sup_t\norm{A_\phi(t)-C_\eta(t)}_F<\eps'$. Now consider the density map $\Psi(A)=AA^\dagger/\Tr(AA^\dagger)$. On the compact set $\mathcal{K}=\{A:\norm{A-C_\eta(t)}_F\le1\text{ for some }t\}$, the trace $\Tr(AA^\dagger)=\norm{A}_F^2$ is bounded below by a constant $\beta>0$ (because $\inf_t\norm{C_\eta(t)}_F>0$ by uniform positive definiteness and $\eps'\le1$), and both the numerator $AA^\dagger$ and the denominator are polynomial in the entries of $A$ with the denominator bounded away from zero; hence $\Psi$ is continuously differentiable on $\mathcal{K}$, so by the mean value inequality it is Lipschitz there with some constant $L<\infty$. Therefore, choosing $\eps'=\min\{1,\ \eps/(2L)\}$,
-\[
-\sup_t\norm{\Psi(A_\phi(t))-\Psi(C_\eta(t))}_F\le L\sup_t\norm{A_\phi(t)-C_\eta(t)}_F< L\,\eps'\le\eps/2.
-\]
+\begin{equation*}
+\begin{aligned}
+\sup_t\norm{\Psi(A_\phi(t))-\Psi(C_\eta(t))}_F&\le L\sup_t\norm{A_\phi(t)-C_\eta(t)}_F\\
+&< L\,\eps'\le\eps/2.
+\end{aligned}
+\end{equation*}
 But $\Psi(C_\eta(t))=C_\eta C_\eta^\dagger/\Tr(C_\eta C_\eta^\dagger)=\rho_\eta(t)/\Tr\rho_\eta(t)=\rho_\eta(t)$ since $\Tr\rho_\eta(t)=1$. Writing $\rho_\phi(t)=\Psi(A_\phi(t))$ and combining with Step 1 via the triangle inequality,
-\[
-\sup_t\norm{\rho_\phi(t)-\rho(t)}_F\le\sup_t\norm{\rho_\phi(t)-\rho_\eta(t)}_F+\sup_t\norm{\rho_\eta(t)-\rho(t)}_F<\tfrac{\eps}{2}+\tfrac{\eps}{2}=\eps,
-\]
+\begin{equation*}
+\begin{aligned}
+\sup_t\norm{\rho_\phi(t)-\rho(t)}_F&\le\sup_t\norm{\rho_\phi(t)-\rho_\eta(t)}_F\\
+&\quad+\sup_t\norm{\rho_\eta(t)-\rho(t)}_F<\tfrac{\eps}{2}+\tfrac{\eps}{2}=\eps,
+\end{aligned}
+\end{equation*}
 and $A_\phi$ has nonzero output everywhere because $\norm{A_\phi(t)}_F\ge\norm{C_\eta(t)}_F-\eps'>0$. This is an \emph{approximation} (existence) guarantee on the hypothesis class; it does not assert that gradient-based optimization will find such a network, and indeed the training objective remains nonconvex---a fragility made explicit by the seed variance of the qutrit reconstruction (Experiment~3, Table~\ref{tab:exp3}).
 \end{proof}
 
@@ -562,9 +574,12 @@ We treat the two parameterizations separately and in both cases reduce the learn
 \emph{Rate parameterization.} The Hamiltonian $H_\theta=\sum_\ell\theta_\ell G_\ell$ with $G_\ell=G_\ell^\dagger$ and $\theta_\ell\in\R$ is Hermitian because $H_\theta^\dagger=\sum_\ell\theta_\ell G_\ell^\dagger=\sum_\ell\theta_\ell G_\ell=H_\theta$. For each rate, $\softplus(x)=\ln(1+e^x)>0$ for all $x\in\R$ (the argument $1+e^x>1$, and $\ln$ is positive on $(1,\infty)$); adding $\gamma_{\min}\ge0$ keeps $\gamma_k(\xi_k)=\softplus(\xi_k)+\gamma_{\min}>0$. Setting $V_k=\sqrt{\gamma_k}\,L_k$ absorbs each nonnegative rate into its jump operator, and $V_k\rho V_k^\dagger=\gamma_k L_k\rho L_k^\dagger$, $V_k^\dagger V_k=\gamma_k L_k^\dagger L_k$, so Eq.~\eqref{eq:gksl_rates} is exactly Eq.~\eqref{eq:canonical_gksl} with $V_k=\sqrt{\gamma_k}L_k$. Hence $e^{t\calL_\Theta}$ is CPTP for all $t\ge0$.
 
 \emph{Kossakowski parameterization.} Here $\calL_\Theta[\rho]=-\ii[H_\Theta,\rho]+\sum_{a,b=1}^q(C)_{ab}\big(F_a\rho F_b^\dagger-\tfrac12\{F_b^\dagger F_a,\rho\}\big)$ with $C=BB^\dagger$. The matrix $C$ is Hermitian, since $C^\dagger=(BB^\dagger)^\dagger=BB^\dagger=C$, and PSD, since $u^\dagger C u=u^\dagger BB^\dagger u=\norm{B^\dagger u}_2^2\ge0$ for all $u\in\C^q$. By the spectral theorem there is a unitary $U$ and nonnegative eigenvalues $\Lambda_r\ge0$ with $C=U\Lambda U^\dagger$, i.e.\ $C_{ab}=\sum_r U_{ar}\Lambda_r\overline{U_{br}}$. Define the rotated operators $\widetilde L_r=\sqrt{\Lambda_r}\sum_a U_{ar}F_a$. Substituting $C_{ab}=\sum_r U_{ar}\Lambda_r\overline{U_{br}}$ and exchanging the finite sums,
-\[
-\sum_{a,b}C_{ab}F_a\rho F_b^\dagger=\sum_r\Lambda_r\Big(\sum_a U_{ar}F_a\Big)\rho\Big(\sum_b U_{br}F_b\Big)^\dagger=\sum_r\widetilde L_r\rho\widetilde L_r^\dagger,
-\]
+\begin{equation*}
+\begin{aligned}
+\sum_{a,b}C_{ab}F_a\rho F_b^\dagger&=\sum_r\Lambda_r\Big(\sum_a U_{ar}F_a\Big)\rho\Big(\sum_b U_{br}F_b\Big)^\dagger\\
+&=\sum_r\widetilde L_r\rho\widetilde L_r^\dagger,
+\end{aligned}
+\end{equation*}
 where the last equality uses $\big(\sum_b U_{br}F_b\big)^\dagger=\sum_b\overline{U_{br}}F_b^\dagger$ and $\Lambda_r=(\sqrt{\Lambda_r})^2$; the identical computation applied to the anticommutator term gives $\sum_{a,b}C_{ab}F_b^\dagger F_a=\sum_r\widetilde L_r^\dagger\widetilde L_r$. Therefore $\calL_\Theta$ equals Eq.~\eqref{eq:canonical_gksl} with $V_r=\widetilde L_r$ and the same Hermitian $H_\Theta$, so it too generates a CPTP semigroup. Trace preservation holds in both cases because each term of Eq.~\eqref{eq:canonical_gksl} is traceless [$\Tr[H,\rho]=0$ by cyclicity, and $\Tr(V_r\rho V_r^\dagger)=\Tr(V_r^\dagger V_r\rho)=\tfrac12\Tr\{V_r^\dagger V_r,\rho\}$]. This architectural guarantee is what makes the learned two-qubit generator a legal Lindbladian that can be propagated to held-out initial states (Experiment~4, Table~\ref{tab:exp4}).
 \end{proof}
 
@@ -585,9 +600,12 @@ e(t)=\Phi_t[e(0)]+\int_0^t\Phi_{t-s}[r(s)]\,\dd s.
 \emph{Step 3: $r(s)$ is Hermitian and traceless.} By hypothesis $\rhohat$ is a Hermitian, trace-one path, so $\dot\rhohat$ is Hermitian (the derivative of a Hermitian-valued path is Hermitian) and $\Tr\dot\rhohat=\tfrac{\dd}{\dd t}\Tr\rhohat=\tfrac{\dd}{\dd t}1=0$. The generator $\calL$ maps Hermitian inputs to Hermitian outputs and is trace annihilating ($\Tr\calL[X]=0$ for all $X$, since each GKSL term is traceless). Hence $r=\dot\rhohat-\calL[\rhohat]$ is Hermitian with $\Tr r(s)=0$.
 
 \emph{Step 4: a CPTP map is a trace-norm contraction on Hermitian traceless matrices.} Let $X$ be Hermitian with $\Tr X=0$. By the spectral theorem write the Jordan (positive/negative) decomposition $X=X_+-X_-$ with $X_\pm\succeq0$ supported on orthogonal eigenspaces; then $\norm{X}_1=\Tr X_++\Tr X_-$ and $\Tr X=\Tr X_+-\Tr X_-=0$ forces $\Tr X_+=\Tr X_-=:a$, so $\norm{X}_1=2a$. If $a=0$ then $X=0$ and the claim is trivial; otherwise set $\rho_\pm=X_\pm/a$, which are density matrices, and $X=a(\rho_+-\rho_-)$. Because $\Phi$ is CPTP it maps density matrices to density matrices, and the trace distance $\tfrac12\norm{\cdot}_1$ is contractive under any CPTP map (the Holevo--Helstrom monotonicity of trace distance). Therefore, using linearity and homogeneity of $\Phi$ and the norm,
-\[
-\tfrac12\norm{\Phi[X]}_1=\tfrac12\norm{a\big(\Phi[\rho_+]-\Phi[\rho_-]\big)}_1=a\cdot\tfrac12\norm{\Phi[\rho_+]-\Phi[\rho_-]}_1\le a\cdot\tfrac12\norm{\rho_+-\rho_-}_1=a=\tfrac12\norm{X}_1.
-\]
+\begin{equation*}
+\begin{aligned}
+\tfrac12\norm{\Phi[X]}_1&=\tfrac12\norm{a\big(\Phi[\rho_+]-\Phi[\rho_-]\big)}_1=a\cdot\tfrac12\norm{\Phi[\rho_+]-\Phi[\rho_-]}_1\\
+&\le a\cdot\tfrac12\norm{\rho_+-\rho_-}_1=a=\tfrac12\norm{X}_1.
+\end{aligned}
+\end{equation*}
 Thus $\norm{\Phi[X]}_1\le\norm{X}_1$ for every Hermitian traceless $X$, and in particular for each $\Phi_{t-s}$ applied to the Hermitian traceless $e(0)$ and $r(s)$.
 
 \emph{Step 5: assembling the bound.} Take the trace norm of the variation-of-constants formula, apply the triangle inequality (for the integral, $\norm{\int_0^t g\,\dd s}_1\le\int_0^t\norm{g}_1\,\dd s$), and then the contraction of Step 4 to each $\Phi$:
