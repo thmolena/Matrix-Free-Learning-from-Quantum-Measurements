@@ -393,6 +393,70 @@ def plot_qutrit_fidelity_distribution(fids_plain: list, fids_fourier: list,
     plt.close()
 
 
+def plot_qutrit_fidelity_comparison(fids_by_method: dict, save_path: str):
+    """Per-seed reconstruction fidelity for several qutrit density networks
+    (plain MLP, Fourier features, spectral frame), with the mean and 95% CI
+    overlaid (n = 5 seeds). The spectral-frame (interaction-picture) network is
+    the proposed cure for spectral bias. Panel label 'b'."""
+    from .stats import aggregate
+    apply_nmi_style()
+    _ensure_dir(save_path)
+    methods = list(fids_by_method.keys())
+    fig, ax = plt.subplots(figsize=(COL_SINGLE, 2.8))
+    for i, name in enumerate(methods):
+        vals = list(fids_by_method[name])
+        x = np.full(len(vals), i + 1, dtype=float)
+        jit = (np.arange(len(vals)) - (len(vals) - 1) / 2) * 0.04
+        ax.scatter(x + jit, vals, s=20, alpha=0.7, zorder=3,
+                   color=NMI_PALETTE[i % len(NMI_PALETTE)],
+                   label='per-seed' if i == 0 else None)
+        a = aggregate(vals)
+        ax.errorbar(i + 1, a['mean'], yerr=a['ci'], fmt='_', color='k',
+                    markersize=18, capsize=4, elinewidth=1.2, zorder=4,
+                    label='mean $\\pm$ 95% CI' if i == 0 else None)
+    ax.set_xlim(0.5, len(methods) + 0.5)
+    ax.set_ylim(0.0, 1.05)
+    ax.set_xticks(range(1, len(methods) + 1))
+    ax.set_xticklabels(methods)
+    ax.set_ylabel('Mean state fidelity')
+    ax.legend(loc='lower left')
+    plt.tight_layout()
+    plt.savefig(save_path, format='pdf')
+    plt.close()
+
+
+def plot_spectral_truncation(levels: list, fidelities: list, oob_weights: list,
+                             save_path: str):
+    """Operator-system spectral truncation of the interaction-picture generator:
+    mean state fidelity of the propagated level-N truncated generator (left axis)
+    and the out-of-band spectral weight / certificate bound (right axis, log) as a
+    function of the retained Bohr-band level N. The full band recovers the exact
+    generator; N=0 is the secular (Davies) generator and N=1 the rotating-wave
+    approximation."""
+    apply_nmi_style()
+    _ensure_dir(save_path)
+    levels = np.asarray(levels, dtype=float)
+    fig, ax = plt.subplots(figsize=(COL_ONEHALF, 2.8))
+    infid = 1.0 - np.asarray(fidelities, dtype=float)
+    infid = np.clip(infid, 1e-16, None)
+    ax.semilogy(levels, infid, 'o-', color=NMI_PALETTE[0],
+                label='mean infidelity $1-F$')
+    ax.set_xlabel(r'Spectral-truncation level $N$ (retained Bohr band)')
+    ax.set_ylabel('Mean infidelity $1-F$')
+    ax2 = ax.twinx()
+    ax2.spines['top'].set_visible(False)
+    ax2.semilogy(levels, np.clip(oob_weights, 1e-16, None), 's--',
+                 color=NMI_PALETTE[1], label='out-of-band weight')
+    ax2.set_ylabel('Out-of-band spectral weight', color=NMI_PALETTE[1])
+    ax2.tick_params(axis='y', colors=NMI_PALETTE[1])
+    lines1, labels1 = ax.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax.legend(lines1 + lines2, labels1 + labels2, loc='upper right')
+    plt.tight_layout()
+    plt.savefig(save_path, format='pdf')
+    plt.close()
+
+
 # ---------------------------------------------------------------------------
 # Experiment 4 -- two-qubit dissipative gate.
 # ---------------------------------------------------------------------------

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ctpcpinn"
-version = "1.0.0"
-description = "CPTP-Compiler-PINNs: structure-preserving residual learning and matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. Regenerates every table and figure of the manuscript deterministically."
+version = "2.0.0"
+description = "Spectral-CPTP-PINNs: spectral-frame (interaction-picture eigen-operator) structure-preserving residual learning, operator-system spectral truncation of the open-system generator, and matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. Regenerates every table and figure of the manuscript deterministically."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -19,6 +19,9 @@ keywords = [
     "physics-informed-neural-networks",
     "PINN",
     "structure-preserving",
+    "spectral-truncation",
+    "operator-systems",
+    "interaction-picture",
     "reproducibility",
 ]
 classifiers = [

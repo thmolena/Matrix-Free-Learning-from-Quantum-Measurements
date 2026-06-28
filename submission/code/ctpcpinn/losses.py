@@ -100,6 +100,41 @@ def physics_residual_loss(rho_t: torch.Tensor, t: torch.Tensor,
     return loss
 
 
+def interaction_residual_loss(rho_tilde_t: torch.Tensor, t: torch.Tensor,
+                              interaction_rhs_fn) -> torch.Tensor:
+    """Interaction-picture physics residual: ||d rho_tilde/dt - L_tilde(t)[rho_tilde]||_F^2.
+
+    Identical in spirit to ``physics_residual_loss`` but the right-hand side is the
+    time-dependent interaction-picture generator, which is supplied a function of
+    BOTH the envelope and the time. The time derivative of the slow envelope is
+    obtained by automatic differentiation exactly as before; because the envelope
+    is slowly varying, this derivative is far better conditioned under measurement
+    noise than the derivative of the fast lab-frame trajectory.
+
+    Args:
+        rho_tilde_t: (N, d, d) complex envelopes (from SpectralDensityNet.forward)
+        t: (N, 1) time tensor with requires_grad=True
+        interaction_rhs_fn: callable(rho_tilde_batch, t) -> (N, d, d) RHS
+    """
+    N, d, _ = rho_tilde_t.shape
+    rho_real = rho_tilde_t.real
+    rho_imag = rho_tilde_t.imag
+    drho_real_dt = torch.zeros_like(rho_real)
+    drho_imag_dt = torch.zeros_like(rho_imag)
+    for i in range(d):
+        for j in range(d):
+            grad_real = torch.autograd.grad(
+                rho_real[:, i, j].sum(), t, create_graph=True, retain_graph=True)[0]
+            drho_real_dt[:, i, j] = grad_real.squeeze(-1)
+            grad_imag = torch.autograd.grad(
+                rho_imag[:, i, j].sum(), t, create_graph=True, retain_graph=True)[0]
+            drho_imag_dt[:, i, j] = grad_imag.squeeze(-1)
+    drho_dt = torch.complex(drho_real_dt, drho_imag_dt)
+    rhs = interaction_rhs_fn(rho_tilde_t, t)
+    residual = drho_dt - rhs
+    return (residual.real ** 2 + residual.imag ** 2).sum(dim=(-2, -1)).mean()
+
+
 def positivity_penalty(rho_t: torch.Tensor) -> torch.Tensor:
     """Soft positivity penalty: mean over the batch of sum_i ReLU(-lambda_i(rho)).
 

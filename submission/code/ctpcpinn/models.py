@@ -206,6 +206,62 @@ class DensityMatrixNet(nn.Module):
         return A
 
 
+class SpectralDensityNet(nn.Module):
+    """Interaction-picture (spectral-frame) density network -- the eigen-operator
+    cure for spectral bias.
+
+    The network outputs the SLOW envelope ``rho_tilde_E(t) = U(t)^dag rho(t) U(t)``
+    in the Hamiltonian eigenbasis through the same hard Cholesky map as
+    ``DensityMatrixNet`` (so the envelope, and hence the lab state, is Hermitian,
+    positive semidefinite and unit trace by construction). The fast Bohr-frequency
+    oscillations carried by ``U(t) = exp(-i H t)`` are supplied analytically by an
+    exact phase rotation, so the trainable part only has to represent a slowly
+    varying envelope -- removing the spectral bias that defeats a smooth-in-time
+    density network on fast multi-level dynamics.
+
+    ``forward(t)`` returns the eigenbasis envelope (used by the interaction-picture
+    physics residual); ``rho_lab(t)`` returns the lab-frame density matrix (used by
+    the data and initial-condition terms and for evaluation).
+
+    Args:
+        H: (d, d) frame Hamiltonian (the known coherent part defining U(t)).
+        hidden_dim, n_layers, fourier_features, fourier_period: passed to the
+            underlying envelope network. ``fourier_features`` can usually be 0 (a
+            plain MLP) because the envelope is slow.
+    """
+
+    def __init__(self, H, hidden_dim: int = 96, n_layers: int = 4,
+                 fourier_features: int = 0, fourier_period: float = 1.0):
+        super().__init__()
+        H = np.asarray(H, dtype=np.complex128)
+        self.d = H.shape[0]
+        E, V = np.linalg.eigh(0.5 * (H + H.conj().T))
+        self.register_buffer('E', torch.tensor(E.real, dtype=torch.float32))
+        self.register_buffer('V', torch.from_numpy(V.astype(np.complex64)))
+        self.envelope = DensityMatrixNet(
+            d=self.d, hidden_dim=hidden_dim, n_layers=n_layers,
+            fourier_features=fourier_features, fourier_period=fourier_period)
+
+    def forward(self, t: torch.Tensor) -> torch.Tensor:
+        """Eigenbasis envelope rho_tilde_E(t), a valid density matrix (batch,d,d)."""
+        return self.envelope(t)
+
+    def _bohr_phase(self, t: torch.Tensor) -> torch.Tensor:
+        if t.dim() > 1:
+            t = t.reshape(-1)
+        omega = self.E[:, None] - self.E[None, :]
+        ang = t[:, None, None] * omega[None, :, :]
+        return torch.complex(torch.cos(ang), torch.sin(ang))
+
+    def rho_lab(self, t: torch.Tensor) -> torch.Tensor:
+        """Lab-frame state rho(t) = V (Phi^* . rho_tilde_E) V^dag (batch,d,d)."""
+        rho_tilde = self.envelope(t)
+        phase = self._bohr_phase(t)
+        rho_E = phase.conj() * rho_tilde
+        Vd = self.V.conj().T
+        return torch.matmul(torch.matmul(self.V, rho_E), Vd)
+
+
 class UnconstrainedDensityNet(nn.Module):
     """Baseline: unconstrained network outputting d^2 real values reshaped to matrix.
 

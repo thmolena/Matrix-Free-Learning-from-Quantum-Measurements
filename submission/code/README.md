@@ -1,10 +1,14 @@
-# ctpcpinn — CPTP-Compiler-PINNs code artifact
+# ctpcpinn — Spectral-Frame CPTP-PINNs code artifact
 
-Structure-preserving residual learning and matrix-free compilation for Markovian
-open quantum (Lindblad/GKSL) dynamics. This package regenerates every table and
-figure of the manuscript deterministically: a hard-constrained Cholesky density
-network, a GKSL-preserving generator parameterization, and a matrix-free Lindblad
-compiler, with five reproducible simulation studies.
+Spectral-frame (interaction-picture eigen-operator) structure-preserving residual
+learning, operator-system spectral truncation of the open-system generator, and
+matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. This
+package regenerates every table and figure of the manuscript deterministically: a
+hard-constrained Cholesky density network, a spectral-frame parameterization that
+removes spectral bias (`ctpcpinn/spectral.py`, `models.py:SpectralDensityNet`), an
+operator-system spectral truncation of the generator with an error certificate, a
+GKSL-preserving generator parameterization, and a matrix-free Lindblad compiler,
+with six reproducible simulation studies.
 
 Molena Huynh · North Carolina State University · molena.huynh@jmp.com
 
@@ -74,10 +78,11 @@ pytest                                   # ctpcpinn/tests/
 | `figures/fig1_schematic.pdf` | Programmatic method-overview schematic |
 | `figures/exp1_parameter_recovery.pdf`, `figures/exp1_state_fidelity.pdf` | Single-qubit system identification |
 | `figures/exp2_sparse_measurements.pdf` | Sparse-measurement ablation |
-| `figures/exp3_qutrit_leakage.pdf` | Fast qutrit reconstruction |
+| `figures/exp3_qutrit_leakage.pdf` | Fast qutrit reconstruction (spectral frame) |
 | `figures/exp4_gate_fidelity.pdf` | Two-qubit dissipative gate, held-out generalization |
 | `figures/exp5_compiler_scaling.pdf` | Dense-versus-structured compiler scaling |
-| `tables/exp3_leakage_results.tex`, `tables/exp4_gate_results.tex` | Corresponding LaTeX result tables |
+| `figures/exp6_spectral_truncation.pdf` | Operator-system spectral truncation hierarchy |
+| `tables/exp3_leakage_results.tex` … `exp6_spectral_truncation.tex` | Corresponding LaTeX result tables |
 
 Recompiling `submission/main.tex` after a run picks up the regenerated numbers
 automatically.
@@ -85,9 +90,11 @@ automatically.
 ## Determinism
 
 Each training experiment (Experiments 1–4) is repeated over the fixed seeds
-`[0, 1, 2, 3, 4]` and reported as mean ± 95% Student-*t* confidence interval. The
-full configuration is 3000 Adam epochs at learning rate 10⁻³, 100 time points, and
-measurement-noise standard deviation 0.02 (`ctpcpinn/config.py`, `FULL_CONFIG`).
+`[0, 1, 2, 3, 4]` and reported as mean ± 95% Student-*t* confidence interval;
+Experiments 5 (compiler scaling) and 6 (operator-system spectral truncation) are
+deterministic. The full configuration is 3000 Adam epochs at learning rate 10⁻³,
+100 time points, and measurement-noise standard deviation 0.02
+(`ctpcpinn/config.py`, `FULL_CONFIG`).
 The quick configuration uses seeds `[0, 1]`, 200 epochs, and 60 time points.
 
 Reproduction is single-threaded by design. The reproduction scripts pin
@@ -119,8 +126,9 @@ submission/code/
     ├── operators.py / lindblad.py / solvers.py
     ├── models.py / losses.py / metrics.py / stats.py
     ├── compiler.py / ir.py     # matrix-free open-system compiler and IR
-    ├── theory.py               # statements of the six guarantees
-    ├── experiments/            # exp1–exp5
+    ├── spectral.py             # spectral frame + operator-system truncation + rate readouts
+    ├── theory.py               # statements of the guarantees
+    ├── experiments/            # exp1–exp6 (exp6 = operator-system spectral truncation)
     └── tests/                  # invariant tests
 ```
 

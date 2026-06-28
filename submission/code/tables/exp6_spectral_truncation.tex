@@ -1,0 +1,17 @@
+\begin{table}[ht]
+\centering
+\caption{Experiment 6: operator-system spectral truncation of the interaction-picture generator. Mean and worst-case state fidelity of the level-$N$ truncated generator propagated against the exact trajectory, and the out-of-band spectral weight $\sum_{|k|>N}\lVert L_k\rVert$ that bounds the generator-approximation error. $N{=}0$ is the secular (Davies) generator and $N{=}1$ the rotating-wave approximation; the full band recovers the exact generator. Deterministic (no seeds).}
+\label{tab:exp6}
+\begin{tabular}{llccc}
+\toprule
+$N$ & Interpretation & Mean fidelity & Max infidelity & Out-of-band weight \\
+\midrule
+0 & secular (Davies) & 0.759962 & 5.12e-01 & 1.660e+01 \\
+1 & rotating-wave & 0.955322 & 1.11e-01 & 8.462e+00 \\
+2 & partial band & 0.993096 & 1.75e-02 & 3.270e+00 \\
+4 & partial band & 0.999988 & 3.12e-05 & 1.819e-01 \\
+8 & partial band & 1.000000 & 1.15e-08 & 2.508e-04 \\
+16 & partial band & 1.000000 & 7.63e-09 & 2.250e-04 \\
+\bottomrule
+\end{tabular}
+\end{table}

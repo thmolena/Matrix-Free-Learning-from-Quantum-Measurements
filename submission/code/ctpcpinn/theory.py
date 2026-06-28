@@ -46,6 +46,30 @@ positive semidefinite and trace one. Rates are parameterized with softplus, and
 Hermitian bases keep the Hamiltonian legal, so learned generators stay in the
 GKSL form.
 
+The spectral frame and operator-system truncation
+--------------------------------------------------
+A hard constraint guarantees a legal state but not an accurate one: a smooth
+network is biased toward low frequencies and cannot resolve the fast Bohr-
+frequency oscillations of multi-level systems. The spectral frame (spectral.py,
+models.py:SpectralDensityNet) learns only the slow envelope
+
+    rho_tilde(t) = U(t)^dagger rho(t) U(t),   U(t) = exp(-i H t),
+
+in the Hamiltonian eigenbasis through the same Cholesky map, and rebuilds the
+fast lab state rho = U rho_tilde U^dagger analytically. Conjugation by a unitary
+preserves physicality, so this is exactly physical and exactly equivalent to the
+lab dynamics, while the trainable target is slow -- removing spectral bias.
+
+In this frame the generator is almost periodic; keeping only its slowest Bohr-
+frequency Fourier modes (the band |k| <= N) is the operator-system spectral
+truncation of noncommutative geometry, here applied to a completely positive
+dynamical generator. N = 0 is the secular (Davies) generator, N = 1 the rotating-
+wave approximation, and the full band the exact generator; the out-of-band weight
+eta_N = sum_{|k|>N} ||L_k|| is a computable error certificate. The dissipative
+rates are read out from the learned envelope by a small linear/integral least
+squares (spectral.py:fit_rates_integral), the operational form of the local
+identifiability bound.
+
 Compiler view
 -------------
 compiler.py compares dense Liouvillian evaluation, which stores a d**2 by d**2

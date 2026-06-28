@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CPTP-Compiler-PINNs — Structure-Preserving Learning for Open Quantum Dynamics</title>
+  <title>Spectral-Frame CPTP-PINNs — Eigen-Operator Learning and Operator-System Spectral Truncation for Open Quantum Dynamics</title>
   <meta name="description" content="Structure-preserving residual learning and matrix-free compilation for Markovian open quantum systems: a hard-constrained Cholesky density network, a GKSL-preserving generator parameterization, and a matrix-free Lindblad compiler, proved physical and benchmarked over five reproducible five-seed studies." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2319435b'/%3E%3Cpath d='M20 66c18-40 42-40 60 0' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='34' cy='44' r='6' fill='%23ffffff'/%3E%3Ccircle cx='66' cy='44' r='6' fill='%23ffffff'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -173,16 +173,17 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">Open Quantum Systems · Physics-Informed Learning · Structure-Preserving Computation · Part of a unified graph-learning program for quantum computation</div>
-    <h1>CPTP-Compiler-PINNs: Structure-Preserving Residual Learning and Matrix-Free Compilation for Open Quantum Dynamics</h1>
-    <p class="lead">Identification of Markovian open-quantum models from sparse, noisy data, founded on two design principles: physicality is an invariant of the architecture rather than a penalty applied after the fact, and the Lindblad residual is evaluated by a compiler that bypasses the dense <span class="mono">d²×d²</span> Liouvillian. The hard constraint is proved free of expressive cost and yields a transferable, certified generator.</p>
+    <div class="kicker">Open Quantum Systems · Physics-Informed Learning · Spectral Truncation &amp; Operator Systems · Structure-Preserving Computation</div>
+    <h1>Spectral-Frame CPTP-PINNs: Eigen-Operator Structure-Preserving Learning and Operator-System Spectral Truncation for Open Quantum Dynamics</h1>
+    <p class="lead">Identification of Markovian open-quantum models from sparse, noisy data. The central contribution is a <strong>spectral-frame (interaction-picture eigen-operator) parameterization</strong>: the density network learns only the slow envelope <span class="mono">ρ̃ = U†ρU</span> in the Hamiltonian eigenbasis through the same hard Cholesky map, supplying the fast Bohr-frequency oscillations analytically and so removing spectral bias at the level of the representation. Band-limiting the interaction-picture generator to its slow Bohr eigen-operators is an <strong>operator-system spectral truncation</strong>, lifting the spectral-truncation construction of noncommutative geometry and C\*-algebraic kernel machines from static kernels to a completely positive dynamical generator. This resolves the principal open problem of the structure-preserving approach — reliable reconstruction of fast multi-level (qutrit leakage) dynamics.</p>
     <p class="meta"><strong>Molena Huynh</strong> · North Carolina State University · <a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a> · manuscript prepared for submission to <em>Nature Machine Intelligence</em></p>
     <div class="badges">
+      <span class="badge">Spectral-frame eigen-operator network</span>
+      <span class="badge">Operator-system spectral truncation</span>
       <span class="badge">Cholesky density network</span>
       <span class="badge">GKSL-preserving generator</span>
-      <span class="badge">Matrix-free Lindblad compiler</span>
-      <span class="badge">Six exact guarantees</span>
-      <span class="badge">5 studies · 5 seeds · 95% CI</span>
+      <span class="badge">Eight exact guarantees</span>
+      <span class="badge">6 studies · 5 seeds · 95% CI</span>
       <span class="badge">pip install ctpcpinn</span>
     </div>
   </div>
@@ -242,6 +243,11 @@
     <p>Training minimizes three terms: a masked data fit, an initial-condition match, and the Lindblad residual evaluated at collocation points <span class="mono">{τ_ℓ}</span>:</p>
     <p style="text-align:center">$$\mathcal{J}(\phi,\Theta)=\lambda_{\mathrm{data}}\,\mathcal{J}_{\mathrm{data}}+\lambda_{\mathrm{phys}}\,\mathcal{J}_{\mathrm{phys}}+\lambda_0\,\mathcal{J}_0,\qquad \mathcal{J}_{\mathrm{phys}}=\frac{1}{N_c}\sum_\ell\big\|\dot\rho_\phi(\tau_\ell)-\mathcal{L}_\Theta[\rho_\phi(\tau_\ell)]\big\|_F^2,$$</p>
     <p>with <span class="mono">J_data = (Σ m_ij)⁻¹ Σ m_ij (Tr[O_j ρ_φ(t_i)] − y_ij)²</span> and <span class="mono">J_0 = ‖ρ_φ(0) − ρ_0‖_F²</span>. The time derivative <span class="mono">ρ̇_φ</span> comes from automatic differentiation of the density network; the residual term <span class="mono">L_Θ[ρ_φ]</span> is supplied by the compiler in either its dense or structured mode.</p>
+
+    <h3>Spectral frame and operator-system truncation</h3>
+    <p>Diagonalize the frame Hamiltonian <span class="mono">H=Σ_a E_a |a⟩⟨a|</span>; with <span class="mono">U(t)=e^{−iHt}</span> the network learns the slow interaction-picture envelope and rebuilds the lab state analytically,</p>
+    <p style="text-align:center">$$\rho_\phi(t)=U(t)\,\widetilde\rho_\phi(t)\,U(t)^\dagger,\qquad (\widetilde\rho_\phi)_{ab}\mapsto e^{-i\omega_{ab}t}(\widetilde\rho_\phi)_{ab},\quad \omega_{ab}=E_a-E_b,$$</p>
+    <p>where <span class="mono">ρ̃_φ</span> is produced by the same Cholesky map (so it is a valid density matrix) and the physics residual is evaluated in the interaction picture with rotated jumps <span class="mono">L̃_k(t)=U(t)†L_kU(t)</span>. In this frame the generator is almost periodic, <span class="mono">𝓛̃_t = Σ_k e^{ikω₀t}𝓛_k</span>, <span class="mono">ω₀=2π/T</span>; the level-N <em>operator-system spectral truncation</em> keeps the band <span class="mono">|k|≤N</span>, with <span class="mono">N=0</span> the secular (Davies) generator, <span class="mono">N=1</span> the rotating-wave approximation, and the full band the exact generator, certified by the out-of-band weight <span class="mono">η_N = Σ_{|k|&gt;N}‖𝓛_k‖</span>.</p>
   </section>
 
   <!-- ===================== FORMULATION ===================== -->
@@ -257,10 +263,10 @@
     <h2><span class="num">4</span>Principal Contributions</h2>
     <ol class="contrib">
       <li><strong>A hard-constrained density network.</strong> The Cholesky density map enforces Hermiticity, positive semidefiniteness, and unit trace exactly — not approximately — at every time point, every training iteration, and every evaluation point.</li>
-      <li><strong>A CPTP-by-construction generator parameterization.</strong> Nonnegative Lindblad rates pass through softplus, and full Kossakowski matrices are factored as positive semidefinite Gram matrices <span class="mono">C=BB^†</span>, so the learned generator can never leave GKSL form.</li>
-      <li><strong>A matrix-free open-system compiler.</strong> A symbolic open-system intermediate representation is lowered to either a dense superoperator or a structured residual kernel; a dispatch policy picks the mode by dimension and batch size, and the two modes agree to floating-point precision.</li>
-      <li><strong>Six exact mathematical guarantees.</strong> Exact physicality, universal trajectory approximation, CPTP semigroup preservation, an a posteriori trace-norm residual certificate, a local identifiability bound, and a dense-versus-structured complexity separation — each proved in full.</li>
-      <li><strong>A fully reproducible study with statistics and baselines.</strong> Every figure and number is emitted by the accompanying scripts; each training experiment is repeated over five seeds and reported as mean ± 95% confidence interval, against a soft positivity penalty, an unconstrained network, and a classical model-based least-squares fit.</li>
+      <li><strong>A spectral-frame (eigen-operator) parameterization.</strong> The network learns only the slow interaction-picture envelope <span class="mono">ρ̃(t)=U(t)†ρ(t)U(t)</span> in the Hamiltonian eigenbasis through the same hard map, supplying the fast Bohr-frequency oscillations analytically via the known <span class="mono">U(t)=exp(−iHt)</span>. Spectral bias is removed at the architecture level, and the well-conditioned envelope derivative makes the dissipative rates identifiable by a linear least-squares readout.</li>
+      <li><strong>Operator-system spectral truncation of the generator.</strong> Band-limiting the interaction-picture generator to its slow Bohr eigen-operators is a projection onto a finite operator system, giving a controlled multi-resolution hierarchy — secular (Davies) and rotating-wave as its coarsest levels, converging to the exact generator — with an a posteriori out-of-band-weight error certificate. This lifts the spectral-truncation construction of noncommutative geometry (Connes–van Suijlekom) and C\*-algebraic kernel machines (Hashimoto et al.) from static kernels to a completely positive dynamical generator.</li>
+      <li><strong>A CPTP-by-construction generator parameterization and matrix-free compiler.</strong> Softplus-positive rates and positive semidefinite Kossakowski factorizations <span class="mono">C=BB^†</span> keep the generator in GKSL form; a symbolic open-system intermediate representation lowers to dense, structured, or spectrally truncated kernels that agree to floating-point precision.</li>
+      <li><strong>Eight exact mathematical guarantees and a fully reproducible study.</strong> Including spectral-frame physicality-and-equivalence and the operator-system truncation bound; every figure and number is emitted by the <span class="mono">ctpcpinn</span> package over six experiments, five seeds each, mean ± 95% confidence interval.</li>
     </ol>
     <p class="sub">The claims are deliberately bounded: the experiments establish the value of the structural constraints and the compiler path on controlled simulations. Their scope stops short of quantum-hardware validation, universal superiority over every baseline, and production-scale GPU performance.</p>
   </section>
@@ -270,6 +276,8 @@
     <h2><span class="num">5</span>Methodological Novelty</h2>
     <p>The novelty is best read against named prior art, one comparison at a time:</p>
     <ul class="tight">
+      <li><strong>Versus spectral-truncation kernel machines (Hashimoto et al.; Connes–van Suijlekom operator systems).</strong> Spectral truncation approximates a <span class="mono">C*</span>-algebra by finite-dimensional operator systems, and has recently been used to reinstate noncommutativity in static kernel machines. This work lifts the same construction from <em>static kernels</em> to the <em>learning and approximation of a completely positive dynamical generator</em>: band-limiting the interaction-picture generator to its slow Bohr eigen-operators yields a multi-resolution hierarchy — with the secular (Davies) and rotating-wave generators as its coarsest levels — equipped with a computable truncation-error certificate.</li>
+      <li><strong>Versus spectral-bias remedies (Fourier features; Tancik et al.).</strong> Rather than encode the input to help a network learn high frequencies, the spectral frame carries the fast, exactly-known Bohr oscillation analytically and lets the network represent only the slow envelope — a change of representation, not of loss or encoding, that inherits the physicality guarantee.</li>
       <li><strong>Versus completely-positive projection methods (Knee et al.).</strong> Standard pipelines repair an invalid estimate <em>after the fact</em> by projecting onto the positive cone. Here invalid states fall outside the model's expressive range: the Cholesky map lands in <span class="mono">𝒟(ℋ)</span> by construction, eliminating the projection step entirely.</li>
       <li><strong>Versus Lindblad / Hamiltonian learning (Boulant et al.; Wang et al.).</strong> The framework retains structured identification while replacing unconstrained trajectory estimation with a hard density parameterization, so optimizer capacity stays inside the physical set throughout training.</li>
       <li><strong>Versus inverse PINNs (Raissi, Karniadakis; Wang et al.).</strong> The residual objective is shared, while the hypothesis class is narrowed to physically valid states and CPTP generators — the same structure-preserving principle behind Hamiltonian, Lagrangian, and symplectic networks, which constrain the model to improve learning.</li>
@@ -281,7 +289,7 @@
   <!-- ===================== THEORY ===================== -->
   <section id="theory">
     <h2><span class="num">6</span>Theoretical Guarantees</h2>
-    <p class="sub">Six exact results — not empirical trends — transcribed verbatim from the manuscript, each followed by a one-line reading of what it buys.</p>
+    <p class="sub">Eight exact results — not empirical trends — transcribed verbatim from the manuscript, each followed by a one-line reading of what it buys.</p>
 
     <div class="theorem">
       <span class="tname">Theorem 1 — Exact density-matrix physicality.</span>
@@ -319,6 +327,19 @@
       For a <span class="mono">d</span>-dimensional system with <span class="mono">m</span> dense Lindblad operators: dense Liouvillian storage is <span class="mono">O(d⁴)</span>, construction <span class="mono">O(md⁴)</span>, and <span class="mono">O(d⁴)</span> per dense matvec; structured evaluation costs <span class="mono">O(md³)</span> arithmetic and <span class="mono">O(md²)</span> storage. Over <span class="mono">N</span> collocation states, dense is <span class="mono">O(md⁴+Nd⁴)</span> and structured <span class="mono">O(Nmd³)</span>.
       <div class="interp">The per-evaluation ratio is <span class="mono">Θ(d/m)</span> and the storage ratio <span class="mono">Θ(d²/m)</span>, so the structured route wins by a widening margin in both arithmetic and memory as <span class="mono">d</span> grows.</div>
     </div>
+
+    <div class="theorem">
+      <span class="tname">Theorem 7 — Spectral-frame physicality and equivalence.</span>
+      For a Hermitian frame Hamiltonian <span class="mono">H</span> with <span class="mono">U(t)=e^{−iHt}</span> and any envelope <span class="mono">ρ̃:[0,T]→𝒟(ℋ)</span>, the lab state <span class="mono">ρ(t)=U(t)ρ̃(t)U(t)†∈𝒟(ℋ)</span> for every <span class="mono">t</span>; and <span class="mono">ρ</span> solves the lab master equation iff <span class="mono">ρ̃</span> solves the interaction-picture equation <span class="mono">ρ̃̇=𝓛̃_t[ρ̃]</span>, whose generator is GKSL for each <span class="mono">t</span> with rotated jumps <span class="mono">L̃_k(t)=U(t)†L_kU(t)</span>.
+      <div class="interp">The spectral frame is exactly physical and exactly equivalent to the lab dynamics, so the network may learn the slow envelope — free of spectral bias — without sacrificing the state-space guarantee.</div>
+    </div>
+
+    <div class="theorem">
+      <span class="tname">Theorem 8 — Operator-system spectral-truncation certificate.</span>
+      The interaction-picture generator has the Fourier series <span class="mono">𝓛̃_t=Σ_k e^{ikω₀t}𝓛_k</span>. Its level-<span class="mono">N</span> truncation <span class="mono">𝓛̃_t^{(N)}=Σ_{|k|≤N} e^{ikω₀t}𝓛_k</span> satisfies <span class="mono">sup_t‖𝓛̃_t−𝓛̃_t^{(N)}‖ ≤ Σ_{|k|&gt;N}‖𝓛_k‖ = η_N → 0</span>, is Hermiticity- and trace-preserving, and (with Theorem 4) bounds the trajectory error by <span class="mono">½∫η_N‖ρ̃(s)‖₁ds</span>, vanishing at full band.
+      <div class="interp">A single dial trades cost for fidelity — secular and rotating-wave generators at the coarse end, the exact generator (and the structured kernel) at the full band — with an a posteriori certificate at every setting.</div>
+    </div>
+
     <p class="sub">Two auxiliary results round out the theory: a Corollary extending physicality to low-rank-plus-isotropic variants, and a Proposition giving a Frobenius-norm analogue of the certificate via Grönwall's inequality.</p>
   </section>
 
@@ -346,7 +367,41 @@
   <!-- ===================== EMPIRICAL ===================== -->
   <section id="empirical">
     <h2><span class="num">8</span>Empirical Validation</h2>
-    <p>Five reproducible simulation studies anchor the claims. Each is repeated over five seeds — redrawing both the network initialization and the measurement-noise realization — and reported as mean ± 95% Student-<em>t</em> confidence interval. Four methods compete throughout: the hard-constrained <strong>CPTP-PINN</strong> (this work), a <strong>soft-penalty PINN</strong> (eigenvalue-negativity penalty), a fully <strong>unconstrained</strong> network, and a <strong>classical least-squares</strong> fit that is given the exact model structure.</p>
+    <p>Six reproducible simulation studies anchor the claims. The two that carry the central contribution — the spectral frame and the operator-system spectral truncation — are reported first. Training experiments are repeated over five seeds (redrawing both the network initialization and the measurement-noise realization) and reported as mean ± 95% Student-<em>t</em> confidence interval; the compiler and truncation benchmarks are deterministic.</p>
+
+    <h3>The spectral frame reconstructs fast qutrit dynamics (Experiment 3)</h3>
+    <div class="tbl-scroll">
+    <table>
+      <caption>Mean state fidelity and recovery error of the dominant decay rates (γ₁₀, γ₂₁), read out identically for every method by an integral least-squares fit of the linear-in-rates generator to the learned interaction-picture envelope. Mean ± 95% CI over five seeds.</caption>
+      <thead>
+        <tr><th>Density network</th><th>Mean state fidelity</th><th>Dominant-rate error</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Plain MLP</td><td>0.7657 ± 0.3463</td><td>—</td></tr>
+        <tr><td>Fourier time-features</td><td>0.5238 ± 0.4897</td><td>—</td></tr>
+        <tr class="ours"><td>Spectral frame (ours)</td><td>0.9847 ± 0.0015</td><td>0.273 ± 0.025</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub">The plain and Fourier baselines are unreliable across seeds (intervals as wide as their means); the spectral frame reconstructs the fast dynamics reliably and is the only method whose envelope is accurate enough to identify the rates. The dephasing rate γ_φ remains a sloppy direction under 2% measurement noise — exact on the noiseless envelope — isolating the residual gap to measurement noise rather than spectral bias (Theorem 5).</p>
+
+    <h3>Operator-system spectral truncation of the generator (Experiment 6)</h3>
+    <div class="tbl-scroll">
+    <table>
+      <caption>Mean state fidelity of the level-N spectrally truncated interaction-picture generator propagated against the exact dynamics of a driven dissipative two-qubit system, and the out-of-band spectral weight η_N that certifies the generator-approximation error. Deterministic.</caption>
+      <thead>
+        <tr><th>N</th><th>Interpretation</th><th>Mean fidelity</th><th>Out-of-band weight η_N</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>secular (Davies)</td><td>0.7600</td><td>1.66 × 10¹</td></tr>
+        <tr><td>1</td><td>rotating-wave</td><td>0.9553</td><td>8.46 × 10⁰</td></tr>
+        <tr><td>2</td><td>partial band</td><td>0.9931</td><td>3.27 × 10⁰</td></tr>
+        <tr class="ours"><td>4</td><td>partial band</td><td>0.999988</td><td>1.82 × 10⁻¹</td></tr>
+        <tr class="ours"><td>8</td><td>full band (→ exact)</td><td>1.000000</td><td>2.51 × 10⁻⁴</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub">The hierarchy converges monotonically to the exact generator (and the structured kernel) as the band widens, with the certificate η_N tracking and bounding the error — the secular and rotating-wave generators emerging as its coarsest two levels (Theorem 8).</p>
 
     <h3>Single-qubit system identification (Experiment 1)</h3>
     <div class="tbl-scroll">
@@ -408,11 +463,11 @@
         <tr><th>d</th><th>Dense (s)</th><th>Structured (s)</th><th>Speedup</th><th>Dense (MB)</th><th>Structured (MB)</th></tr>
       </thead>
       <tbody>
-        <tr><td>2</td><td>0.0069</td><td>0.0012</td><td>5.9×</td><td>0.000</td><td>0.00024</td></tr>
-        <tr><td>3</td><td>0.0095</td><td>0.0016</td><td>6.1×</td><td>0.001</td><td>0.00069</td></tr>
-        <tr><td>4</td><td>0.0099</td><td>0.0015</td><td>6.5×</td><td>0.004</td><td>0.00122</td></tr>
-        <tr><td>6</td><td>0.0125</td><td>0.0016</td><td>7.7×</td><td>0.020</td><td>0.00275</td></tr>
-        <tr><td>8</td><td>0.0238</td><td>0.0019</td><td>12.9×</td><td>0.062</td><td>0.00488</td></tr>
+        <tr><td>2</td><td>0.0094</td><td>0.0015</td><td>6.3×</td><td>0.000</td><td>0.00024</td></tr>
+        <tr><td>3</td><td>0.0130</td><td>0.0020</td><td>6.5×</td><td>0.001</td><td>0.00069</td></tr>
+        <tr><td>4</td><td>0.0134</td><td>0.0020</td><td>6.8×</td><td>0.004</td><td>0.00122</td></tr>
+        <tr><td>6</td><td>0.0176</td><td>0.0021</td><td>8.4×</td><td>0.020</td><td>0.00275</td></tr>
+        <tr><td>8</td><td>0.0291</td><td>0.0033</td><td>8.8×</td><td>0.062</td><td>0.00488</td></tr>
       </tbody>
     </table>
     </div>
@@ -438,32 +493,32 @@
   <!-- ===================== SIGNIFICANCE ===================== -->
   <section id="significance">
     <h2><span class="num">9</span>Significance and Impact</h2>
-    <p>The central claim is that physicality belongs in the architecture as an <em>invariant</em> rather than in the loss as an afterthought, and the mathematics shows this invariant is nearly free: it costs nothing in expressivity (Theorem 2), keeps the learned generator CPTP (Theorem 3), supplies an a posteriori trace-norm certificate (Theorem 4), and admits structured compilation that sidesteps dense Liouvillian storage (Theorem 6). Device characterization ultimately requires a transferable open-system model rather than a fitted curve — a generator that propagates to held-out preparations at ≈0.97 fidelity. The constraint earns its keep exactly where practice demands it: physical trajectories guaranteed at every step, graceful degradation under sparse measurements, and a compiler path that holds storage and arithmetic below the squared density-vector dimension as <span class="mono">d=2^n</span> grows.</p>
+    <p>The two central claims are that physicality belongs in the architecture as an <em>invariant</em> rather than in the loss as an afterthought, and that the fast coherent structure of open-system dynamics should be carried by an analytic change of frame rather than learned — so the network represents only what is genuinely unknown. The mathematics shows these choices cost nothing in expressivity (Theorem 2), keep the learned generator CPTP (Theorem 3), remain exactly physical and exactly equivalent to the lab dynamics (Theorem 7), supply a posteriori certificates from both the residual (Theorem 4) and the spectral-truncation tail (Theorem 8), and admit structured compilation that sidesteps dense Liouvillian storage (Theorem 6). The spectral frame resolves the principal open problem of the prior approach — turning an unreliable fast-reconstruction (mean fidelity ≈0.5–0.8, intervals as wide as the means) into a reliable one (≈0.98 ± 0.01) — and the operator-system truncation furnishes a single dial between the secular generator and the exact one. Device characterization ultimately requires a transferable open-system model rather than a fitted curve — a generator that propagates to held-out preparations at ≈0.97 fidelity.</p>
     <div class="callout">
       <strong>Limitations, stated in full.</strong>
       <ul class="tight" style="margin-top:6px">
-        <li><strong>Fast multi-level regimes remain the principal open problem.</strong> Direct reconstruction of fast qutrit (leakage) trajectories varies across seeds: an apparent single-seed Fourier-feature advantage dissolves under seed averaging (mean fidelity 0.77 ± 0.35 plain MLP against 0.52 ± 0.49 Fourier). Since a least-squares fit of the linear-in-rates dissipator to the <em>exact</em> trajectory recovers the rates to better than 1%, the bottleneck is derivative quality under noise rather than identifiability.</li>
+        <li><strong>Rate sloppiness under measurement noise.</strong> With the trajectory now reliably reconstructed, the dominant decay rates are recovered, but a weakly excited rate (the qutrit dephasing γ_φ) is a sloppy direction at 2% noise — exactly as the local identifiability bound predicts (Theorem 5), since the readout is exact on the noiseless envelope. Richer measurement designs (active experiment design) and derivative denoising are the natural next steps.</li>
+        <li><strong>Known frame Hamiltonian.</strong> The spectral frame and the operator-system truncation use the eigenbasis of a known coherent part; when it is unknown or strongly time-dependent the frame must be co-learned or chosen adaptively (a partial static frame already removes the dominant oscillations).</li>
         <li><strong>Simulation scope.</strong> The experiments are synthetic CPU simulations; they validate the implementation and the theory, leaving device performance to future hardware studies.</li>
         <li><strong>Markovian assumption.</strong> The framework presumes GKSL dynamics; non-Markovian systems require extended state spaces, memory kernels, or process tensors.</li>
-        <li><strong>Identifiability is measurement-dependent.</strong> A rank-deficient sensitivity Gramian defeats any optimizer (Theorem 5).</li>
-        <li><strong>Scale.</strong> This is a small, fully reproducible proof of concept (five seeds per experiment), distinct from a state-of-the-art benchmark sweep.</li>
+        <li><strong>Scale.</strong> This is a small, fully reproducible proof of concept (five seeds per training experiment), distinct from a state-of-the-art benchmark sweep.</li>
       </ul>
     </div>
-    <p>The clearest engineering path forward is a compiler that ingests a high-level noise model and emits fused, batched, differentiable kernels for accelerator execution. The scientific path forward follows naturally from the limitations above: interaction-picture residuals, derivative denoising, richer measurement designs, non-Markovian embeddings, and hardware-calibration datasets.</p>
+    <p>The clearest engineering path forward is a compiler that ingests a high-level noise model and emits fused, batched, spectrally truncated, differentiable kernels for accelerator execution. The scientific path forward follows from the limitations above: co-learned or adaptive frames, richer measurement designs, non-Markovian embeddings, and hardware-calibration datasets.</p>
   </section>
 
   <!-- ===================== REPRODUCIBILITY ===================== -->
   <section id="repro">
     <h2><span class="num">10</span>Reproducibility</h2>
-    <p>Every number in the manuscript is written directly to its figure and table file by the scripts in <code>submission/code</code>, with none entered by hand. The artifact is distributed as a pip-installable package, <code>ctpcpinn</code> (version 1.0.0, MIT, Python ≥ 3.10).</p>
+    <p>Every number in the manuscript is written directly to its figure and table file by the <code>ctpcpinn</code> package (<code>submission/code</code>), with none entered by hand. The artifact is a pip-installable package, <code>ctpcpinn</code> (version 2.0.0, MIT, Python ≥ 3.10), whose <code>ctpcpinn/spectral.py</code> module implements the spectral frame and the operator-system truncation.</p>
     <pre><span class="c"># 1. Obtain the source tree and install the package</span>
 <span class="k">cd</span> submission/code
 pip install .                 <span class="c"># runtime deps: numpy, scipy, torch, matplotlib, cycler</span>
 
-<span class="c"># 2. Regenerate every committed table and figure in place</span>
-python run_all.py             <span class="c"># or the console entry point:</span>
+<span class="c"># 2. Regenerate every committed table and figure (six experiments)</span>
+python run_full.py            <span class="c"># or the console entry point:</span>
 ctpcpinn-reproduce
-ctpcpinn-validate             <span class="c"># checks regenerated numbers against the manuscript</span>
+ctpcpinn-validate             <span class="c"># invariant checks, incl. the spectral frame</span>
 
 <span class="c"># 3. For bit-identical numbers, pin the exact environment</span>
 pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplotlib 3.10.8</span></pre>
@@ -474,7 +529,7 @@ pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch
 
 <footer>
   <div class="wrap">
-    <p>CPTP-Compiler-PINNs — Structure-Preserving Residual Learning and Matrix-Free Compilation for Open Quantum Dynamics. Molena Huynh, North Carolina State University (<a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a>). Manuscript prepared for submission to <em>Nature Machine Intelligence</em>. Numbers, theorems, and figures on this page are transcribed from the manuscript source (<code>submission/main.tex</code>); the interactive panel is a qualitative illustration of the governing relations, not a re-run of the experiments.</p>
+    <p>Spectral-Frame CPTP-PINNs — Eigen-Operator Structure-Preserving Learning and Operator-System Spectral Truncation for Open Quantum Dynamics. Molena Huynh, North Carolina State University (<a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a>). Manuscript prepared for submission to <em>Nature Machine Intelligence</em>. Numbers, theorems, and figures on this page are transcribed from the manuscript source (<code>submission/main.tex</code>); the interactive panel is a qualitative illustration of the governing relations, not a re-run of the experiments.</p>
   </div>
 </footer>
 

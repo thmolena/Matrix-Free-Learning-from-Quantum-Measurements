@@ -37,13 +37,14 @@ import torch
 
 from .config import QUICK_CONFIG, FULL_CONFIG
 
-EXPERIMENTS = ['exp1', 'exp2', 'exp3', 'exp4', 'exp5']
+EXPERIMENTS = ['exp1', 'exp2', 'exp3', 'exp4', 'exp5', 'exp6']
 _TITLES = {
     'exp1': 'single-qubit identification',
     'exp2': 'sparse-measurement ablation',
-    'exp3': 'fast qutrit reconstruction',
+    'exp3': 'fast qutrit reconstruction (spectral frame)',
     'exp4': 'two-qubit gate generalization',
     'exp5': 'dense-vs-structured compiler',
+    'exp6': 'operator-system spectral truncation',
 }
 
 
@@ -52,7 +53,7 @@ def _load(name):
     return importlib.import_module(f'ctpcpinn.experiments.{name}_' + {
         'exp1': 'qubit_inverse', 'exp2': 'sparse_measurements',
         'exp3': 'qutrit_leakage', 'exp4': 'two_qubit_gate',
-        'exp5': 'compiler_ablation'}[name])
+        'exp5': 'compiler_ablation', 'exp6': 'spectral_truncation'}[name])
 
 
 def _versions():

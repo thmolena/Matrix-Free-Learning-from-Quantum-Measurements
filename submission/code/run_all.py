@@ -92,13 +92,15 @@ def main():
     from ctpcpinn.experiments import exp3_qutrit_leakage
     from ctpcpinn.experiments import exp4_two_qubit_gate
     from ctpcpinn.experiments import exp5_compiler_ablation
+    from ctpcpinn.experiments import exp6_spectral_truncation
 
     experiments = [
         ("Experiment 1: single-qubit identification", exp1_qubit_inverse.run),
         ("Experiment 2: sparse-measurement ablation", exp2_sparse_measurements.run),
-        ("Experiment 3: fast qutrit reconstruction", exp3_qutrit_leakage.run),
+        ("Experiment 3: fast qutrit reconstruction (spectral frame)", exp3_qutrit_leakage.run),
         ("Experiment 4: two-qubit gate generalization", exp4_two_qubit_gate.run),
         ("Experiment 5: dense-vs-structured compiler", exp5_compiler_ablation.run),
+        ("Experiment 6: operator-system spectral truncation", exp6_spectral_truncation.run),
     ]
 
     total_start = time.time()

@@ -85,6 +85,52 @@ def test_compiler():
     assert np.allclose(drho_d, drho_s, atol=1e-12), "Dense and structured disagree!"
     print("  [PASS] Compiler dense/structured agree")
 
+def test_spectral_frame():
+    """Spectral-frame (interaction-picture) machinery: physicality of the lab
+    state, exact lab<->envelope equivalence, and convergence of the operator-system
+    spectral truncation to the exact generator at full band."""
+    import torch
+    from ctpcpinn.operators import projector
+    from ctpcpinn.solvers import solve_lindblad_trajectory
+    from ctpcpinn.models import SpectralDensityNet
+    from ctpcpinn.metrics import state_fidelity_over_time
+    from ctpcpinn import spectral as sp
+
+    d = 3
+    E1, E2 = 2 * np.pi * 2.0, 2 * np.pi * 3.8
+    H = E1 * projector(d, 1, 1) + E2 * projector(d, 2, 2)
+    Ls = [np.sqrt(0.5) * projector(d, 0, 1), np.sqrt(0.2) * projector(d, 1, 2),
+          np.sqrt(0.1) * np.diag([0, 1, 2]).astype(np.complex128)]
+    psi0 = np.array([0.8, 0.5, 0.3], dtype=np.complex128); psi0 /= np.linalg.norm(psi0)
+    rho0 = np.outer(psi0, psi0.conj())
+    t_grid = np.linspace(0, 4.0, 60)
+    rhos_exact = solve_lindblad_trajectory(lambda t: H, lambda t: Ls, rho0, t_grid)
+    E, V = sp.eigh_hamiltonian(H)
+
+    # (a) lab <-> interaction-picture roundtrip is exact.
+    err = max(np.max(np.abs(sp.lab_from_envelope(
+        sp.interaction_envelope(rhos_exact[i], t_grid[i], E, V), t_grid[i], E, V)
+        - rhos_exact[i])) for i in range(len(t_grid)))
+    assert err < 1e-10, f"interaction-picture roundtrip err={err}"
+
+    # (b) the spectral-frame network's lab state is a valid density matrix.
+    torch.manual_seed(0)
+    net = SpectralDensityNet(H, hidden_dim=32, n_layers=3)
+    with torch.no_grad():
+        rho_lab = net.rho_lab(torch.linspace(0, 4.0, 8)).numpy()
+    for r in rho_lab:
+        assert np.max(np.abs(r - r.conj().T)) < 1e-4
+        assert abs(np.trace(r) - 1.0) < 1e-4
+        assert np.linalg.eigvalsh(0.5 * (r + r.conj().T)).min() >= -1e-5
+    print("  [PASS] spectral frame (physical lab state, exact IP roundtrip)")
+
+    # (c) full-band spectral truncation reproduces the exact trajectory.
+    modes, norms = sp.generator_fourier_modes(E, V, None, lambda t: Ls, 4.0, n_grid=1024)
+    traj = sp.propagate_truncated(modes, 64, E, V, rho0, t_grid, 4.0)
+    assert np.mean(state_fidelity_over_time(traj, rhos_exact)) > 0.999
+    print("  [PASS] operator-system spectral truncation -> exact at full band")
+
+
 def test_solver():
     from ctpcpinn.operators import pauli_z, sigma_minus
     from ctpcpinn.solvers import solve_lindblad_trajectory
@@ -113,6 +159,7 @@ def main():
     test_density_net()
     test_positive_param()
     test_compiler()
+    test_spectral_frame()
     test_solver()
     print("\nAll tests PASSED.")
     return 0
