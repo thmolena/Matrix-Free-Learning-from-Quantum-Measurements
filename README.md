@@ -6,6 +6,8 @@ Molena Huynh · North Carolina State University · molena.huynh@jmp.com
 
 **[Read the manuscript (PDF)](submission/main.pdf)** · [Full tutorial](index.html) · [Reproducibility package (`ctpcpinn`)](submission/code) · [Live interactive report](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
 
+> **AI for quantum, at HPC scale.** This is a *physics-informed neural network* for open-quantum-system identification, with the physics enforced in the architecture rather than the loss: a hard Cholesky map keeps the learned density Hermitian, positive, and trace-one at every step (positivity violations **0.000**), and a spectral-frame eigen-operator parameterization removes the spectral bias that defeats smooth networks on fast multi-level dynamics (**0.985** mean fidelity on qutrit leakage, vs ≤0.77 for plain/Fourier baselines). It is built on PyTorch and runs on GPU out of the box; the operator-system spectral truncation gives a multi-resolution generator with an a posteriori error certificate at every level. Six studies, five seeds each, deterministic and reproducible.
+
 ## Most novel contribution
 
 Learning a Markovian (GKSL/Lindblad) open-system generator from sparse, noisy
