@@ -4,7 +4,7 @@
 
 Molena Huynh · North Carolina State University · molena.huynh@jmp.com
 
-[Full report and interactive illustration](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
+**[Read the manuscript (PDF)](submission/main.pdf)** · [Full tutorial](index.html) · [Reproducibility package (`ctpcpinn`)](submission/code) · [Live interactive report](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
 
 ## Most novel contribution
 
@@ -39,7 +39,7 @@ and reduces dissipative-rate identification to a measurement-noise question.
 ## Demo (from the manuscript)
 
 The figures and tables below are emitted verbatim by the `ctpcpinn` package and
-appear in [`submission/main.tex`](submission/main.tex). The two results that carry
+appear in [the manuscript](submission/main.pdf). The two results that carry
 the novel contribution:
 
 **The spectral frame reconstructs fast qutrit (leakage) dynamics (Experiment 3).**
