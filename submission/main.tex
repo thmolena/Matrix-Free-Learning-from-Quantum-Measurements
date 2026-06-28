@@ -265,6 +265,7 @@ Using the same qubit system, we randomly retain only a fraction of the observati
 \centering
 \caption{\textbf{Robustness under sparse measurements (Experiment~2).} Mean trace distance to the exact single-qubit trajectory versus retained observation fraction, for the three neural methods. Mean $\pm$ $95\%$ CI over 5 seeds.}
 \label{tab:exp2}
+\resizebox{\columnwidth}{!}{%
 \begin{ruledtabular}
 \begin{tabular}{lccc}
 Fraction & CPTP-PINN (ours) & Soft-penalty & Unconstrained \\
@@ -274,7 +275,7 @@ Fraction & CPTP-PINN (ours) & Soft-penalty & Unconstrained \\
 0.25 & 0.0050 $\pm$ 0.0018 & 0.3682 $\pm$ 0.3490 & 0.3709 $\pm$ 0.3467 \\
 0.10 & 0.0100 $\pm$ 0.0062 & 0.3572 $\pm$ 0.3616 & 0.3572 $\pm$ 0.3626 \\
 \end{tabular}
-\end{ruledtabular}
+\end{ruledtabular}}
 \end{table}
 
 \subsection{Spectral-frame reconstruction of fast qutrit leakage dynamics}
@@ -438,7 +439,8 @@ The compiler receives an IR $\mathsf{IR}=(d,\{G_\ell\},\{F_a\},\Theta,\{O_j\},\m
 \end{equation}
 Thresholds should be empirical, because BLAS libraries, GPU memory, and batch sizes move the crossover.
 
-\begin{widetext}
+\onecolumngrid
+\medskip
 \noindent\hrulefill\par\vspace{-1.5ex}
 \refstepcounter{algorithm}\label{alg:dispatch}%
 \noindent\textbf{Algorithm \thealgorithm.}~Residual-kernel dispatch from an open-system IR
@@ -455,10 +457,8 @@ Thresholds should be empirical, because BLAS libraries, GPU memory, and batch si
 \ENDIF
 \STATE Attach gradient rule: automatic differentiation, custom adjoint, or finite-difference fallback.
 \end{algorithmic}
-\vspace{-1ex}\noindent\hrulefill
-\end{widetext}
 
-\begin{widetext}
+\medskip
 \noindent\hrulefill\par\vspace{-1.5ex}
 \refstepcounter{algorithm}\label{alg:cptp_compiler_pinn}%
 \noindent\textbf{Algorithm \thealgorithm.}~Structure-preserving, physics-informed training
@@ -473,10 +473,8 @@ Thresholds should be empirical, because BLAS libraries, GPU memory, and batch si
 \ENDFOR
 \STATE Return $(\phi,\Theta)$ and the residual certificate of Theorem~\ref{thm:certificate}.
 \end{algorithmic}
-\vspace{-1ex}\noindent\hrulefill
-\end{widetext}
 
-\begin{widetext}
+\medskip
 \noindent\hrulefill\par\vspace{-1.5ex}
 \refstepcounter{algorithm}\label{alg:spectral}%
 \noindent\textbf{Algorithm \thealgorithm.}~Spectral-frame training and rate readout
@@ -491,10 +489,8 @@ Thresholds should be empirical, because BLAS libraries, GPU memory, and batch si
 \STATE \textbf{Rate readout:} with the trained envelope, solve $\min_{\gamma\ge0}\sum_i\norm{\widetilde\rho_\phi(t_i)-e^{t_i\sum_k\gamma_k\calD_k}\widetilde\rho_\phi(0)}_F^2$ (integral form) or the derivative least squares of Appendix~\ref{sec:spectral_methods}.
 \STATE Return $\rhophi$ and $\gamma$.
 \end{algorithmic}
-\vspace{-1ex}\noindent\hrulefill
-\end{widetext}
 
-\begin{widetext}
+\medskip
 \noindent\hrulefill\par\vspace{-1.5ex}
 \refstepcounter{algorithm}\label{alg:truncation}%
 \noindent\textbf{Algorithm \thealgorithm.}~Operator-system spectral truncation of the generator
@@ -506,7 +502,7 @@ Thresholds should be empirical, because BLAS libraries, GPU memory, and batch si
 \STATE Compute the certificate $\eta_N=\sum_{|k|>N}\norm{\calL_k}$ (Theorem~\ref{thm:truncation}); propagate $\widetilde{\mathbb L}^{(N)}$ and rotate the envelope back to the lab frame as needed.
 \end{algorithmic}
 \vspace{-1ex}\noindent\hrulefill
-\end{widetext}
+\twocolumngrid
 
 \section{Proofs}
 \label{sec:appendix_proofs}
@@ -602,7 +598,8 @@ e(t)=\Phi_t[e(0)]+\int_0^t\Phi_{t-s}[r(s)]\,\dd s.
 \emph{Step 4: a CPTP map is a trace-norm contraction on Hermitian traceless matrices.} Let $X$ be Hermitian with $\Tr X=0$. By the spectral theorem write the Jordan (positive/negative) decomposition $X=X_+-X_-$ with $X_\pm\succeq0$ supported on orthogonal eigenspaces; then $\norm{X}_1=\Tr X_++\Tr X_-$ and $\Tr X=\Tr X_+-\Tr X_-=0$ forces $\Tr X_+=\Tr X_-=:a$, so $\norm{X}_1=2a$. If $a=0$ then $X=0$ and the claim is trivial; otherwise set $\rho_\pm=X_\pm/a$, which are density matrices, and $X=a(\rho_+-\rho_-)$. Because $\Phi$ is CPTP it maps density matrices to density matrices, and the trace distance $\tfrac12\norm{\cdot}_1$ is contractive under any CPTP map (the Holevo--Helstrom monotonicity of trace distance). Therefore, using linearity and homogeneity of $\Phi$ and the norm,
 \begin{equation*}
 \begin{aligned}
-\tfrac12\norm{\Phi[X]}_1&=\tfrac12\norm{a\big(\Phi[\rho_+]-\Phi[\rho_-]\big)}_1=a\cdot\tfrac12\norm{\Phi[\rho_+]-\Phi[\rho_-]}_1\\
+\tfrac12\norm{\Phi[X]}_1&=\tfrac12\norm{a\big(\Phi[\rho_+]-\Phi[\rho_-]\big)}_1\\
+&=a\cdot\tfrac12\norm{\Phi[\rho_+]-\Phi[\rho_-]}_1\\
 &\le a\cdot\tfrac12\norm{\rho_+-\rho_-}_1=a=\tfrac12\norm{X}_1.
 \end{aligned}
 \end{equation*}
@@ -686,9 +683,12 @@ Let $\calL$ be linear with operator norm $\norm{\calL[X]}_F\le\Lambda\norm{X}_F$
 \end{proposition}
 \begin{proof}
 Let $e(t)=\rhohat(t)-\rho(t)$ and $r(t)=\dot\rhohat(t)-\calL[\rhohat(t)]$ with $\norm{r(t)}_F\le\delta$. As in the proof of Theorem~\ref{thm:certificate}, $\dot e=\calL[e]+r$. Let $u(t)=\norm{e(t)}_F$. Where $u(t)>0$ it is differentiable with $\dot u=\operatorname{Re}\ip{e}{\dot e}_F/u$, where $\ip{X}{Y}_F=\Tr(X^\dagger Y)$; by Cauchy--Schwarz and the triangle inequality,
-\[
-\dot u=\frac{\operatorname{Re}\ip{e}{\calL[e]+r}_F}{\norm{e}_F}\le\frac{\norm{e}_F\,\norm{\calL[e]+r}_F}{\norm{e}_F}\le\norm{\calL[e]}_F+\norm{r}_F\le\Lambda u+\delta.
-\]
+\begin{equation*}
+\begin{aligned}
+\dot u=\frac{\operatorname{Re}\ip{e}{\calL[e]+r}_F}{\norm{e}_F}&\le\frac{\norm{e}_F\,\norm{\calL[e]+r}_F}{\norm{e}_F}\\
+&\le\norm{\calL[e]}_F+\norm{r}_F\le\Lambda u+\delta.
+\end{aligned}
+\end{equation*}
 (The same differential inequality holds in the Dini/upper-derivative sense at points where $u=0$, so it is valid for all $t$.) Multiplying by the integrating factor $e^{-\Lambda t}$ gives $\tfrac{\dd}{\dd t}\big(e^{-\Lambda t}u\big)\le e^{-\Lambda t}\delta$; integrating from $0$ to $t$,
 \[
 e^{-\Lambda t}u(t)-u(0)\le\delta\int_0^t e^{-\Lambda s}\,\dd s=\frac{\delta}{\Lambda}\big(1-e^{-\Lambda t}\big),
@@ -722,6 +722,7 @@ The following tables give the full numerical values summarized graphically in th
 \centering
 \caption{\textbf{Fast qutrit (leakage) reconstruction (Experiment~3).} Mean state fidelity and mean relative recovery error of the dominant decay rates $(\gamma_{10},\gamma_{21})$ for a plain MLP, a Fourier-feature density network, and the spectral-frame (interaction-picture) density network. Rates are read out by an integral least-squares fit of the linear-in-rates generator to the learned interaction-picture envelope; this readout is meaningful only for a reconstructed trajectory, so it is reported only for methods reaching mean fidelity $\ge0.9$ (``---'' otherwise). Mean $\pm$ $95\%$ CI over 5 seeds.}
 \label{tab:exp3}
+\resizebox{\columnwidth}{!}{%
 \begin{ruledtabular}
 \begin{tabular}{lcc}
 Density network & Mean state fidelity & Dominant-rate error \\
@@ -730,7 +731,7 @@ Plain MLP & \sync{0.7657 $\pm$ 0.3463} & \sync{---} \\
 Fourier time-features & \sync{0.5238 $\pm$ 0.4897} & \sync{---} \\
 Spectral (ours) & \sync{0.9847 $\pm$ 0.0015} & \sync{0.273 $\pm$ 0.025} \\
 \end{tabular}
-\end{ruledtabular}
+\end{ruledtabular}}
 \end{table}
 
 \begin{table}[t]
@@ -755,6 +756,7 @@ Average & 0.9685 $\pm$ 0.0047 & --- \\
 \centering
 \caption{\textbf{Dense-versus-structured compiler scaling (Experiment~5).} Runtime and memory of the two residual evaluators versus Hilbert-space dimension $d$. Times are the median residual-evaluation wall time over 50 repeats (warm-up excluded) for a batch of 100 states; memory is the analytic storage for the dense $d^2\times d^2$ Liouvillian versus the structured operators. CPU, single machine. The genuine separation is the analytic memory columns [$O(d^4)$ versus $O(md^2)$]; the time-ratio column is an implementation artifact (the dense path rebuilds the Liouvillian on every state) and is not claimed as an intrinsic speedup---see the main text and Table~\ref{tab:compiler_scaling}.}
 \label{tab:exp5}
+\resizebox{\columnwidth}{!}{%
 \begin{ruledtabular}
 \begin{tabular}{lccccc}
 $d$ & Dense (s) & Struct.\ (s) & Time ratio & Dense (MB) & Struct.\ (MB) \\
@@ -765,7 +767,7 @@ $d$ & Dense (s) & Struct.\ (s) & Time ratio & Dense (MB) & Struct.\ (MB) \\
 6 & 0.0176 & 0.0021 & 8.4$\times$ & 0.020 & 0.00275 \\
 8 & 0.0291 & 0.0033 & 8.8$\times$ & 0.062 & 0.00488 \\
 \end{tabular}
-\end{ruledtabular}
+\end{ruledtabular}}
 \end{table}
 
 \begin{table}[t]
