@@ -609,9 +609,12 @@ e(t)=\Phi_t[e(0)]+\int_0^t\Phi_{t-s}[r(s)]\,\dd s.
 Thus $\norm{\Phi[X]}_1\le\norm{X}_1$ for every Hermitian traceless $X$, and in particular for each $\Phi_{t-s}$ applied to the Hermitian traceless $e(0)$ and $r(s)$.
 
 \emph{Step 5: assembling the bound.} Take the trace norm of the variation-of-constants formula, apply the triangle inequality (for the integral, $\norm{\int_0^t g\,\dd s}_1\le\int_0^t\norm{g}_1\,\dd s$), and then the contraction of Step 4 to each $\Phi$:
-\[
-\tfrac12\norm{e(t)}_1\le\tfrac12\norm{\Phi_t[e(0)]}_1+\tfrac12\int_0^t\norm{\Phi_{t-s}[r(s)]}_1\,\dd s\le\tfrac12\norm{e(0)}_1+\tfrac12\int_0^t\norm{r(s)}_1\,\dd s,
-\]
+\begin{equation*}
+\begin{aligned}
+\tfrac12\norm{e(t)}_1&\le\tfrac12\norm{\Phi_t[e(0)]}_1+\tfrac12\int_0^t\norm{\Phi_{t-s}[r(s)]}_1\,\dd s\\
+&\le\tfrac12\norm{e(0)}_1+\tfrac12\int_0^t\norm{r(s)}_1\,\dd s,
+\end{aligned}
+\end{equation*}
 which is exactly Eq.~\eqref{eq:certificate}. The right-hand side is computable from the learned path alone (it never references the unknown $\rho$), so a small training residual is an a~posteriori guarantee; the bound is verified empirically on physical perturbations of the exact qubit trajectory in Table~\ref{tab:residual_certificate}, where the certificate stays a small constant factor above the true error.
 \end{proof}
 
@@ -621,15 +624,21 @@ Write $\Delta=\Thetahat-\Theta_*\in\R^q$ and define $\gamma(\alpha)=\Theta_*+\al
 f(\Thetahat)-f(\Theta_*)=\int_0^1\frac{\dd}{\dd\alpha}f(\gamma(\alpha))\,\dd\alpha=\Big(\underbrace{\int_0^1 J(\gamma(\alpha))\,\dd\alpha}_{=: \bar J}\Big)\Delta .
 \]
 \emph{Lower bound on the smallest singular value of $\bar J$.} By hypothesis the segment lies in a neighborhood on which the Jacobian varies by at most $s_{\min}/2$, i.e.\ $\norm{J(\gamma(\alpha))-J(\Theta_*)}_2\le s_{\min}/2$ for all $\alpha\in[0,1]$, where $\norm{\cdot}_2$ is the spectral norm. Averaging, $\norm{\bar J-J(\Theta_*)}_2=\norm{\int_0^1(J(\gamma(\alpha))-J(\Theta_*))\dd\alpha}_2\le\int_0^1\norm{J(\gamma(\alpha))-J(\Theta_*)}_2\dd\alpha\le s_{\min}/2$. The smallest singular value is $s_{\min}(\cdot)=\min_{\norm{u}_2=1}\norm{(\cdot)u}_2$ and is $1$-Lipschitz in the spectral norm by the triangle inequality; since $s_{\min}(J(\Theta_*))=s_{\min}$,
-\[
-s_{\min}(\bar J)\ge s_{\min}(J(\Theta_*))-\norm{\bar J-J(\Theta_*)}_2\ge s_{\min}-\tfrac{s_{\min}}{2}=\tfrac{s_{\min}}{2}>0.
-\]
+\begin{equation*}
+\begin{aligned}
+s_{\min}(\bar J)&\ge s_{\min}(J(\Theta_*))-\norm{\bar J-J(\Theta_*)}_2\\
+&\ge s_{\min}-\tfrac{s_{\min}}{2}=\tfrac{s_{\min}}{2}>0.
+\end{aligned}
+\end{equation*}
 In particular $\bar J$ has full column rank, so $\norm{\bar J\,\Delta}_2\ge s_{\min}(\bar J)\norm{\Delta}_2\ge\tfrac{s_{\min}}{2}\norm{\Delta}_2$ for every $\Delta$.
 
 \emph{Conclusion.} Combining with the hypothesis $\norm{f(\Thetahat)-f(\Theta_*)}_2\le\delta$,
-\[
-\delta\ge\norm{f(\Thetahat)-f(\Theta_*)}_2=\norm{\bar J\,\Delta}_2\ge\tfrac{s_{\min}}{2}\norm{\Delta}_2\quad\Longrightarrow\quad\norm{\Thetahat-\Theta_*}_2\le\frac{2\delta}{s_{\min}}.
-\]
+\begin{equation*}
+\begin{aligned}
+\delta\ge\norm{f(\Thetahat)-f(\Theta_*)}_2&=\norm{\bar J\,\Delta}_2\ge\tfrac{s_{\min}}{2}\norm{\Delta}_2\\
+\Longrightarrow\quad \norm{\Thetahat-\Theta_*}_2&\le\frac{2\delta}{s_{\min}}.
+\end{aligned}
+\end{equation*}
 The bound degrades as $s_{\min}\to0$, i.e.\ when the chosen observables do not excite some parameter direction; this is precisely the regime in which the individual qutrit dissipative rates are hard to recover (Experiment~3, Sec.~\ref{sec:experiment_qutrit}), even though physicality is still guaranteed.
 \end{proof}
 
@@ -647,10 +656,12 @@ We count storage and arithmetic for the two evaluators using the standard model 
 \emph{Physicality.} By hypothesis $\widetilde\rho(t)\in\calD(\hilb)$, i.e.\ $\widetilde\rho=\widetilde\rho^\dagger\succeq0$ with $\Tr\widetilde\rho=1$. For unitary $U$, $\rho=U\widetilde\rho U^\dagger$ satisfies $\rho^\dagger=U\widetilde\rho^\dagger U^\dagger=\rho$; for any $v$, $v^\dagger\rho v=(U^\dagger v)^\dagger\widetilde\rho(U^\dagger v)\ge0$ since $\widetilde\rho\succeq0$; and $\Tr\rho=\Tr(U\widetilde\rho U^\dagger)=\Tr(\widetilde\rho U^\dagger U)=\Tr\widetilde\rho=1$ by cyclicity and $U^\dagger U=I$. Hence $\rho(t)\in\calD(\hilb)$ for all $t$.
 
 \emph{Equivalence of the equations of motion.} Write $\rho=U\widetilde\rho U^\dagger$ with $\dot U=-\ii HU$, so $\dot U^\dagger=\ii U^\dagger H$. Differentiating, $\dot\rho=-\ii H\rho+U\dot{\widetilde\rho}U^\dagger+\ii\rho H=-\ii[H,\rho]+U\dot{\widetilde\rho}U^\dagger$. Substituting $\dot\rho=\calL_\Theta[\rho]=-\ii[H_\Theta,\rho]+\calD_\Theta[\rho]$ (with $\calD_\Theta$ the dissipator) and solving for $\dot{\widetilde\rho}=U^\dagger(\dot\rho+\ii[H,\rho])U$ gives
-\[
-\dot{\widetilde\rho}=U^\dagger\big(-\ii[H_\Theta-H,\rho]+\calD_\Theta[\rho]\big)U
-=-\ii[\widetilde H_c,\widetilde\rho]+U^\dagger\calD_\Theta[U\widetilde\rho U^\dagger]U,
-\]
+\begin{equation*}
+\begin{aligned}
+\dot{\widetilde\rho}&=U^\dagger\big(-\ii[H_\Theta-H,\rho]+\calD_\Theta[\rho]\big)U\\
+&=-\ii[\widetilde H_c,\widetilde\rho]+U^\dagger\calD_\Theta[U\widetilde\rho U^\dagger]U,
+\end{aligned}
+\end{equation*}
 using $U^\dagger[X,U\widetilde\rho U^\dagger]U=[U^\dagger XU,\widetilde\rho]$ and $\widetilde H_c=U^\dagger(H_\Theta-H)U$ (Hermitian). For each jump term, $U^\dagger(L_k\rho L_k^\dagger)U=(U^\dagger L_kU)\widetilde\rho(U^\dagger L_k^\dagger U)=\widetilde L_k\widetilde\rho\widetilde L_k^\dagger$ with $\widetilde L_k=U^\dagger L_kU$, and likewise $U^\dagger\{L_k^\dagger L_k,\rho\}U=\{\widetilde L_k^\dagger\widetilde L_k,\widetilde\rho\}$ because $U^\dagger L_k^\dagger L_kU=\widetilde L_k^\dagger\widetilde L_k$. Thus $\dot{\widetilde\rho}=\widetilde\calL_{\Theta,t}[\widetilde\rho]$ with the stated GKSL form, and the chain of identities is reversible, so the two equations are equivalent. Each $\widetilde\calL_{\Theta,t}$ is GKSL because $\widetilde H_c$ is Hermitian and the jump set $\{\widetilde L_k(t)\}$ is a valid (unitarily rotated) Lindblad list, hence $e^{s\widetilde\calL_{\Theta,t}}$ is CPTP for frozen $t$ by Theorem~\ref{thm:cptp_generator}. This is the architectural physicality and exact equivalence used by the spectral-frame experiments (Experiment~3, Table~\ref{tab:exp3}).
 \end{proof}
 
