@@ -211,6 +211,11 @@
 
 <main class="wrap">
 
+<div style="margin:26px 0 6px;padding:18px 20px;border:1px solid rgba(127,140,170,.32);border-left:4px solid var(--accent,#1f6feb);border-radius:8px;background:rgba(127,140,170,.06);">
+  <strong style="display:block;font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent,#1f6feb);margin-bottom:7px;">AI for quantum, at HPC scale</strong>
+  <p style="margin:0;font-size:1.02rem;line-height:1.6;">This is a <em>physics-informed neural network</em> for open-quantum-system identification with the physics enforced in the architecture, not the loss: a hard Cholesky map keeps the learned state Hermitian, positive, and trace-one at every step (<strong>0</strong> positivity violations), and a spectral-frame eigen-operator parameterization removes the spectral bias that defeats smooth networks on fast multi-level dynamics (<strong>0.985</strong> mean qutrit-leakage fidelity vs &le;0.77 for plain/Fourier baselines). It is PyTorch-native and runs on GPU out of the box, with an a posteriori truncation-error certificate at every level.</p>
+</div>
+
   <!-- ===================== BACKGROUND ===================== -->
   <section id="background">
     <h2><span class="num">1</span>Background and Motivation</h2>
