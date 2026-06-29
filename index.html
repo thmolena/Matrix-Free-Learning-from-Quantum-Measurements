@@ -113,6 +113,10 @@
     ul.tight { padding-left: 20px; }
     ul.tight li { margin: 7px 0; }
 
+    ol.refs { padding-left: 26px; font-size: 0.9rem; color: var(--ink); }
+    ol.refs li { margin: 8px 0; line-height: 1.5; }
+    ol.refs li em { color: var(--accent-soft); }
+
     table { border-collapse: collapse; width: 100%; font-size: 14.5px; margin: 14px 0; }
     table caption { text-align: left; font-size: 0.9rem; color: var(--muted); margin-bottom: 8px; }
     th, td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: right; }
@@ -206,6 +210,7 @@
     <a href="#empirical">Empirical Validation</a>
     <a href="#significance">Significance</a>
     <a href="#repro">Reproducibility</a>
+    <a href="#references">References</a>
   </div>
 </nav>
 
@@ -224,6 +229,8 @@
     <p>For Markovian, time-local dynamics, the most general generator of a completely positive trace-preserving (CPTP) semigroup is the Gorini–Kossakowski–Sudarshan–Lindblad (GKSL) generator. It is the backbone of quantum noise modeling, control, and calibration.</p>
     <p>Recovering such a generator from data is the inverse problem at the heart of device characterization, and existing approaches each pay a price. Classical process tomography reconstructs a channel but scales poorly with system size; Hamiltonian and Lindblad learning exploit dynamical structure yet still confront identifiability and optimization obstacles. Physics-informed neural networks (PINNs) add flexible approximation and place the equation residual in the objective, yet a direct neural map <span class="mono">t ↦ ρ_θ(t)</span> is free to leave the manifold of Hermitian, positive semidefinite, unit-trace operators — the very properties that define a state.</p>
     <p><strong>The open problem.</strong> Penalizing negative eigenvalues differs from enforcing physicality during training: a penalty merely asks the optimizer to repair an already-invalid output. In parallel, dense Liouvillian implementations assemble the full <span class="mono">d²×d²</span> superoperator even when the model is fixed by a Hamiltonian and a handful of local jump operators. This work inverts both design choices: it renders invalid states <em>unrepresentable</em>, and lowers a symbolic open-system specification to kernels that bypass the dense superoperator entirely.</p>
+    <p><strong>A second, orthogonal obstacle.</strong> Even with physicality made architectural, a direct map <span class="mono">t ↦ ρ_θ(t)</span> must still represent every fast coherent oscillation of the lab-frame trajectory, and a smooth-in-time network suffers <em>spectral bias</em>: it learns low frequencies first and resolves the rapid Bohr-frequency oscillations of multilevel systems only slowly and unreliably. The coherent generator <span class="mono">ad_H = −i[H,·]</span> is normal; in the Hamiltonian eigenbasis its eigen-operators are the transition operators <span class="mono">|a⟩⟨b|</span> with purely imaginary eigenvalues <span class="mono">−iω_{ab}</span>, <span class="mono">ω_{ab}=E_a−E_b</span> — precisely those fast oscillations. Moving to the interaction picture lets the network learn only the slow envelope while the fast oscillation is supplied analytically by the known <span class="mono">U(t)=e^{−iHt}</span>, removing spectral bias by a change of representation rather than a penalty.</p>
+    <p><strong>The same decomposition truncates the kernel.</strong> In the interaction picture the residual generator is almost periodic; on a finite window it admits a Fourier series, and keeping the low-frequency band is a projection onto a finite <em>operator system</em> of slow eigen-operators. This is the spectral-truncation construction by which noncommutative geometry approximates a <span class="mono">C*</span>-algebra by finite-dimensional operator systems (Connes–van Suijlekom) and by which <span class="mono">C*</span>-algebraic kernel machines reinstate noncommutativity (Hashimoto et al.); here it is lifted from static kernels to a <em>dynamical, completely positive generator</em>, yielding a controlled multi-resolution hierarchy from the secular (Davies) generator through the rotating-wave approximation to the exact generator. The framework is presented in a compiler idiom: a model is written as an intermediate representation — Hilbert dimension, Hamiltonian terms, jump operators, rates, observables, batching, differentiation mode — and lowered to a dense Liouvillian, a structured residual kernel, or a spectrally truncated kernel, mirroring the high-level-intent-to-hardware-conscious-kernel philosophy of contemporary accelerator software and compatible with PyTorch, SciPy, QuTiP, and Qiskit.</p>
   </section>
 
   <!-- ===================== PRELIMINARIES ===================== -->
@@ -533,6 +540,65 @@ ctpcpinn-validate             <span class="c"># invariant checks, incl. the spec
 <span class="c"># 3. For bit-identical numbers, pin the exact environment</span>
 pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplotlib 3.10.8</span></pre>
     <p class="sub">Each training experiment runs over seeds {0,1,2,3,4} and reports mean ± 95% Student-<em>t</em> CI; the compiler benchmark reports the median over repeated timings. Configuration: 3000 Adam epochs at learning rate 10⁻³, 100 time points, noise standard deviation 0.02. The <code>ctpcpinn/foundations.py</code> module gives a from-scratch theory-to-code map, and <code>run_one.py</code> reproduces a single experiment. All simulations run on CPU; they are deliberately modest in scale and stand as a controlled proof of concept, separate from hardware data or state-of-the-art claims.</p>
+  </section>
+
+  <!-- ===================== REFERENCES ===================== -->
+  <section id="references">
+    <h2><span class="num">11</span>Related Work and References</h2>
+    <p class="lead">The contribution sits at the meeting point of several lines of work. It follows the structured-identification philosophy of Lindblad and Hamiltonian learning (Boulant <em>et al.</em> [11]; Wang <em>et al.</em> [12]) but replaces unconstrained trajectory estimation with a hard density-matrix map, in contrast to completely-positive <em>projection</em> methods that repair an estimate after the fact (Knee <em>et al.</em> [10]). It is closest to inverse physics-informed neural networks (Raissi <em>et al.</em> [13]; Karniadakis <em>et al.</em> [14]) and to structure-preserving scientific networks (Greydanus <em>et al.</em> [20]). Its operator-system spectral truncation lifts the noncommutative-geometry construction of Connes and van Suijlekom [39] and the <span class="mono">C*</span>-algebraic kernel machines of Hashimoto <em>et al.</em> [41] from static kernels to a completely positive dynamical generator, complementing the deterministic Fourier-feature remedy for spectral bias of Tancik <em>et al.</em> [43]. The full bibliography of the manuscript follows.</p>
+
+    <ol class="refs">
+      <li>G. Lindblad, "On the generators of quantum dynamical semigroups," <em>Commun. Math. Phys.</em> <strong>48</strong>, 119 (1976).</li>
+      <li>V. Gorini, A. Kossakowski, and E. C. G. Sudarshan, "Completely positive dynamical semigroups of <em>N</em>-level systems," <em>J. Math. Phys.</em> <strong>17</strong>, 821 (1976).</li>
+      <li>H.-P. Breuer and F. Petruccione, <em>The Theory of Open Quantum Systems</em> (Oxford University Press, 2002).</li>
+      <li>H. M. Wiseman and G. J. Milburn, <em>Quantum Measurement and Control</em> (Cambridge University Press, 2009).</li>
+      <li>P. Krantz, M. Kjaergaard, F. Yan, T. P. Orlando, S. Gustavsson, and W. D. Oliver, "A quantum engineer's guide to superconducting qubits," <em>Appl. Phys. Rev.</em> <strong>6</strong>, 021318 (2019).</li>
+      <li>D. Leibfried, R. Blatt, C. Monroe, and D. Wineland, "Quantum dynamics of single trapped ions," <em>Rev. Mod. Phys.</em> <strong>75</strong>, 281 (2003).</li>
+      <li>J. Preskill, "Quantum computing in the NISQ era and beyond," <em>Quantum</em> <strong>2</strong>, 79 (2018).</li>
+      <li>I. L. Chuang and M. A. Nielsen, "Prescription for experimental determination of the dynamics of a quantum black box," <em>J. Mod. Opt.</em> <strong>44</strong>, 2455 (1997).</li>
+      <li>J. F. Poyatos, J. I. Cirac, and P. Zoller, "Complete characterization of a quantum process: the two-bit quantum gate," <em>Phys. Rev. Lett.</em> <strong>78</strong>, 390 (1997).</li>
+      <li>G. C. Knee, E. Bolduc, J. Leach, and E. M. Gauger, "Quantum process tomography via completely positive and trace-preserving projection," <em>Phys. Rev. A</em> <strong>98</strong>, 062336 (2018).</li>
+      <li>N. Boulant, T. F. Havel, M. A. Pravia, and D. G. Cory, "Robust method for estimating the Lindblad operators of a dissipative quantum process from measurements of the density operator at multiple time points," <em>Phys. Rev. A</em> <strong>67</strong>, 042322 (2003).</li>
+      <li>J. Wang, S. Paesani, R. Santagati, S. Knauer, A. A. Gentile, N. Wiebe, M. Petruccione, J. L. O'Brien, J. G. Rarity, A. Laing, and M. G. Thompson, "Experimental quantum Hamiltonian learning," <em>Nat. Phys.</em> <strong>13</strong>, 551 (2017).</li>
+      <li>M. Raissi, P. Perdikaris, and G. E. Karniadakis, "Physics-informed neural networks: a deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations," <em>J. Comput. Phys.</em> <strong>378</strong>, 686 (2019).</li>
+      <li>G. E. Karniadakis, I. G. Kevrekidis, L. Lu, P. Perdikaris, S. Wang, and L. Yang, "Physics-informed machine learning," <em>Nat. Rev. Phys.</em> <strong>3</strong>, 422 (2021).</li>
+      <li>R. T. Q. Chen, Y. Rubanova, J. Bettencourt, and D. K. Duvenaud, "Neural ordinary differential equations," <em>Adv. Neural Inf. Process. Syst.</em> <strong>31</strong> (2018).</li>
+      <li>A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, <em>et al.</em>, "PyTorch: an imperative style, high-performance deep learning library," <em>Adv. Neural Inf. Process. Syst.</em> <strong>32</strong> (2019).</li>
+      <li>P. Virtanen, R. Gommers, T. E. Oliphant, M. Haberland, T. Reddy, D. Cournapeau, E. Burovski, P. Peterson, W. Weckesser, J. Bright, <em>et al.</em>, "SciPy 1.0: fundamental algorithms for scientific computing in Python," <em>Nat. Methods</em> <strong>17</strong>, 261 (2020).</li>
+      <li>QuTiP Developers, "QuTiP: Quantum toolbox in Python for open-system and hybrid quantum-classical simulation," <a href="https://qutip.org" target="_blank" rel="noreferrer">https://qutip.org</a> (2024).</li>
+      <li>IBM Quantum, "Qiskit: an open-source framework for quantum computing," <a href="https://qiskit.org" target="_blank" rel="noreferrer">https://qiskit.org</a> (2024).</li>
+      <li>S. Wang, S. Sankaran, and P. Perdikaris, "Respecting causality for training physics-informed neural networks," <em>Comput. Methods Appl. Mech. Eng.</em> <strong>421</strong>, 116813 (2022).</li>
+      <li>S. Greydanus, M. Dzamba, and J. Yosinski, "Hamiltonian neural networks," <em>Adv. Neural Inf. Process. Syst.</em> <strong>32</strong> (2019).</li>
+      <li>M. Cranmer, S. Greydanus, S. Hoyer, P. Battaglia, D. Spergel, and S. Ho, "Lagrangian neural networks," in <em>ICLR 2020 Workshop on Integration of Deep Neural Models and Differential Equations</em> (2020).</li>
+      <li>E. Hairer, C. Lubich, and G. Wanner, <em>Geometric Numerical Integration</em>, Springer Series in Computational Mathematics <strong>31</strong> (Springer, 2006).</li>
+      <li>G. Carleo and M. Troyer, "Solving the quantum many-body problem with artificial neural networks," <em>Science</em> <strong>355</strong>, 602 (2017).</li>
+      <li>G. Torlai, G. Mazzola, J. Carrasquilla, M. Troyer, R. Melko, and G. Carleo, "Neural-network quantum state tomography," <em>Nat. Phys.</em> <strong>14</strong>, 447 (2018).</li>
+      <li>N. Yoshioka and R. Hamazaki, "Variational neural-network ansatz for steady states in open quantum systems," <em>Phys. Rev. Lett.</em> <strong>125</strong>, 230601 (2020).</li>
+      <li>L. Lu, P. Jin, G. Pang, Z. Zhang, and G. E. Karniadakis, "Learning nonlinear operators via DeepONet based on the universal approximation theorem of operators," <em>Nat. Mach. Intell.</em> <strong>3</strong>, 218 (2021).</li>
+      <li>Z. Li, N. Kovachki, K. Azizzadenesheli, B. Liu, K. Bhatt, A. Stuart, and A. Anandkumar, "Fourier neural operator for parametric partial differential equations," in <em>International Conference on Learning Representations</em> (2021).</li>
+      <li>S. Denisov, T. Laptyeva, W. Tarnowski, D. Chruściński, and K. Życzkowski, "From open quantum walks to unitary quantum walks," <em>New J. Phys.</em> <strong>21</strong>, 023032 (2019).</li>
+      <li>M. M. Wolf, J. Eisert, T. S. Cubitt, and J. I. Cirac, "Assessing non-Markovian quantum dynamics," <em>Phys. Rev. Lett.</em> <strong>101</strong>, 150402 (2008).</li>
+      <li>L. Banchi, E. Grant, A. Stokes, and L. Sheridan, "Modelling non-Markovian quantum processes with recurrent neural networks," <em>New J. Phys.</em> <strong>20</strong>, 123030 (2018).</li>
+      <li>I. A. Luchnikov, S. V. Vintskevich, H. Ouerdane, and S. N. Filippov, "Machine learning non-Markovian quantum dynamics," <em>Phys. Rev. Lett.</em> <strong>124</strong>, 140502 (2020).</li>
+      <li>F. Verstraete, M. M. Wolf, and J. I. Cirac, "Quantum computation and quantum-state engineering driven by dissipation," <em>Nat. Phys.</em> <strong>5</strong>, 633 (2009).</li>
+      <li>D. P. Kingma and J. Ba, "Adam: a method for stochastic optimization," in <em>International Conference on Learning Representations</em> (2015).</li>
+      <li>M. E. Beverland <em>et al.</em>, "Assessing requirements to scale to practical quantum advantage," <a href="https://arxiv.org/abs/2211.07629" target="_blank" rel="noreferrer">arXiv:2211.07629</a> (2022).</li>
+      <li>P. Rall, C. Wang, and P. Wocjan, "Quantum algorithms for estimating physical quantities using block encodings," <em>Phys. Rev. A</em> <strong>105</strong>, 032441 (2023).</li>
+      <li>D. C. Liu and J. Nocedal, "On the limited memory BFGS method for large scale optimization," <em>Math. Program.</em> <strong>45</strong>, 503 (1989).</li>
+      <li>G. Cybenko, "Approximation by superpositions of a sigmoidal function," <em>Math. Control Signals Syst.</em> <strong>2</strong>, 303 (1989).</li>
+      <li>K. Hornik, "Approximation capabilities of multilayer feedforward networks," <em>Neural Netw.</em> <strong>4</strong>, 251 (1991).</li>
+      <li>A. Connes and W. D. van Suijlekom, "Spectral truncations in noncommutative geometry and operator systems," <em>Commun. Math. Phys.</em> <strong>383</strong>, 2021 (2021), <a href="https://doi.org/10.1007/s00220-020-03825-x" target="_blank" rel="noreferrer">doi:10.1007/s00220-020-03825-x</a>.</li>
+      <li>W. D. van Suijlekom, "Gromov–Hausdorff convergence of state spaces for spectral truncations," <em>J. Geom. Phys.</em> <strong>162</strong>, 104075 (2021).</li>
+      <li>Y. Hashimoto, A. Hafid, M. Ikeda, and H. Kadri, "Spectral truncation kernels: noncommutativity in <span class="mono">C*</span>-algebraic kernel machines," <a href="https://arxiv.org/abs/2405.17823" target="_blank" rel="noreferrer">arXiv:2405.17823</a> (2024), <a href="https://doi.org/10.48550/arXiv.2405.17823" target="_blank" rel="noreferrer">doi:10.48550/arXiv.2405.17823</a>.</li>
+      <li>E. B. Davies, "Markovian master equations," <em>Commun. Math. Phys.</em> <strong>39</strong>, 91 (1974).</li>
+      <li>M. Tancik, P. P. Srinivasan, B. Mildenhall, S. Fridovich-Keil, N. Raghavan, U. Singhal, R. Ramamoorthi, J. T. Barron, and R. Ng, "Fourier features let networks learn high frequency functions in low dimensional domains," <em>Adv. Neural Inf. Process. Syst.</em> <strong>33</strong> (2020).</li>
+      <li>M. Huynh, "Query-efficient quantum approximate optimization via graph-conditioned trust regions," <a href="https://arxiv.org/abs/2604.24803" target="_blank" rel="noreferrer">arXiv:2604.24803</a> (2026), <a href="https://doi.org/10.48550/arXiv.2604.24803" target="_blank" rel="noreferrer">doi:10.48550/arXiv.2604.24803</a>.</li>
+      <li>M. Huynh, "Topology-conditioned warm starts match spectral initialization for depth-one QAOA," manuscript in preparation (2026).</li>
+      <li>M. Huynh, "Commutator-graph term ordering reduces first-order Trotter error at matched gate cost," manuscript in preparation (2026).</li>
+      <li>M. Huynh, "Provable operator learning of size-transferable Trotter corrections for Hamiltonian simulation," manuscript in preparation (2026).</li>
+      <li>M. Nguyen and N. Jing, "Zassenhaus expansion in solving the Schrödinger equation," <a href="https://arxiv.org/abs/2505.09441" target="_blank" rel="noreferrer">arXiv:2505.09441</a> (2025), <a href="https://doi.org/10.48550/arXiv.2505.09441" target="_blank" rel="noreferrer">doi:10.48550/arXiv.2505.09441</a>.</li>
+      <li>N. Jing and M. Nguyen, "Complexity bounds for Hamiltonian simulation in unitary representations," <a href="https://arxiv.org/abs/2603.07231" target="_blank" rel="noreferrer">arXiv:2603.07231</a> (2026), <a href="https://doi.org/10.48550/arXiv.2603.07231" target="_blank" rel="noreferrer">doi:10.48550/arXiv.2603.07231</a>.</li>
+    </ol>
   </section>
 
 </main>

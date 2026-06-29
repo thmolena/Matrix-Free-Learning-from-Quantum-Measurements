@@ -70,7 +70,7 @@ def main():
         print("Running in FULL mode (reproduces the manuscript)...")
 
     # Resolve output paths to submission/figures and submission/tables.
-    submission_dir = os.path.dirname(CODE_DIR)              # .../submission
+    submission_dir = os.path.join(os.path.dirname(CODE_DIR), 'submission')  # repo/submission
     config['figures_dir'] = os.path.join(submission_dir, 'figures')
     config['tables_dir'] = os.path.join(submission_dir, 'tables')
     Path(config['figures_dir']).mkdir(parents=True, exist_ok=True)

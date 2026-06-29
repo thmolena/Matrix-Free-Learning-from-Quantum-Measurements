@@ -4,7 +4,7 @@
 
 Molena Huynh · North Carolina State University · molena.huynh@jmp.com
 
-**[Read the manuscript (PDF)](submission/main.pdf)** · [Full tutorial](index.html) · [Reproducibility package (`ctpcpinn`)](submission/code) · [Live interactive report](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
+**[Read the manuscript (PDF)](submission/main.pdf)** · [Full tutorial](index.html) · [Reproducibility package (`ctpcpinn`)](code) · [Live interactive report](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
 
 > **AI for quantum, at HPC scale.** This is a *physics-informed neural network* for open-quantum-system identification, with the physics enforced in the architecture rather than the loss: a hard Cholesky map keeps the learned density Hermitian, positive, and trace-one at every step (positivity violations **0.000**), and a spectral-frame eigen-operator parameterization removes the spectral bias that defeats smooth networks on fast multi-level dynamics (**0.985** mean fidelity on qutrit leakage, vs ≤0.77 for plain/Fourier baselines). It is built on PyTorch and runs on GPU out of the box; the operator-system spectral truncation gives a multi-resolution generator with an a posteriori error certificate at every level. Six studies, five seeds each, deterministic and reproducible.
 
@@ -147,12 +147,12 @@ hardware-independent separation is the analytic memory scaling (`O(d⁴)` dense 
 
 ## Installation
 
-The reproducible code artifact is the package `ctpcpinn`:
+The reproducible code artifact is the package `ctpcpinn`, in the top-level `code/`
+directory. From the repository root:
 
 ```bash
-cd submission/code
-pip install .                 # runtime deps: numpy, scipy, torch, matplotlib, cycler
-pip install ".[exact]"        # pinned versions for bit-identical numbers
+pip install ./code              # runtime deps: numpy, scipy, torch, matplotlib, cycler
+pip install "./code[exact]"     # pinned versions for bit-identical numbers
 ```
 
 Python ≥ 3.10 is required. The simulations run on CPU.
@@ -160,31 +160,43 @@ Python ≥ 3.10 is required. The simulations run on CPU.
 ## Reproduction
 
 ```bash
-cd submission/code
-ctpcpinn-reproduce            # regenerates every table and figure (6 experiments)
-ctpcpinn-validate             # dependency-light invariant checks (incl. spectral frame)
+pip install -e ./code           # editable install (so reproduction writes in place)
+python code/run_all.py          # regenerates every table and figure (6 experiments)
+ctpcpinn-validate               # dependency-light invariant checks (incl. spectral frame)
 ```
 
-`python run_full.py` is the canonical source-tree entry point and writes the
-figure PDFs into `submission/code/figures` (the manuscript `\graphicspath`). Each
-training experiment runs over the fixed seeds `[0, 1, 2, 3, 4]` and reports
-mean ± 95% Student-*t* CI; the compiler and spectral-truncation benchmarks are
-deterministic. The full configuration is 3000 Adam epochs at learning rate 10⁻³,
-100 time points, and noise standard deviation 0.02. Reproduction is single-threaded
-by design; see `submission/code/README.md` for the determinism details.
+`python code/run_all.py` is the canonical entry point: it writes the regenerated
+table `.tex` files into `submission/tables` and the figure PDFs into
+`submission/figures` (the manuscript `\graphicspath`), so recompiling `main.tex`
+afterwards picks up the regenerated numbers. `ctpcpinn-reproduce --in-place` does
+the same from the installed console script. Each training experiment runs over the
+fixed seeds `[0, 1, 2, 3, 4]` and reports mean ± 95% Student-*t* CI; the compiler
+and spectral-truncation benchmarks are deterministic. The full configuration is
+3000 Adam epochs at learning rate 10⁻³, 100 time points, and noise standard
+deviation 0.02. Reproduction is single-threaded by design (the scripts pin
+`OMP_NUM_THREADS=1` and a sequential MKL backend internally). Only the wall-clock
+*times* in Experiment 5 are machine-dependent; their ratios and the analytic
+memory columns are not.
 
 ## Repository layout
 
 ```text
 QuantumPINNs-.../
-├── README.md
+├── README.md                   # this file (the only README)
 ├── LICENSE
-├── index.html              # research report + interactive illustration (GitHub Pages)
-├── submission/             # open-quantum manuscript, theory, and code
-│   ├── main.tex            # the manuscript
-│   └── code/               # ctpcpinn package, experiments, tests, reproduction scripts
-│       └── ctpcpinn/spectral.py   # the spectral frame + operator-system truncation
-└── website/                # local inference interface
+├── index.html                  # research report + interactive illustration (GitHub Pages)
+├── code/                       # the installable `ctpcpinn` package (pip install ./code)
+│   ├── pyproject.toml          # package metadata + console scripts + deps
+│   ├── run_all.py              # canonical reproduction entry point
+│   └── ctpcpinn/
+│       ├── spectral.py         # the spectral frame + operator-system truncation
+│       └── experiments/        # the six experiments that emit the tables and figures
+├── submission/                 # the manuscript, self-contained
+│   ├── main.tex                # the manuscript (REVTeX, PRX Quantum)
+│   ├── main.pdf
+│   ├── figures/                # figure PDFs (regenerated by the package)
+│   └── tables/                 # table .tex files (regenerated by the package)
+└── website/                    # local inference interface
 ```
 
 ## Citation

@@ -1,0 +1,274 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand*\HyPL@Entry[1]{}
+\citation{lindblad1976generators,gorini1976completely,breuer2002theory}
+\citation{wiseman2009quantum,krantz2019quantum,leibfried2003quantum,preskill2018quantum}
+\citation{chuang1997prescription,poyatos1997complete,knee2018quantum}
+\citation{boulant2003robust,wang2017experimental}
+\citation{raissi2019physics,karniadakis2021physics,chen2018neural}
+\citation{tancik2020fourier}
+\HyPL@Entry{0<</P(\376\377\0001)>>}
+\newlabel{FirstPage}{{}{1}{}{section*.1}{}}
+\@writefile{toc}{\contentsline {title}{Structure-preserving physics-informed learning of open quantum dynamics with spectral-frame encodings and operator-system truncation}{1}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {abstract}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section*.3}\protected@file@percent }
+\newlabel{sec:introduction}{{I}{1}{}{section*.3}{}}
+\newlabel{eq:state_space}{{1}{1}{}{equation.1.1}{}}
+\newlabel{eq:intro_cholesky}{{2}{1}{}{equation.1.2}{}}
+\citation{connes2021spectral,vansuijlekom2021gromov}
+\citation{hashimoto2024spectral}
+\citation{davies1974markovian}
+\citation{paszke2019pytorch}
+\citation{virtanen2020scipy}
+\citation{qutip2024}
+\citation{qiskit2024}
+\citation{boulant2003robust,wang2017experimental}
+\citation{knee2018quantum}
+\citation{raissi2019physics,karniadakis2021physics,wang2022respecting}
+\citation{greydanus2019hamiltonian,cranmer2020lagrangian,hairer2006geometric}
+\citation{breuer2002theory,davies1974markovian}
+\citation{tancik2020fourier}
+\citation{connes2021spectral,vansuijlekom2021gromov}
+\citation{hashimoto2024spectral}
+\citation{carleo2017solving,torlai2018neural,yoshioka2020variational}
+\citation{chen2018neural,lu2021learning,li2021fourier}
+\citation{denisov2019open,wolf2008assessing,banchi2018modelling,luchnikov2020machine}
+\citation{verstraete2009quantum}
+\citation{huynh2026gctr,huynh2026gctrcal,huynh2026gctrcalpro,huynh2026meascost,huynh2026certqb,huynh2026paramxfer,huynh2026paramxferB,huynh2026ostqaoa,huynh2026topoqaoa}
+\citation{huynh2026topoham,huynh2026lie}
+\citation{huynh2026gnndec,huynh2026topoqec,huynh2026covdec,huynh2026fiber}
+\citation{huynh2026gctr,huynh2026topoqaoa}
+\citation{huynh2026topoham}
+\citation{huynh2026lie}
+\citation{nguyen2025zassenhaus,jing2026complexity}
+\citation{connes2021spectral,hashimoto2024spectral}
+\HyPL@Entry{1<</P(\376\377\0002)>>}
+\HyPL@Entry{2<</P(\376\377\0003)>>}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {The structure-preserving, physics-informed framework.} Two structure-preserving networks feed a physics-informed residual. The density network maps time to a lower-triangular factor $A_\phi (t)$ and outputs $\rho _\phi =A_\phi A_\phi ^\dagger /\Tr  (A_\phi A_\phi ^\dagger )$, which is Hermitian, positive semidefinite, and unit trace at every time and every training step (Theorem\nobreakspace  {}\ref  {thm:physicality}); the generator is parameterized so that all Lindblad rates are nonnegative [$\gamma _k=\softplus  (\xi _k)\ge 0$] or the Kossakowski matrix is positive semidefinite [$C=BB^\dagger $], keeping $\mathcal  {L}_\Theta $ in GKSL form (Theorem\nobreakspace  {}\ref  {thm:cptp_generator}). A matrix-free compiler lowers the specification $\dot  \rho =\mathcal  {L}_\Theta [\rho ]$ to a dense $d^2\times d^2$ Liouvillian or a structured residual kernel (the two agree to floating-point precision; Theorem\nobreakspace  {}\ref  {thm:compiler}). Training minimizes a physics-informed loss combining the masked data term, the Lindblad residual, and the initial condition; the outputs are a physically valid trajectory, a completely positive generator, and the metrics (state fidelity, trace distance, positivity-violation rate, and the trace-norm residual certificate of Theorem\nobreakspace  {}\ref  {thm:certificate}). The figure is generated programmatically by \texttt  {ctpcpinn/plotting.py:plot\_schematic}.}}{3}{figure.1}\protected@file@percent }
+\newlabel{fig:schematic}{{1}{3}{\textbf {The structure-preserving, physics-informed framework.} Two structure-preserving networks feed a physics-informed residual. The density network maps time to a lower-triangular factor $A_\phi (t)$ and outputs $\rho _\phi =A_\phi A_\phi ^\dagger /\Tr (A_\phi A_\phi ^\dagger )$, which is Hermitian, positive semidefinite, and unit trace at every time and every training step (Theorem~\ref {thm:physicality}); the generator is parameterized so that all Lindblad rates are nonnegative [$\gamma _k=\softplus (\xi _k)\ge 0$] or the Kossakowski matrix is positive semidefinite [$C=BB^\dagger $], keeping $\mathcal {L}_\Theta $ in GKSL form (Theorem~\ref {thm:cptp_generator}). A matrix-free compiler lowers the specification $\dot \rho =\mathcal {L}_\Theta [\rho ]$ to a dense $d^2\times d^2$ Liouvillian or a structured residual kernel (the two agree to floating-point precision; Theorem~\ref {thm:compiler}). Training minimizes a physics-informed loss combining the masked data term, the Lindblad residual, and the initial condition; the outputs are a physically valid trajectory, a completely positive generator, and the metrics (state fidelity, trace distance, positivity-violation rate, and the trace-norm residual certificate of Theorem~\ref {thm:certificate}). The figure is generated programmatically by \texttt {ctpcpinn/plotting.py:plot\_schematic}}{figure.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Structure-preserving framework}{3}{section*.4}\protected@file@percent }
+\newlabel{sec:framework}{{II}{3}{}{section*.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A}Hard-constrained density parameterization}{3}{section*.5}\protected@file@percent }
+\newlabel{sec:framework_density}{{II\,A}{3}{}{section*.5}{}}
+\newlabel{eq:A_definition}{{3}{3}{}{equation.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Spectral-frame eigen-operator parameterization}{3}{section*.6}\protected@file@percent }
+\newlabel{sec:framework_spectral}{{II\,B}{3}{}{section*.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C}Completely-positive generator parameterization}{3}{section*.7}\protected@file@percent }
+\newlabel{sec:framework_generator}{{II\,C}{3}{}{section*.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {D}Physics-informed objective and matrix-free compiler}{3}{section*.8}\protected@file@percent }
+\newlabel{sec:framework_objective}{{II\,D}{3}{}{section*.8}{}}
+\newlabel{eq:pinn_general_loss}{{4}{3}{}{equation.2.4}{}}
+\citation{paszke2019pytorch,virtanen2020scipy}
+\citation{kingma2015adam}
+\HyPL@Entry{3<</P(\376\377\0004)>>}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Theoretical guarantees}{4}{section*.9}\protected@file@percent }
+\newlabel{sec:guarantees}{{III}{4}{}{section*.9}{}}
+\newlabel{thm:physicality}{{1}{4}{Exact density-matrix physicality}{theorem.1}{}}
+\newlabel{thm:universal}{{2}{4}{Universal approximation of continuous density trajectories}{theorem.2}{}}
+\newlabel{thm:cptp_generator}{{3}{4}{GKSL preservation}{theorem.3}{}}
+\newlabel{thm:certificate}{{4}{4}{A~posteriori residual certificate}{theorem.4}{}}
+\newlabel{eq:certificate}{{5}{4}{A~posteriori residual certificate}{equation.3.5}{}}
+\newlabel{thm:identifiability}{{5}{4}{Local identifiability}{theorem.5}{}}
+\newlabel{thm:compiler}{{6}{4}{Dense versus structured residual complexity}{theorem.6}{}}
+\newlabel{thm:spectral_frame}{{7}{4}{Spectral-frame physicality and equivalence}{theorem.7}{}}
+\newlabel{thm:truncation}{{8}{4}{Operator-system spectral-truncation certificate}{theorem.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Simulations and results}{4}{section*.10}\protected@file@percent }
+\newlabel{sec:results}{{IV}{4}{}{section*.10}{}}
+\HyPL@Entry{4<</P(\376\377\0005)>>}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A}Hard constraints versus soft penalties}{5}{section*.11}\protected@file@percent }
+\newlabel{sec:soft_penalties_results}{{IV\,A}{5}{}{section*.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Single-qubit system identification}{5}{section*.12}\protected@file@percent }
+\newlabel{sec:experiment_qubit}{{IV\,B}{5}{}{section*.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C}Robustness under sparse measurements}{5}{section*.13}\protected@file@percent }
+\newlabel{sec:experiment_sparse}{{IV\,C}{5}{}{section*.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {D}Spectral-frame reconstruction of fast qutrit leakage dynamics}{5}{section*.14}\protected@file@percent }
+\newlabel{sec:experiment_qutrit}{{IV\,D}{5}{}{section*.14}{}}
+\HyPL@Entry{5<</P(\376\377\0006)>>}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces \textbf  {Single-qubit system identification (Experiment\nobreakspace  {}1).} Parameter-recovery relative error, mean state fidelity, and positivity-violation rate (fraction of time points with a negative eigenvalue) for the four methods. Values are mean $\pm $ $95\%$ confidence interval (CI) over 5 seeds. True values: $\omega =3.1416$, $\Omega =0.6283$, $\gamma _1=0.3000$, $\gamma _\phi =0.1500$. The classical least-squares fit uses the exact model structure and is the strongest method on this full-data task; the PINN advantage appears under sparse measurements (Table\nobreakspace  {}\ref  {tab:exp2}).}}{6}{table.1}\protected@file@percent }
+\newlabel{tab:exp1}{{I}{6}{\textbf {Single-qubit system identification (Experiment~1).} Parameter-recovery relative error, mean state fidelity, and positivity-violation rate (fraction of time points with a negative eigenvalue) for the four methods. Values are mean $\pm $ $95\%$ confidence interval (CI) over 5 seeds. True values: $\omega =3.1416$, $\Omega =0.6283$, $\gamma _1=0.3000$, $\gamma _\phi =0.1500$. The classical least-squares fit uses the exact model structure and is the strongest method on this full-data task; the PINN advantage appears under sparse measurements (Table~\ref {tab:exp2})}{table.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Single-qubit system identification.} (a)\nobreakspace  {}Relative parameter-recovery error per method (mean and $95\%$ confidence interval over five seeds, log scale): the CPTP-PINN strongly outperforms the soft-penalty and unconstrained networks and is competitive with a classical least-squares fit that already knows the exact model (Table\nobreakspace  {}\ref  {tab:exp1}). (b)\nobreakspace  {}State fidelity between the learned and exact density-matrix trajectories (representative seed); the hard-constrained CPTP-PINN stays inside $\mathcal  {D}(\mathcal  {H})$ by construction. Error bars and bands are $95\%$ confidence intervals over five random seeds.}}{6}{figure.2}\protected@file@percent }
+\newlabel{fig:singlequbit}{{2}{6}{\textbf {Single-qubit system identification.} (a)~Relative parameter-recovery error per method (mean and $95\%$ confidence interval over five seeds, log scale): the CPTP-PINN strongly outperforms the soft-penalty and unconstrained networks and is competitive with a classical least-squares fit that already knows the exact model (Table~\ref {tab:exp1}). (b)~State fidelity between the learned and exact density-matrix trajectories (representative seed); the hard-constrained CPTP-PINN stays inside $\calD (\hilb )$ by construction. Error bars and bands are $95\%$ confidence intervals over five random seeds}{figure.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces \textbf  {Robustness under sparse measurements (Experiment\nobreakspace  {}2).} Mean trace distance to the exact single-qubit trajectory versus retained observation fraction, for the three neural methods. Mean $\pm $ $95\%$ CI over 5 seeds.}}{6}{table.2}\protected@file@percent }
+\newlabel{tab:exp2}{{II}{6}{\textbf {Robustness under sparse measurements (Experiment~2).} Mean trace distance to the exact single-qubit trajectory versus retained observation fraction, for the three neural methods. Mean $\pm $ $95\%$ CI over 5 seeds}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {E}A transferable two-qubit dissipative gate}{6}{section*.15}\protected@file@percent }
+\newlabel{sec:experiment_twoqubit}{{IV\,E}{6}{}{section*.15}{}}
+\citation{connes2021spectral,hashimoto2024spectral}
+\citation{connes2021spectral,hashimoto2024spectral}
+\HyPL@Entry{6<</P(\376\377\0007)>>}
+\@writefile{toc}{\contentsline {subsection}{\numberline {F}Matrix-free compiler scaling}{7}{section*.16}\protected@file@percent }
+\newlabel{sec:experiment_compiler}{{IV\,F}{7}{}{section*.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {G}Operator-system spectral truncation of the generator}{7}{section*.17}\protected@file@percent }
+\newlabel{sec:experiment_truncation}{{IV\,G}{7}{}{section*.17}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Discussion and conclusion}{7}{section*.18}\protected@file@percent }
+\newlabel{sec:discussion}{{V}{7}{}{section*.18}{}}
+\citation{qiskit2024,qutip2024}
+\citation{beverland2022assessing,rall2023quantum}
+\HyPL@Entry{7<</P(\376\377\0008)>>}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Robustness, the spectral-frame cure, and generalization across systems.} (a)\nobreakspace  {}Sparse-measurement ablation on the single qubit: mean trace distance to the exact trajectory versus retained observation fraction (log scale), for the CPTP-PINN, a soft-penalty PINN, and an unconstrained network. (b)\nobreakspace  {}Fast qutrit reconstruction: per-seed mean state fidelity for the plain MLP, the Fourier-feature density network, and the spectral-frame (interaction-picture) density network. The plain and Fourier baselines are unreliable across seeds, whereas the spectral frame reconstructs the fast dynamics reliably (tight interval near unity)---resolving the principal open problem. (c)\nobreakspace  {}Two-qubit dissipative gate: state fidelity for the trained $\left \lvert 00 \right \rangle $ trajectory and for three held-out initial states obtained by propagating the learned generator (representative seed). Error bars/bands and points are over five random seeds; see Table\nobreakspace  {}\ref  {tab:exp2} and Tables\nobreakspace  {}\ref  {tab:exp3} and\nobreakspace  {}\ref  {tab:exp4}.}}{8}{figure.3}\protected@file@percent }
+\newlabel{fig:robustness}{{3}{8}{\textbf {Robustness, the spectral-frame cure, and generalization across systems.} (a)~Sparse-measurement ablation on the single qubit: mean trace distance to the exact trajectory versus retained observation fraction (log scale), for the CPTP-PINN, a soft-penalty PINN, and an unconstrained network. (b)~Fast qutrit reconstruction: per-seed mean state fidelity for the plain MLP, the Fourier-feature density network, and the spectral-frame (interaction-picture) density network. The plain and Fourier baselines are unreliable across seeds, whereas the spectral frame reconstructs the fast dynamics reliably (tight interval near unity)---resolving the principal open problem. (c)~Two-qubit dissipative gate: state fidelity for the trained $\ket {00}$ trajectory and for three held-out initial states obtained by propagating the learned generator (representative seed). Error bars/bands and points are over five random seeds; see Table~\ref {tab:exp2} and Tables~\ref {tab:exp3} and~\ref {tab:exp4}}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Matrix-free compiler scaling.} Dense superoperator residual-evaluation time versus structured matrix-free evaluation (median over 50 repeats, log scale). The structured path avoids materializing the $d^2\times d^2$ Liouvillian; its robust advantage is memory [$O(md^2)$ versus $O(d^4)$], not speed---the dense timings shown rebuild the Liouvillian per state and so overstate any wall-clock gap (see text and Table\nobreakspace  {}\ref  {tab:exp5}).}}{8}{figure.4}\protected@file@percent }
+\newlabel{fig:compiler}{{4}{8}{\textbf {Matrix-free compiler scaling.} Dense superoperator residual-evaluation time versus structured matrix-free evaluation (median over 50 repeats, log scale). The structured path avoids materializing the $d^2\times d^2$ Liouvillian; its robust advantage is memory [$O(md^2)$ versus $O(d^4)$], not speed---the dense timings shown rebuild the Liouvillian per state and so overstate any wall-clock gap (see text and Table~\ref {tab:exp5})}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Operator-system spectral truncation of the open-system generator.} Mean infidelity $1-F$ of the propagated level-$N$ truncated interaction-picture generator (left axis) and the out-of-band spectral weight $\eta _N=\DOTSB \sum@ \slimits@ _{|k|>N}\left \lVert \mathcal  {L}_k \right \rVert $ of Theorem\nobreakspace  {}\ref  {thm:truncation} (right axis, log scale) versus the retained Bohr-band level $N$, for a driven dissipative two-qubit system. $N{=}0$ is the secular (Davies) generator, $N{=}1$ the rotating-wave approximation, and the full band recovers the exact generator (and the structured kernel) to floating-point precision. The certificate $\eta _N$ tracks and bounds the infidelity, decreasing monotonically to zero. Deterministic (no seed averaging).}}{8}{figure.5}\protected@file@percent }
+\newlabel{fig:truncation}{{5}{8}{\textbf {Operator-system spectral truncation of the open-system generator.} Mean infidelity $1-F$ of the propagated level-$N$ truncated interaction-picture generator (left axis) and the out-of-band spectral weight $\eta _N=\sum _{|k|>N}\norm {\calL _k}$ of Theorem~\ref {thm:truncation} (right axis, log scale) versus the retained Bohr-band level $N$, for a driven dissipative two-qubit system. $N{=}0$ is the secular (Davies) generator, $N{=}1$ the rotating-wave approximation, and the full band recovers the exact generator (and the structured kernel) to floating-point precision. The certificate $\eta _N$ tracks and bounds the infidelity, decreasing monotonically to zero. Deterministic (no seed averaging)}{figure.5}{}}
+\HyPL@Entry{8<</P(\376\377\0009)>>}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A}Limitations}{9}{section*.19}\protected@file@percent }
+\newlabel{sec:limitations}{{V\,A}{9}{}{section*.19}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {}Acknowledgments}{9}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {}Data and code availability}{9}{section*.21}\protected@file@percent }
+\citation{lindblad1976generators,gorini1976completely,breuer2002theory,wiseman2009quantum}
+\citation{kingma2015adam}
+\citation{liu1989limited}
+\citation{connes2021spectral,vansuijlekom2021gromov}
+\citation{davies1974markovian}
+\HyPL@Entry{9<</P(\376\377\0001\0000)>>}
+\@writefile{toc}{\appendix }
+\@writefile{toc}{\contentsline {section}{\numberline {A}GKSL dynamics and the dense Liouvillian}{10}{section*.22}\protected@file@percent }
+\newlabel{sec:gksl}{{A}{10}{}{section*.22}{}}
+\newlabel{eq:gksl_rates}{{A1}{10}{}{equation.A.1}{}}
+\newlabel{eq:dense_liouvillian}{{A2}{10}{}{equation.A.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Generator parameterization}{10}{section*.23}\protected@file@percent }
+\newlabel{sec:generator_parameterization}{{B}{10}{}{section*.23}{}}
+\newlabel{eq:softplus_rates}{{B1}{10}{}{equation.B.1}{}}
+\newlabel{eq:kossakowski_generator}{{B2}{10}{}{equation.B.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Observation model and loss}{10}{section*.24}\protected@file@percent }
+\newlabel{sec:loss}{{C}{10}{}{section*.24}{}}
+\newlabel{eq:data_ic_loss}{{C1}{10}{}{equation.C.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Spectral-frame parameterization and interaction-picture residual}{10}{section*.25}\protected@file@percent }
+\newlabel{sec:spectral_methods}{{D}{10}{}{section*.25}{}}
+\newlabel{eq:spectral_rotation}{{D1}{10}{}{equation.D.1}{}}
+\newlabel{eq:spectral_residual}{{D2}{10}{}{equation.D.2}{}}
+\HyPL@Entry{10<</P(\376\377\0001\0001)>>}
+\@writefile{toc}{\contentsline {section}{\numberline {E}Operator-system spectral truncation}{11}{section*.26}\protected@file@percent }
+\newlabel{sec:truncation_methods}{{E}{11}{}{section*.26}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {F}Intermediate representation, dispatch, and algorithms}{11}{section*.27}\protected@file@percent }
+\newlabel{sec:ir}{{F}{11}{}{section*.27}{}}
+\newlabel{alg:dispatch}{{1}{11}{}{algorithm.1}{}}
+\newlabel{alg:cptp_compiler_pinn}{{2}{11}{}{algorithm.2}{}}
+\newlabel{alg:spectral}{{3}{11}{}{algorithm.3}{}}
+\citation{cybenko1989approximation,hornik1991approximation}
+\HyPL@Entry{11<</P(\376\377\0001\0002)>>}
+\newlabel{alg:truncation}{{4}{12}{}{algorithm.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {G}Proofs}{12}{section*.28}\protected@file@percent }
+\newlabel{sec:appendix_proofs}{{G}{12}{}{section*.28}{}}
+\citation{lindblad1976generators,gorini1976completely,breuer2002theory}
+\HyPL@Entry{12<</P(\376\377\0001\0003)>>}
+\newlabel{eq:canonical_gksl}{{G1}{13}{}{equation.G.1}{}}
+\HyPL@Entry{13<</P(\376\377\0001\0004)>>}
+\HyPL@Entry{14<</P(\376\377\0001\0005)>>}
+\newlabel{cor:low_rank}{{9}{15}{Low-rank physicality}{theorem.9}{}}
+\newlabel{prop:frobenius_certificate}{{10}{15}{Frobenius residual certificate via Gr\"onwall}{theorem.10}{}}
+\citation{tancik2020fourier}
+\HyPL@Entry{15<</P(\376\377\0001\0006)>>}
+\@writefile{toc}{\contentsline {section}{\numberline {H}Sensitivity equations and low-rank variants}{16}{section*.29}\protected@file@percent }
+\newlabel{sec:sensitivity_equations}{{H}{16}{}{section*.29}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Experimental implementation details}{16}{section*.30}\protected@file@percent }
+\newlabel{sec:appendix_experiments}{{I}{16}{}{section*.30}{}}
+\citation{wang2022respecting}
+\HyPL@Entry{16<</P(\376\377\0001\0007)>>}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces \textbf  {Fast qutrit (leakage) reconstruction (Experiment\nobreakspace  {}3).} Mean state fidelity and mean relative recovery error of the dominant decay rates $(\gamma _{10},\gamma _{21})$ for a plain MLP, a Fourier-feature density network, and the spectral-frame (interaction-picture) density network. Rates are read out by an integral least-squares fit of the linear-in-rates generator to the learned interaction-picture envelope; this readout is meaningful only for a reconstructed trajectory, so it is reported only for methods reaching mean fidelity $\ge 0.9$ (``---'' otherwise). Mean $\pm $ $95\%$ CI over 5 seeds.}}{17}{table.3}\protected@file@percent }
+\newlabel{tab:exp3}{{III}{17}{\textbf {Fast qutrit (leakage) reconstruction (Experiment~3).} Mean state fidelity and mean relative recovery error of the dominant decay rates $(\gamma _{10},\gamma _{21})$ for a plain MLP, a Fourier-feature density network, and the spectral-frame (interaction-picture) density network. Rates are read out by an integral least-squares fit of the linear-in-rates generator to the learned interaction-picture envelope; this readout is meaningful only for a reconstructed trajectory, so it is reported only for methods reaching mean fidelity $\ge 0.9$ (``---'' otherwise). Mean $\pm $ $95\%$ CI over 5 seeds}{table.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces \textbf  {Two-qubit dissipative gate (Experiment\nobreakspace  {}4).} State fidelity for the trained $\lvert 00\rangle $ trajectory and for three held-out initial states obtained by propagating the learned generator. Mean $\pm $ $95\%$ CI over 5 seeds.}}{17}{table.4}\protected@file@percent }
+\newlabel{tab:exp4}{{IV}{17}{\textbf {Two-qubit dissipative gate (Experiment~4).} State fidelity for the trained $\lvert 00\rangle $ trajectory and for three held-out initial states obtained by propagating the learned generator. Mean $\pm $ $95\%$ CI over 5 seeds}{table.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {J}Extended data}{17}{section*.31}\protected@file@percent }
+\newlabel{sec:extended_data}{{J}{17}{}{section*.31}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {K}Gauge freedom, failure modes, and diagnostics}{17}{section*.32}\protected@file@percent }
+\newlabel{sec:gauge_failure_modes}{{K}{17}{}{section*.32}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces \textbf  {Dense-versus-structured compiler scaling (Experiment\nobreakspace  {}5).} Runtime and memory of the two residual evaluators versus Hilbert-space dimension $d$. Times are the median residual-evaluation wall time over 50 repeats (warm-up excluded) for a batch of 100 states; memory is the analytic storage for the dense $d^2\times d^2$ Liouvillian versus the structured operators. CPU, single machine. The genuine separation is the analytic memory columns [$O(d^4)$ versus $O(md^2)$]; the time-ratio column is an implementation artifact (the dense path rebuilds the Liouvillian on every state) and is not claimed as an intrinsic speedup---see the main text and Table\nobreakspace  {}\ref  {tab:compiler_scaling}.}}{17}{table.5}\protected@file@percent }
+\newlabel{tab:exp5}{{V}{17}{\textbf {Dense-versus-structured compiler scaling (Experiment~5).} Runtime and memory of the two residual evaluators versus Hilbert-space dimension $d$. Times are the median residual-evaluation wall time over 50 repeats (warm-up excluded) for a batch of 100 states; memory is the analytic storage for the dense $d^2\times d^2$ Liouvillian versus the structured operators. CPU, single machine. The genuine separation is the analytic memory columns [$O(d^4)$ versus $O(md^2)$]; the time-ratio column is an implementation artifact (the dense path rebuilds the Liouvillian on every state) and is not claimed as an intrinsic speedup---see the main text and Table~\ref {tab:compiler_scaling}}{table.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces \textbf  {Operator-system spectral truncation of the generator (Experiment\nobreakspace  {}6).} Mean and worst-case state fidelity of the level-$N$ spectrally truncated interaction-picture generator propagated against the exact trajectory of a driven dissipative two-qubit system, and the out-of-band spectral weight $\eta _N=\DOTSB \sum@ \slimits@ _{|k|>N}\left \lVert \mathcal  {L}_k \right \rVert $ that bounds the generator-approximation error (Theorem\nobreakspace  {}\ref  {thm:truncation}). $N{=}0$ is the secular (Davies) generator and $N{=}1$ the rotating-wave approximation; the full band recovers the exact generator (and the structured kernel) to floating-point precision. Deterministic (no seeds).}}{17}{table.6}\protected@file@percent }
+\newlabel{tab:exp6}{{VI}{17}{\textbf {Operator-system spectral truncation of the generator (Experiment~6).} Mean and worst-case state fidelity of the level-$N$ spectrally truncated interaction-picture generator propagated against the exact trajectory of a driven dissipative two-qubit system, and the out-of-band spectral weight $\eta _N=\sum _{|k|>N}\norm {\calL _k}$ that bounds the generator-approximation error (Theorem~\ref {thm:truncation}). $N{=}0$ is the secular (Davies) generator and $N{=}1$ the rotating-wave approximation; the full band recovers the exact generator (and the structured kernel) to floating-point precision. Deterministic (no seeds)}{table.6}{}}
+\HyPL@Entry{17<</P(\376\377\0001\0008)>>}
+\@writefile{lot}{\contentsline {table}{\numberline {VII}{\ignorespaces \textbf  {A\nobreakspace  {}posteriori residual certificate (Theorem\nobreakspace  {}\ref  {thm:certificate}).} For a family of physically valid (Hermitian, trace-one) perturbations of the exact single-qubit trajectory of increasing amplitude (column\nobreakspace  {}1, dimensionless), the table reports the maximum trace distance to the exact trajectory actually attained over the time grid (column\nobreakspace  {}2), the certificate bound $\genfrac  {}{}{}112\left \lVert \setbox \z@ \hbox {\mathsurround \z@ $\textstyle \rho $}\mathaccent "0362{\rho }(0)-\rho _0 \right \rVert _1+\genfrac  {}{}{}112\DOTSI \intop \ilimits@ _0^t\left \lVert r(s) \right \rVert _1\mathrm  {d}s$ of Eq.\nobreakspace  {}\textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {eq:certificate}\unskip \@@italiccorr )}} computed from the residual alone without knowledge of the exact trajectory (column\nobreakspace  {}3), and their ratio (column\nobreakspace  {}4). The ratio exceeds one at every amplitude, confirming the certificate is a valid upper bound, and stays at a small near-constant factor ($\approx 2.35$), confirming it is not loose by orders of magnitude. Values are deterministic (single reference trajectory, no seed averaging).}}{18}{table.7}\protected@file@percent }
+\newlabel{tab:residual_certificate}{{VII}{18}{\textbf {A~posteriori residual certificate (Theorem~\ref {thm:certificate}).} For a family of physically valid (Hermitian, trace-one) perturbations of the exact single-qubit trajectory of increasing amplitude (column~1, dimensionless), the table reports the maximum trace distance to the exact trajectory actually attained over the time grid (column~2), the certificate bound $\tfrac 12\norm {\rhohat (0)-\rho _0}_1+\tfrac 12\int _0^t\norm {r(s)}_1\dd s$ of Eq.~\eqref {eq:certificate} computed from the residual alone without knowledge of the exact trajectory (column~3), and their ratio (column~4). The ratio exceeds one at every amplitude, confirming the certificate is a valid upper bound, and stays at a small near-constant factor ($\approx 2.35$), confirming it is not loose by orders of magnitude. Values are deterministic (single reference trajectory, no seed averaging)}{table.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {VIII}{\ignorespaces \textbf  {Extended dense-versus-structured compiler scaling to larger $d$ (Theorem\nobreakspace  {}\ref  {thm:compiler}).} Analytic storage and measured residual-evaluation time for the dense $d^2\times d^2$ Liouvillian versus the structured matrix-free kernel, on random Lindblad systems with $m$ jump operators, extended to $d=24$. Columns: Hilbert dimension $d$; number of jump operators $m$; dense and structured storage (MB, analytic); dense and structured residual-evaluation time (ms, median over repeated runs on a single CPU); the measured time ratio (dense/structured); and the relative Frobenius difference between the two residual outputs. The genuine, hardware-independent separation is in the analytic memory columns [$O(d^4)$ versus $O(md^2)$], which widen with $d$, together with the floating-point agreement (relative error $\sim 10^{-16}$, so the structured route is exact, not an approximation). The time ratio (reaching $\approx 277\times $ at $d=24$) is \emph  {not} an intrinsic speedup: in this benchmark the dense path reconstructs the full Liouvillian on every state evaluation, so the ratio is dominated by repeated $O(md^4)$ Liouvillian construction and would largely vanish if the build were amortized across states. We therefore report it only as an implementation artifact. Bold marks the faster evaluator (structured) in each row. Timings are hardware- and implementation-dependent; the analytic memory columns and the floating-point agreement are not.}}{18}{table.8}\protected@file@percent }
+\newlabel{tab:compiler_scaling}{{VIII}{18}{\textbf {Extended dense-versus-structured compiler scaling to larger $d$ (Theorem~\ref {thm:compiler}).} Analytic storage and measured residual-evaluation time for the dense $d^2\times d^2$ Liouvillian versus the structured matrix-free kernel, on random Lindblad systems with $m$ jump operators, extended to $d=24$. Columns: Hilbert dimension $d$; number of jump operators $m$; dense and structured storage (MB, analytic); dense and structured residual-evaluation time (ms, median over repeated runs on a single CPU); the measured time ratio (dense/structured); and the relative Frobenius difference between the two residual outputs. The genuine, hardware-independent separation is in the analytic memory columns [$O(d^4)$ versus $O(md^2)$], which widen with $d$, together with the floating-point agreement (relative error $\sim 10^{-16}$, so the structured route is exact, not an approximation). The time ratio (reaching $\approx 277\times $ at $d=24$) is \emph {not} an intrinsic speedup: in this benchmark the dense path reconstructs the full Liouvillian on every state evaluation, so the ratio is dominated by repeated $O(md^4)$ Liouvillian construction and would largely vanish if the build were amortized across states. We therefore report it only as an implementation artifact. Bold marks the faster evaluator (structured) in each row. Timings are hardware- and implementation-dependent; the analytic memory columns and the floating-point agreement are not}{table.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {L}Accelerator-aware implementation}{18}{section*.33}\protected@file@percent }
+\newlabel{sec:accelerator_roadmap}{{L}{18}{}{section*.33}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {M}Reproducibility}{18}{section*.34}\protected@file@percent }
+\newlabel{sec:reproducibility}{{M}{18}{}{section*.34}{}}
+\bibcite{lindblad1976generators}{{1}{}{{}}{{}}}
+\bibcite{gorini1976completely}{{2}{}{{}}{{}}}
+\bibcite{breuer2002theory}{{3}{}{{}}{{}}}
+\bibcite{wiseman2009quantum}{{4}{}{{}}{{}}}
+\bibcite{krantz2019quantum}{{5}{}{{}}{{}}}
+\bibcite{leibfried2003quantum}{{6}{}{{}}{{}}}
+\bibcite{preskill2018quantum}{{7}{}{{}}{{}}}
+\bibcite{chuang1997prescription}{{8}{}{{}}{{}}}
+\bibcite{poyatos1997complete}{{9}{}{{}}{{}}}
+\bibcite{knee2018quantum}{{10}{}{{}}{{}}}
+\bibcite{boulant2003robust}{{11}{}{{}}{{}}}
+\bibcite{wang2017experimental}{{12}{}{{}}{{}}}
+\bibcite{raissi2019physics}{{13}{}{{}}{{}}}
+\bibcite{karniadakis2021physics}{{14}{}{{}}{{}}}
+\bibcite{chen2018neural}{{15}{}{{}}{{}}}
+\bibcite{paszke2019pytorch}{{16}{}{{}}{{}}}
+\bibcite{virtanen2020scipy}{{17}{}{{}}{{}}}
+\bibcite{qutip2024}{{18}{}{{}}{{}}}
+\bibcite{qiskit2024}{{19}{}{{}}{{}}}
+\bibcite{wang2022respecting}{{20}{}{{}}{{}}}
+\bibcite{greydanus2019hamiltonian}{{21}{}{{}}{{}}}
+\bibcite{cranmer2020lagrangian}{{22}{}{{}}{{}}}
+\bibcite{hairer2006geometric}{{23}{}{{}}{{}}}
+\bibcite{carleo2017solving}{{24}{}{{}}{{}}}
+\bibcite{torlai2018neural}{{25}{}{{}}{{}}}
+\bibcite{yoshioka2020variational}{{26}{}{{}}{{}}}
+\bibcite{lu2021learning}{{27}{}{{}}{{}}}
+\bibcite{li2021fourier}{{28}{}{{}}{{}}}
+\bibcite{denisov2019open}{{29}{}{{}}{{}}}
+\bibcite{wolf2008assessing}{{30}{}{{}}{{}}}
+\HyPL@Entry{18<</P(\376\377\0001\0009)>>}
+\@writefile{toc}{\contentsline {section}{\numberline {}References}{19}{section*.35}\protected@file@percent }
+\bibcite{banchi2018modelling}{{31}{}{{}}{{}}}
+\bibcite{luchnikov2020machine}{{32}{}{{}}{{}}}
+\bibcite{verstraete2009quantum}{{33}{}{{}}{{}}}
+\bibcite{kingma2015adam}{{34}{}{{}}{{}}}
+\bibcite{beverland2022assessing}{{35}{}{{}}{{}}}
+\bibcite{rall2023quantum}{{36}{}{{}}{{}}}
+\bibcite{liu1989limited}{{37}{}{{}}{{}}}
+\bibcite{cybenko1989approximation}{{38}{}{{}}{{}}}
+\bibcite{hornik1991approximation}{{39}{}{{}}{{}}}
+\bibcite{connes2021spectral}{{40}{}{{}}{{}}}
+\bibcite{vansuijlekom2021gromov}{{41}{}{{}}{{}}}
+\bibcite{hashimoto2024spectral}{{42}{}{{}}{{}}}
+\bibcite{davies1974markovian}{{43}{}{{}}{{}}}
+\bibcite{tancik2020fourier}{{44}{}{{}}{{}}}
+\bibcite{huynh2026gctr}{{45}{}{{}}{{}}}
+\bibcite{huynh2026gctrcal}{{46}{}{{}}{{}}}
+\bibcite{huynh2026gctrcalpro}{{47}{}{{}}{{}}}
+\bibcite{huynh2026meascost}{{48}{}{{}}{{}}}
+\bibcite{huynh2026certqb}{{49}{}{{}}{{}}}
+\bibcite{huynh2026paramxfer}{{50}{}{{}}{{}}}
+\bibcite{huynh2026paramxferB}{{51}{}{{}}{{}}}
+\bibcite{huynh2026ostqaoa}{{52}{}{{}}{{}}}
+\bibcite{huynh2026topoqaoa}{{53}{}{{}}{{}}}
+\bibcite{huynh2026topoham}{{54}{}{{}}{{}}}
+\bibcite{huynh2026lie}{{55}{}{{}}{{}}}
+\bibcite{huynh2026gnndec}{{56}{}{{}}{{}}}
+\bibcite{huynh2026topoqec}{{57}{}{{}}{{}}}
+\bibcite{huynh2026covdec}{{58}{}{{}}{{}}}
+\bibcite{huynh2026fiber}{{59}{}{{}}{{}}}
+\bibcite{nguyen2025zassenhaus}{{60}{}{{}}{{}}}
+\bibcite{jing2026complexity}{{61}{}{{}}{{}}}
+\bibdata{mainNotes}
+\bibstyle{apsrev4-2}
+\citation{REVTEX42Control}
+\citation{apsrev42Control}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\HyPL@Entry{19<</P(\376\377\0002\0000)>>}
+\newlabel{LastBibItem}{{61}{20}{}{section*.35}{}}
+\newlabel{LastPage}{{}{20}{}{}{}}
+\gdef \@abspage@last{20}

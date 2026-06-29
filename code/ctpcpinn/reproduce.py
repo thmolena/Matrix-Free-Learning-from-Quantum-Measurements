@@ -81,7 +81,7 @@ def main(argv=None):
     torch.set_num_threads(max(1, args.threads))
     config = dict(QUICK_CONFIG if args.quick else FULL_CONFIG)
 
-    out = (Path(__file__).resolve().parents[2]
+    out = (Path(__file__).resolve().parents[2] / 'submission'
            if args.in_place else Path(args.output_dir).resolve())
     config['figures_dir'] = str(out / 'figures')
     config['tables_dir'] = str(out / 'tables')
