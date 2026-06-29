@@ -193,7 +193,7 @@
     <div class="hero-actions" style="margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
       <a href="submission/main.pdf" style="display:inline-block;padding:10px 18px;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;text-decoration:none;">Read the manuscript (PDF)</a>
       <a href="https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/" style="display:inline-block;padding:10px 18px;border-radius:8px;border:1px solid rgba(120,140,170,.45);color:inherit;font-weight:600;text-decoration:none;">Live interactive report</a>
-      <a href="submission/code" style="display:inline-block;padding:10px 18px;border-radius:8px;border:1px solid rgba(120,140,170,.45);color:inherit;font-weight:600;text-decoration:none;">Reproducible code</a>
+      <a href="code" style="display:inline-block;padding:10px 18px;border-radius:8px;border:1px solid rgba(120,140,170,.45);color:inherit;font-weight:600;text-decoration:none;">Reproducible code</a>
     </div>
   </div>
 </header>
@@ -527,19 +527,19 @@
   <!-- ===================== REPRODUCIBILITY ===================== -->
   <section id="repro">
     <h2><span class="num">10</span>Reproducibility</h2>
-    <p>Every number in the manuscript is written directly to its figure and table file by the <code>ctpcpinn</code> package (<code>submission/code</code>), with none entered by hand. The artifact is a pip-installable package, <code>ctpcpinn</code> (version 2.0.0, MIT, Python ≥ 3.10), whose <code>ctpcpinn/spectral.py</code> module implements the spectral frame and the operator-system truncation.</p>
+    <p>Every number in the manuscript is written directly to its figure and table file by the <code>ctpcpinn</code> package (<code>code</code>), with none entered by hand. The artifact is a pip-installable package, <code>ctpcpinn</code> (version 2.0.0, MIT, Python ≥ 3.10), whose <code>ctpcpinn/spectral.py</code> module implements the spectral frame and the operator-system truncation.</p>
     <pre><span class="c"># 1. Obtain the source tree and install the package</span>
-<span class="k">cd</span> submission/code
+<span class="k">cd</span> code
 pip install .                 <span class="c"># runtime deps: numpy, scipy, torch, matplotlib, cycler</span>
 
 <span class="c"># 2. Regenerate every committed table and figure (six experiments)</span>
-python run_full.py            <span class="c"># or the console entry point:</span>
+python run_all.py            <span class="c"># or the console entry point:</span>
 ctpcpinn-reproduce
 ctpcpinn-validate             <span class="c"># invariant checks, incl. the spectral frame</span>
 
 <span class="c"># 3. For bit-identical numbers, pin the exact environment</span>
 pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplotlib 3.10.8</span></pre>
-    <p class="sub">Each training experiment runs over seeds {0,1,2,3,4} and reports mean ± 95% Student-<em>t</em> CI; the compiler benchmark reports the median over repeated timings. Configuration: 3000 Adam epochs at learning rate 10⁻³, 100 time points, noise standard deviation 0.02. The <code>ctpcpinn/foundations.py</code> module gives a from-scratch theory-to-code map, and <code>run_one.py</code> reproduces a single experiment. All simulations run on CPU; they are deliberately modest in scale and stand as a controlled proof of concept, separate from hardware data or state-of-the-art claims.</p>
+    <p class="sub">Each training experiment runs over seeds {0,1,2,3,4} and reports mean ± 95% Student-<em>t</em> CI; the compiler benchmark reports the median over repeated timings. Configuration: 3000 Adam epochs at learning rate 10⁻³, 100 time points, noise standard deviation 0.02. The <code>ctpcpinn/foundations.py</code> module gives a from-scratch theory-to-code map, and <code>ctpcpinn-reproduce --experiment exp1</code> reproduces a single experiment. All simulations run on CPU; they are deliberately modest in scale and stand as a controlled proof of concept, separate from hardware data or state-of-the-art claims.</p>
   </section>
 
   <!-- ===================== REFERENCES ===================== -->

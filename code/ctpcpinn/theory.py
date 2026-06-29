@@ -80,7 +80,7 @@ for these two representations.
 Statistics and reproduction
 ---------------------------
 Each stochastic experiment uses fixed seeds and reports mean plus 95 percent
-confidence intervals. To reproduce the submitted artifacts from submission/code:
+confidence intervals. To reproduce the submitted artifacts from code:
 
     export PYTHONPATH=.
     python run_all.py

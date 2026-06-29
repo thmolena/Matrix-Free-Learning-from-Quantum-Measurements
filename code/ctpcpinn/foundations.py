@@ -65,7 +65,7 @@ FOUNDATION_SECTIONS: tuple[tuple[str, str], ...] = (
     ),
     (
         "Reproduction path",
-        "Run python run_all.py in submission/code to regenerate the in-place "
+        "Run python run_all.py in code to regenerate the in-place "
         "tables and figures used by main.tex.  Use ctpcpinn-reproduce for an "
         "installed console entry point and ctpcpinn-validate for invariant "
         "checks.  Dependencies live in pyproject.toml.",
