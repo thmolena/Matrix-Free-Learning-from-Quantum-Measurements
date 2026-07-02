@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spectral-Frame CPTP-PINNs — Eigen-Operator Learning and Operator-System Spectral Truncation for Open Quantum Dynamics</title>
+  <title>Structure-preserving physics-informed learning of open quantum dynamics with spectral-frame encodings and operator-system truncation</title>
   <meta name="description" content="Structure-preserving residual learning and matrix-free compilation for Markovian open quantum systems: a hard-constrained Cholesky density network, a GKSL-preserving generator parameterization, and a matrix-free Lindblad compiler, proved physical and benchmarked over five reproducible five-seed studies." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2319435b'/%3E%3Cpath d='M20 66c18-40 42-40 60 0' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='34' cy='44' r='6' fill='%23ffffff'/%3E%3Ccircle cx='66' cy='44' r='6' fill='%23ffffff'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -178,9 +178,9 @@
 <header class="hero">
   <div class="wrap">
     <div class="kicker">Open Quantum Systems · Physics-Informed Learning · Spectral Truncation &amp; Operator Systems · Structure-Preserving Computation</div>
-    <h1>Spectral-Frame CPTP-PINNs: Eigen-Operator Structure-Preserving Learning and Operator-System Spectral Truncation for Open Quantum Dynamics</h1>
-    <p class="lead">Identification of Markovian open-quantum models from sparse, noisy data. The central contribution is a <strong>spectral-frame (interaction-picture eigen-operator) parameterization</strong>: the density network learns only the slow envelope <span class="mono">ρ̃ = U†ρU</span> in the Hamiltonian eigenbasis through the same hard Cholesky map, supplying the fast Bohr-frequency oscillations analytically and so removing spectral bias at the level of the representation. Band-limiting the interaction-picture generator to its slow Bohr eigen-operators is an <strong>operator-system spectral truncation</strong>, lifting the spectral-truncation construction of noncommutative geometry and C\*-algebraic kernel machines from static kernels to a completely positive dynamical generator. This resolves the principal open problem of the structure-preserving approach — reliable reconstruction of fast multi-level (qutrit leakage) dynamics.</p>
-    <p class="meta"><strong>Molena Huynh</strong> · North Carolina State University · <a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a> · manuscript prepared for submission to <em>Nature Machine Intelligence</em></p>
+    <h1>Structure-preserving physics-informed learning of open quantum dynamics with spectral-frame encodings and operator-system truncation</h1>
+    <p class="lead">Open-system identification is treated as statistical inference: a physics-informed surrogate is fitted to finite, noisy measurements of a Markovian open quantum system, and what it can and cannot certify is quantified. The central construct is a <strong>spectral-frame (interaction-picture eigen-operator) parameterization</strong>: the density network learns only the slow envelope <span class="mono">ρ̃ = U†ρU</span> in the Hamiltonian eigenbasis through the same hard Cholesky map, supplying the fast Bohr-frequency oscillations analytically and so removing spectral bias at the level of the representation. Band-limiting the interaction-picture generator to its slow Bohr eigen-operators is an <strong>operator-system spectral truncation</strong>, lifting the spectral-truncation construction of noncommutative geometry and C\*-algebraic kernel machines from static kernels to a completely positive dynamical generator. This resolves the principal open problem of the structure-preserving approach — reliable reconstruction of fast multi-level (qutrit leakage) dynamics.</p>
+    <p class="meta"><strong>Molena Huynh</strong> · North Carolina State University, Raleigh, North Carolina 27695, USA · <a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a></p>
     <div class="badges">
       <span class="badge">Spectral-frame eigen-operator network</span>
       <span class="badge">Operator-system spectral truncation</span>
@@ -188,10 +188,10 @@
       <span class="badge">GKSL-preserving generator</span>
       <span class="badge">Eight exact guarantees</span>
       <span class="badge">6 studies · 5 seeds · 95% CI</span>
-      <span class="badge">pip install ctpcpinn</span>
+      <span class="badge">pip install specops-cptppinn</span>
     </div>
     <div class="hero-actions" style="margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
-      <a href="submission/main.pdf" style="display:inline-block;padding:10px 18px;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;text-decoration:none;">Read the manuscript (PDF)</a>
+      <a href="https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/submission/main.pdf" style="display:inline-block;padding:10px 18px;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;text-decoration:none;">Read the manuscript (PDF)</a>
       <a href="https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/" style="display:inline-block;padding:10px 18px;border-radius:8px;border:1px solid rgba(120,140,170,.45);color:inherit;font-weight:600;text-decoration:none;">Live interactive report</a>
       <a href="code" style="display:inline-block;padding:10px 18px;border-radius:8px;border:1px solid rgba(120,140,170,.45);color:inherit;font-weight:600;text-decoration:none;">Reproducible code</a>
     </div>
@@ -211,14 +211,15 @@
     <a href="#significance">Significance</a>
     <a href="#repro">Reproducibility</a>
     <a href="#references">References</a>
+    <a href="#cite">Cite</a>
   </div>
 </nav>
 
 <main class="wrap">
 
 <div style="margin:26px 0 6px;padding:18px 20px;border:1px solid rgba(127,140,170,.32);border-left:4px solid var(--accent,#1f6feb);border-radius:8px;background:rgba(127,140,170,.06);">
-  <strong style="display:block;font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent,#1f6feb);margin-bottom:7px;">AI for quantum, at HPC scale</strong>
-  <p style="margin:0;font-size:1.02rem;line-height:1.6;">This is a <em>physics-informed neural network</em> for open-quantum-system identification with the physics enforced in the architecture, not the loss: a hard Cholesky map keeps the learned state Hermitian, positive, and trace-one at every step (<strong>0</strong> positivity violations), and a spectral-frame eigen-operator parameterization removes the spectral bias that defeats smooth networks on fast multi-level dynamics (<strong>0.985</strong> mean qutrit-leakage fidelity vs &le;0.77 for plain/Fourier baselines). It is PyTorch-native and runs on GPU out of the box, with an a posteriori truncation-error certificate at every level.</p>
+  <strong style="display:block;font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent,#1f6feb);margin-bottom:7px;">Abstract</strong>
+  <p style="margin:0;font-size:1.02rem;line-height:1.6;">This work introduces a structure-preserving, physics-informed framework for identifying Markovian open quantum systems in which the standard failure modes of neural surrogates are made unrepresentable by construction. A hard Cholesky density map keeps every learned state Hermitian, positive semidefinite, and unit trace at every training step (<strong>0</strong> positivity violations); a spectral-frame eigen-operator parameterization learns only the slow interaction-picture envelope and supplies the fast Bohr oscillations analytically, removing the spectral bias that defeats smooth networks on fast multi-level dynamics (mean qutrit-leakage fidelity <strong>0.985&nbsp;±&nbsp;0.002</strong>, against &le;&nbsp;0.77 for plain and Fourier-feature baselines); and an operator-system spectral truncation band-limits the generator to its slow Bohr modes, yielding a controlled hierarchy from the secular (Davies) generator to the exact generator with an a posteriori error certificate. Eight exact guarantees are proved, and every reported number is emitted by the accompanying package over six fully reproducible, CPU-scale studies.</p>
 </div>
 
   <!-- ===================== BACKGROUND ===================== -->
@@ -475,19 +476,20 @@
     <h3>Dense-versus-structured compiler scaling (Experiment 5)</h3>
     <div class="tbl-scroll">
     <table>
-      <caption>Median residual-evaluation time (50 repeats, batch of 100 states) and analytic storage; CPU, single machine. Extended runs reach a 276.65× speedup at d=24 with relative error ~10⁻¹⁶.</caption>
+      <caption>Analytic storage of the dense superoperator versus the structured matrix-free representation, with representative median residual-evaluation timings (50 repeats, batch of 100 states; CPU, single machine). The genuine, hardware-independent separation is the memory scaling — dense storage grows as O(d⁴), structured as O(md²); the two residuals agree to floating-point precision, so structured evaluation is exact rather than approximate.</caption>
       <thead>
-        <tr><th>d</th><th>Dense (s)</th><th>Structured (s)</th><th>Speedup</th><th>Dense (MB)</th><th>Structured (MB)</th></tr>
+        <tr><th>d</th><th>Dense (MB)</th><th>Structured (MB)</th><th>Dense (s)</th><th>Structured (s)</th></tr>
       </thead>
       <tbody>
-        <tr><td>2</td><td>0.0094</td><td>0.0015</td><td>6.3×</td><td>0.000</td><td>0.00024</td></tr>
-        <tr><td>3</td><td>0.0130</td><td>0.0020</td><td>6.5×</td><td>0.001</td><td>0.00069</td></tr>
-        <tr><td>4</td><td>0.0134</td><td>0.0020</td><td>6.8×</td><td>0.004</td><td>0.00122</td></tr>
-        <tr><td>6</td><td>0.0176</td><td>0.0021</td><td>8.4×</td><td>0.020</td><td>0.00275</td></tr>
-        <tr><td>8</td><td>0.0291</td><td>0.0033</td><td>8.8×</td><td>0.062</td><td>0.00488</td></tr>
+        <tr><td>2</td><td>0.000</td><td>0.00024</td><td>0.0094</td><td>0.0015</td></tr>
+        <tr><td>3</td><td>0.001</td><td>0.00069</td><td>0.0130</td><td>0.0020</td></tr>
+        <tr><td>4</td><td>0.004</td><td>0.00122</td><td>0.0134</td><td>0.0020</td></tr>
+        <tr><td>6</td><td>0.020</td><td>0.00275</td><td>0.0176</td><td>0.0021</td></tr>
+        <tr><td>8</td><td>0.062</td><td>0.00488</td><td>0.0291</td><td>0.0033</td></tr>
       </tbody>
     </table>
     </div>
+    <p class="sub">The manuscript does not claim a speed advantage: the benchmark's dense path rebuilds the full Liouvillian on every state evaluation, so its wall-clock timings overstate any intrinsic per-matvec gap. The reported separation is the O(d⁴)-versus-O(md²) memory scaling of Theorem 6, which widens with the Hilbert dimension d.</p>
 
     <h3>Residual certificate, verified numerically (Theorem 4)</h3>
     <div class="tbl-scroll">
@@ -527,18 +529,21 @@
   <!-- ===================== REPRODUCIBILITY ===================== -->
   <section id="repro">
     <h2><span class="num">10</span>Reproducibility</h2>
-    <p>Every number in the manuscript is written directly to its figure and table file by the <code>ctpcpinn</code> package (<code>code</code>), with none entered by hand. The artifact is a pip-installable package, <code>ctpcpinn</code> (version 2.0.0, MIT, Python ≥ 3.10), whose <code>ctpcpinn/spectral.py</code> module implements the spectral frame and the operator-system truncation.</p>
-    <pre><span class="c"># 1. Obtain the source tree and install the package</span>
+    <p>Every number in the manuscript is written directly to its figure and table file by the accompanying package, with none entered by hand. The artifact is pip-installable under the distribution name <code>specops-cptppinn</code> (import name <code>ctpcpinn</code>; version 2.0.0, MIT, Python ≥ 3.9), whose <code>ctpcpinn/spectral.py</code> module implements the spectral frame and the operator-system truncation.</p>
+    <pre><span class="c"># Install from the Python Package Index</span>
+pip install specops-cptppinn
+
+<span class="c"># or from the source tree (runtime deps: numpy, scipy, torch, matplotlib, cycler)</span>
 <span class="k">cd</span> code
-pip install .                 <span class="c"># runtime deps: numpy, scipy, torch, matplotlib, cycler</span>
+pip install .
 
-<span class="c"># 2. Regenerate every committed table and figure (six experiments)</span>
-python run_all.py            <span class="c"># or the console entry point:</span>
-ctpcpinn-reproduce
-ctpcpinn-validate             <span class="c"># invariant checks, incl. the spectral frame</span>
+<span class="c"># Regenerate every committed table and figure (six experiments)</span>
+python run_all.py                 <span class="c"># or the console entry point:</span>
+cptppinn-reproduce
+cptppinn-validate                 <span class="c"># invariant checks, incl. the spectral frame</span>
 
-<span class="c"># 3. For bit-identical numbers, pin the exact environment</span>
-pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplotlib 3.10.8</span></pre>
+<span class="c"># For bit-identical numbers, pin the exact environment</span>
+pip install ".[exact]"            <span class="c"># numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplotlib 3.10.8</span></pre>
     <p class="sub">Each training experiment runs over seeds {0,1,2,3,4} and reports mean ± 95% Student-<em>t</em> CI; the compiler benchmark reports the median over repeated timings. Configuration: 3000 Adam epochs at learning rate 10⁻³, 100 time points, noise standard deviation 0.02. The <code>ctpcpinn/foundations.py</code> module gives a from-scratch theory-to-code map, and <code>ctpcpinn-reproduce --experiment exp1</code> reproduces a single experiment. All simulations run on CPU; they are deliberately modest in scale and stand as a controlled proof of concept, separate from hardware data or state-of-the-art claims.</p>
   </section>
 
@@ -601,11 +606,26 @@ pip install ".[exact]"        <span class="c"># numpy 2.4.2, scipy 1.17.1, torch
     </ol>
   </section>
 
+  <!-- ===================== CITE ===================== -->
+  <section id="cite">
+    <h2><span class="num">12</span>Cite This Work</h2>
+    <p>If this method, its guarantees, or the accompanying package are used, please cite the manuscript:</p>
+    <pre>@article{huynh2026cptppinn,
+  author  = {Huynh, Molena},
+  title   = {Structure-preserving physics-informed learning of open quantum
+             dynamics with spectral-frame encodings and operator-system truncation},
+  journal = {arXiv preprint},
+  year    = {2026},
+  note    = {Part of the spectral-truncation operators (specops) program}
+}</pre>
+    <p class="sub">The software artifact is distributed as <code>specops-cptppinn</code> (import name <code>ctpcpinn</code>); machine-readable citation metadata is provided in <code>code/CITATION.cff</code>.</p>
+  </section>
+
 </main>
 
 <footer>
   <div class="wrap">
-    <p>Spectral-Frame CPTP-PINNs — Eigen-Operator Structure-Preserving Learning and Operator-System Spectral Truncation for Open Quantum Dynamics. Molena Huynh, North Carolina State University (<a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a>). Manuscript prepared for submission to <em>Nature Machine Intelligence</em>. Numbers, theorems, and figures on this page are transcribed from the manuscript source (<code>submission/main.tex</code>); the interactive panel is a qualitative illustration of the governing relations, not a re-run of the experiments.</p>
+    <p>Structure-preserving physics-informed learning of open quantum dynamics with spectral-frame encodings and operator-system truncation. Molena Huynh, North Carolina State University, Raleigh, North Carolina 27695, USA (<a href="mailto:molena.huynh@jmp.com">molena.huynh@jmp.com</a>). Numbers, theorems, and figures on this page are transcribed from the manuscript source (<code>submission/main.tex</code>); the interactive panel is a qualitative illustration of the governing relations, not a re-run of the experiments. Full manuscript: <a href="https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/submission/main.pdf">https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/submission/main.pdf</a>.</p>
   </div>
 </footer>
 

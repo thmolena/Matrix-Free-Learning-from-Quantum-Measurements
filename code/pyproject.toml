@@ -3,10 +3,10 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ctpcpinn"
+name = "specops-cptppinn"
 version = "2.0.0"
-description = "Spectral-CPTP-PINNs: spectral-frame (interaction-picture eigen-operator) structure-preserving residual learning, operator-system spectral truncation of the open-system generator, and matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. Regenerates every table and figure of the manuscript deterministically."
-requires-python = ">=3.10"
+description = "Spectral-CPTP-PINNs: spectral-frame (interaction-picture eigen-operator) structure-preserving residual learning, operator-system spectral truncation of the open-system generator, and matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. Regenerates every table and figure of the manuscript deterministically. Part of the spectral-truncation operators (specops) program."
+requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
 maintainers = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
@@ -29,6 +29,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -60,7 +61,9 @@ exact = [
 dev = ["pytest>=7.0", "build>=1.0"]
 
 [project.scripts]
+cptppinn-reproduce = "ctpcpinn.reproduce:main"
 ctpcpinn-reproduce = "ctpcpinn.reproduce:main"
+cptppinn-validate = "ctpcpinn.validate:main"
 ctpcpinn-validate = "ctpcpinn.validate:main"
 
 [project.urls]
