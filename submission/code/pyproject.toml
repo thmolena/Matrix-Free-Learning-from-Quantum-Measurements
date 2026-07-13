@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "specops-cptppinn"
+version = "2.0.0"
+description = "Spectral-CPTP-PINNs: spectral-frame (interaction-picture eigen-operator) structure-preserving residual learning, operator-system spectral truncation of the open-system generator, and matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. Regenerates every table and figure of the manuscript deterministically. Part of the spectral-truncation operators (specops) program."
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
+maintainers = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
+keywords = [
+    "quantum",
+    "open-quantum-systems",
+    "lindblad",
+    "gksl",
+    "physics-informed-neural-networks",
+    "PINN",
+    "structure-preserving",
+    "spectral-truncation",
+    "operator-systems",
+    "interaction-picture",
+    "reproducibility",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Lower-bound floors keep the package broadly installable across recent
+# scientific-Python environments. For bit-identical reproduction of the
+# committed table and figure values, install the pinned ``exact`` group below
+# and run single-threaded as documented in README.md.
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "torch>=2.0",
+    "matplotlib>=3.7",
+    "cycler>=0.11",
+]
+
+[project.optional-dependencies]
+# Exact versions used to generate the committed tables and figures.
+exact = [
+    "numpy==2.4.2",
+    "scipy==1.17.1",
+    "torch==2.10.0",
+    "matplotlib==3.10.8",
+]
+dev = ["pytest>=7.0", "build>=1.0"]
+
+[project.scripts]
+cptppinn-reproduce = "ctpcpinn.reproduce:main"
+ctpcpinn-reproduce = "ctpcpinn.reproduce:main"
+cptppinn-validate = "ctpcpinn.validate:main"
+ctpcpinn-validate = "ctpcpinn.validate:main"
+
+[project.urls]
+Repository = "https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling"
+Homepage = "https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/"
+
+[tool.setuptools.packages.find]
+include = ["ctpcpinn*"]
