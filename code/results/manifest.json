@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "title": "Matrix-Free Learning of Open Quantum Systems from Measured Signals",
+  "package": "specops-cptppinn",
+  "original_data_source": "https://zenodo.org/records/15797402",
+  "locked_results": {
+    "path": "code/results/locked_results.json",
+    "sha256": "72d7f798534b99b969071a2688689ecfdce06eecfc9a22682e7c9ff1e7a0c104"
+  },
+  "commands": {
+    "install": "python -m pip install -e code",
+    "download": "python code/scripts/download_data.py",
+    "reproduce": "python code/scripts/reproduce.py",
+    "figures": "python code/scripts/make_figures.py",
+    "validate": "python code/scripts/validate_release.py"
+  }
+}

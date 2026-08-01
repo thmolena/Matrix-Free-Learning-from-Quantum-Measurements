@@ -1,27 +1,30 @@
-# specops-cptppinn — Structure-preserving physics-informed learning of open quantum dynamics
+# specops-cptppinn — Matrix-free spectral-frame learning of open quantum dynamics
 
 > Distribution name: **`specops-cptppinn`** (import name: `ctpcpinn`). Part of the
 > **spectral-truncation operators** (`specops`) program.
 >
-> Manuscript: *Structure-preserving physics-informed learning of open quantum
-> dynamics with spectral-frame encodings and operator-system truncation.*
+> Manuscript: *Matrix-Free Learning of Open Quantum Systems from Measured
+> Signals.*
 > Molena Huynh, North Carolina State University, Raleigh, North Carolina 27695, USA
 > (molena.huynh@jmp.com).
-> Full PDF: <https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/submission/main.pdf>
+> Full PDF: [`../main.pdf`](../main.pdf)
 
 ## Summary
 
 This package implements and reproduces a structure-preserving, physics-informed
-framework for identifying Markovian open quantum systems from finite, noisy
-measurements. It supplies a hard-constrained Cholesky density network that emits a
+framework for recovering and identifying open quantum dynamics from finite,
+noisy measurements. Its primary study uses 40,787 measured probabilities from
+177 trapped-ion Ramsey traces in the CC BY 4.0 Zenodo record
+`10.5281/zenodo.15797402`. It supplies a hard-constrained Cholesky density network that emits a
 physically valid quantum state at every point by construction; a spectral-frame
 (interaction-picture eigen-operator) parameterization that learns only the slow
 envelope of the dynamics and supplies the fast coherent oscillations analytically,
-removing spectral bias at the architecture level; an operator-system spectral
-truncation of the generator with an a posteriori error certificate; and a
+removing spectral bias at the architecture level; a symmetric Fourier generator
+approximation with an a posteriori norm-tail bound and explicit non-GKSL caveat; and a
 matrix-free compiler that lowers a symbolic open-system specification to dense,
-structured, or spectrally truncated kernels. It deterministically regenerates every
-table and figure of the manuscript over six reproducible, CPU-scale studies.
+structured kernels or a Fourier-truncated diagnostic; and a block-matrix-free spectral
+readout that never forms the global Ramsey design. It deterministically
+regenerates the real-data evidence and six controlled CPU-scale studies.
 
 ## Background and problem setting (from first principles)
 
@@ -72,26 +75,28 @@ both obstacles by construction rather than by penalty.
    a unitary preserves `𝒟(ℋ)`, physicality remains architectural while spectral
    bias is removed. A well-conditioned envelope derivative renders the dissipation
    rates identifiable by a linear least-squares readout.
-3. **Operator-system spectral truncation of the generator.** In the interaction
+3. **Symmetric Fourier truncation of the generator.** In the interaction
    picture the generator is almost periodic with Fourier series
-   `𝓛̃_t = Σ_k e^{ikω₀t} 𝓛_k`; keeping the band `|k| ≤ N` projects onto a finite
-   operator system of slow Bohr eigen-operators. This yields a controlled
-   multi-resolution hierarchy — `N=0` is the secular (Davies) generator, `N=1` the
-   rotating-wave approximation, the full band the exact generator — with an
-   a posteriori out-of-band-weight certificate `η_N = Σ_{|k|>N} ‖𝓛_k‖`. It lifts
-   the spectral-truncation construction of noncommutative geometry and C\*-algebraic
-   kernel machines from static kernels to a completely positive dynamical generator.
+   `𝓛̃_t = Σ_k e^{ikω₀t} 𝓛_k`; keeping the symmetric band `|k| ≤ N`
+   gives a linear low-frequency approximation with an a posteriori
+   omitted Frobenius-coefficient bound `η_N = Σ_{|k|>N} ‖𝕃_k‖_F`. Paired modes preserve
+   Hermiticity and trace, but a raw finite partial sum is not generally GKSL or
+   completely positive. The `N=0` time average is GKSL; calling it a Davies
+   generator requires additional weak-coupling/secular assumptions. A physical
+   finite-band model instead truncates a factor `B_N(t)` and forms
+   `C_N(t)=B_N(t)B_N(t)†`, with a separately evaluated approximation error.
 4. **A CPTP-by-construction generator parameterization and matrix-free compiler.**
    Softplus-positive rates and positive-semidefinite Kossakowski factorizations
    `C = BB†` keep the learned generator in GKSL form; a symbolic open-system
    intermediate representation is lowered to a dense Liouvillian, a structured
-   residual kernel, or a spectrally truncated kernel that agree to floating-point
-   precision.
-5. **Eight exact guarantees and a fully reproducible study.** These include exact
+   residual kernel, or a Fourier-truncated diagnostic kernel. Dense and structured
+   residual kernels agree to floating-point precision; a truncated kernel is an
+   approximation whose error is measured by its retained-band study.
+5. **Formal guarantees and a fully reproducible study.** These include exact
    density-matrix physicality, universal approximation, GKSL preservation, the
    a posteriori residual certificate, local identifiability, dense-versus-structured
-   complexity, spectral-frame physicality-and-equivalence, and the operator-system
-   truncation bound. Every figure and number is emitted by this package over six
+   complexity, spectral-frame physicality-and-equivalence, and the symmetric Fourier
+   generator bound. Every figure and number is emitted by this package over six
    experiments (five seeds each for the training studies), reported as mean ± a 95%
    confidence interval.
 
@@ -110,7 +115,28 @@ to the envelope `ρ̃_φ` and the lab state is the analytic rotation
 so it can be propagated to held-out initial states with an exact solver — the test
 that matters for device characterization.
 
-## Main results
+## Primary experimental result
+
+The bundled CSV is a deterministic transcription of the official Zenodo
+`Ramsey.zip` archive. `cptppinn-fetch-real-data` downloads the archive from the
+record API, verifies the Zenodo MD5 and a pinned SHA-256, and regenerates the CSV
+using only the Python standard library.
+
+On the eleven clean `|0⟩+|1⟩` traces, withholding every fourth phase point,
+the matrix-free spectral readout obtains RMSE `0.05134`, versus `0.05484` for
+linear interpolation. It wins on 10 of 11 traces, but the paired bootstrap
+interval `[-0.01145, 0.00924]` crosses zero; the paper therefore calls this
+improvement modest, not universal. Across all 177 traces it is slightly worse
+than interpolation (`0.09773` versus `0.09434`).
+
+The computational comparison uses the identical Bohr-anchored Sobolev
+objective. At 32 traces, matrix-free and explicit dense predictions agree to
+`9.44e-16`; the matrix-free path stores `1.03 MB` rather than `31.55 MB` and is
+`17.12×` faster on the recorded CPU run. At four traces it is slower. For all
+traces, implicit storage is
+`5.37 MB` versus a counterfactual `0.907 GB` dense design.
+
+## Controlled-study results
 
 All values are produced by this package and repeated over five seeds (redrawing both
 the network initialization and the measurement-noise realization); confidence
@@ -123,11 +149,14 @@ deterministic.
   **`0.985 ± 0.002`**, more than two orders of magnitude tighter, while remaining a
   valid density matrix by construction. The reliable envelope then identifies the
   dominant decay rates (`γ₁₀, γ₂₁`) to relative error `0.273 ± 0.025`.
-- **Operator-system spectral truncation (Experiment 6).** The hierarchy converges
-  monotonically to the exact generator: secular `N=0` reaches mean fidelity `0.760`
-  (`η_N ≈ 1.66×10¹`), rotating-wave `N=1` reaches `0.955` (`η_N ≈ 8.46`), `N=4`
-  reaches `0.999988`, and `N=8` reaches machine precision (`η_N ≈ 2.51×10⁻⁴`), with
-  the certificate tracking and bounding the error at every level.
+- **Symmetric Fourier truncation (Experiment 6).** On the stated two-qubit
+  simulation, the time-average level `N=0` reaches mean fidelity `0.760`
+  (`η_N ≈ 1.66×10¹`), the first symmetric band `N=1` reaches `0.955`
+  (`η_N ≈ 8.46`), `N=4` reaches `0.999988`, and `N=8` reaches the numerical
+  reference (`η_N ≈ 2.51×10⁻⁴`). The decreasing `η_N` is a conservative
+  bound on the `F→F` generator approximation. Trace-norm trajectory control has
+  an additional `√d` factor; neither quantity guarantees that every finite
+  partial sum is completely positive.
 - **Single-qubit identification (Experiment 1).** Among the neural methods the hard
   constraint is decisive (dephasing-rate error 13% versus >140% for the soft-penalty
   and unconstrained baselines) with mean fidelity `1.0000` and **zero** positivity
@@ -159,21 +188,16 @@ terms. Second, the fast coherent structure of open-system dynamics should be car
 by an analytic change of frame rather than learned, so the network represents only
 what is genuinely unknown — the slow dissipative envelope — which resolves the
 principal open problem of the structure-preserving approach and reduces rate
-identification to a measurement-noise question. The operator-system truncation
-furnishes a single, certified dial between the cheapest time-independent secular
-model and the exact generator, connecting open-system identification to the
-spectral-truncation program of noncommutative geometry. The results are deliberately
-scoped to controlled, fully reproducible simulations; hardware validation,
-superiority over every baseline, and production-scale acceleration are future
-targets, not claims made here.
+identification to a measurement-noise question. The symmetric Fourier diagnostic
+measures convergence of a low-frequency generator approximation; it does not certify
+complete positivity of a raw finite partial sum. A PSD-factor construction is required
+when the reduced generator itself must remain physical. The simulation results
+remain deliberately scoped: they test physicality, identifiability, transfer, and
+truncation under controlled conditions. The experimental Ramsey analysis is a
+real-data recovery task, not an end-to-end hardware-control demonstration.
+Superiority over every baseline and production-scale acceleration are not claimed.
 
 ## Installation and reproduction
-
-```bash
-pip install specops-cptppinn         # from PyPI
-```
-
-or from this source tree:
 
 ```bash
 cd code
@@ -181,8 +205,10 @@ pip install .                 # runtime deps: numpy, scipy, torch, matplotlib, c
 ```
 
 This installs the distribution **`specops-cptppinn`** and its console scripts
-`cptppinn-reproduce` / `cptppinn-validate` (legacy aliases `ctpcpinn-reproduce` /
-`ctpcpinn-validate` are also installed). The importable module is `ctpcpinn`:
+`cptppinn-real-data`, `cptppinn-fetch-real-data`, `cptppinn-reproduce`, and
+`cptppinn-validate` (legacy aliases `ctpcpinn-reproduce` /
+`ctpcpinn-validate` are also installed). The importable module is `ctpcpinn`.
+No unverified PyPI release is required or claimed:
 
 ```python
 import ctpcpinn
@@ -199,7 +225,22 @@ pip install ".[exact]"        # numpy 2.4.2, scipy 1.17.1, torch 2.10.0, matplot
 
 Python ≥ 3.9 is required. The simulations run on CPU; a GPU is not needed.
 
-### Reproduce the tables and figures
+### Reproduce the experimental analysis
+
+The primary analysis uses the bundled, checksum-traceable CSV and writes its
+evidence JSON, four LaTeX tables, and line/bar figures to an output directory:
+
+```bash
+cptppinn-real-data --output-dir real_results
+```
+
+To fetch the official source archive and independently derive the CSV:
+
+```bash
+cptppinn-fetch-real-data --output ramsey_zenodo15797402.csv
+```
+
+### Reproduce the controlled-study tables and figures
 
 The console entry point runs the six experiments sequentially in a single process
 and writes the LaTeX tables and PDF figures into an output directory of your choice:
@@ -207,48 +248,48 @@ and writes the LaTeX tables and PDF figures into an output directory of your cho
 ```bash
 cptppinn-reproduce                       # full run -> ./ctpcpinn_results/{tables,figures}
 cptppinn-reproduce --output-dir out      # full run -> out/{tables,figures}
-cptppinn-reproduce --in-place            # write into submission/{tables,figures}
+cptppinn-reproduce --in-place            # write into code/manuscript_assets
 cptppinn-reproduce --quick               # fast smoke test (2 seeds; not publication quality)
 cptppinn-reproduce --experiment exp1     # a single experiment
 ```
 
-The source-tree script `run_all.py` is the equivalent canonical entry point and
-writes directly into `submission/tables` and `submission/figures`:
+The source-tree script `scripts/reference_run_all.py` is the equivalent canonical entry point and
+writes directly into `code/manuscript_assets`:
 
 ```bash
-python run_all.py                        # full config; reproduces the paper
-python run_all.py --quick                # fast smoke test
-python run_one.py --experiment exp4      # a single experiment
+python scripts/reference_run_all.py                        # full config; reproduces the paper
+python scripts/reference_run_all.py --quick                # fast smoke test
+python scripts/reference_run_one.py exp4                   # a single experiment
 ```
 
 A dependency-light invariant check, and the full pytest suite:
 
 ```bash
 cptppinn-validate                        # operators, trace preservation, density/CPTP, compiler agreement
-pytest                                   # ctpcpinn/tests/
+pytest                                   # tests/
 ```
 
-Recompiling `submission/main.tex` after a run picks up the regenerated numbers
+Recompiling `main.tex` after a run picks up the regenerated numbers
 automatically.
 
 ### Regenerated figures and tables
 
 | Artifact | Source experiment |
 | --- | --- |
-| `figures/fig1_schematic.pdf` | Programmatic method-overview schematic |
 | `figures/exp1_parameter_recovery.pdf`, `figures/exp1_state_fidelity.pdf` | Single-qubit system identification |
 | `figures/exp2_sparse_measurements.pdf` | Sparse-measurement ablation |
 | `figures/exp3_qutrit_leakage.pdf` | Fast qutrit reconstruction (spectral frame) |
 | `figures/exp4_gate_fidelity.pdf` | Two-qubit dissipative gate, held-out generalization |
 | `figures/exp5_compiler_scaling.pdf` | Dense-versus-structured compiler scaling |
-| `figures/exp6_spectral_truncation.pdf` | Operator-system spectral truncation hierarchy |
+| `figures/exp6_spectral_truncation.pdf` | Symmetric Fourier approximation diagnostic |
 | `tables/exp3_leakage_results.tex` … `exp6_spectral_truncation.tex` | Corresponding LaTeX result tables |
+| `real_data_results.json`, `figures/real_ramsey_*.pdf`, `tables/real_*.tex` | Experimental Ramsey evidence |
 
 ### Determinism
 
 Each training experiment (Experiments 1–4) is repeated over the fixed seeds
 `[0, 1, 2, 3, 4]` and reported as mean ± 95% Student-*t* confidence interval;
-Experiments 5 (compiler scaling) and 6 (operator-system spectral truncation) are
+Experiments 5 (compiler scaling) and 6 (symmetric Fourier approximation) are
 deterministic. The full configuration is 3000 Adam epochs at learning rate 10⁻³,
 100 time points, and measurement-noise standard deviation 0.02
 (`ctpcpinn/config.py`, `FULL_CONFIG`); the quick configuration uses seeds `[0, 1]`,
@@ -273,7 +314,7 @@ experiment logic.
 | Flag | Default | Effect |
 | --- | --- | --- |
 | `--output-dir DIR` | `./ctpcpinn_results` | Write `DIR/{tables,figures}`. |
-| `--in-place` | off | Write directly into `submission/{tables,figures}`. |
+| `--in-place` | off | Write directly into `code/manuscript_assets`. |
 | `--quick` | off | Use `QUICK_CONFIG` (2 seeds, 200 epochs) — a fast smoke test, **not** publication quality. |
 | `--experiment {exp1..exp6}` | all | Run a single experiment. |
 | `--threads N` | 1 | BLAS/OMP threads; keep at 1 for bit-identical numbers. |
@@ -329,9 +370,12 @@ be changed without editing model code:
 Lindblad systems are described symbolically through the compiler IR
 (`ctpcpinn/compiler.py:QuantumModelIR`): supply `H`, the jump operators `L_k`, the
 rates, and observables, then call `CompiledLindbladModel` to lower to a dense
-Liouvillian or a matrix-free structured kernel. Operator-system truncation of any
-such generator is available directly via
-`ctpcpinn.spectral.generator_fourier_modes` and `propagate_truncated`.
+Liouvillian or a matrix-free structured kernel. A symmetric temporal-Fourier
+approximation of a sampled time-dependent generator is available via
+`ctpcpinn.spectral.generator_fourier_modes` and `propagate_truncated`. This is a
+linear approximation diagnostic: finite partial sums preserve the paired
+Hermiticity/trace symmetries, but are not guaranteed to remain GKSL or completely
+positive.
 
 To add a new experiment:
 
@@ -360,18 +404,21 @@ net = SpectralDensityNet(H)          # learns the slow interaction-picture envel
 code/
 ├── pyproject.toml              # package metadata, entry points, pinned deps
 ├── README.md                   # this file
-├── run_all.py / run_one.py     # source-tree reproduction entry points
-├── generate_paper_data.py      # regenerates committed data artifacts
-└── ctpcpinn/
+├── scripts/                    # standardized and source-tree reproduction entry points
+├── manuscript_assets/          # locked tables, line/bar figures, evidence
+└── src/ctpcpinn/
     ├── reproduce.py            # cptppinn-reproduce console script
+    ├── real_data.py            # matrix-free experimental Ramsey analysis
+    ├── fetch_real_data.py      # official archive fetch and hash verification
+    ├── data/                   # derived CSV and source metadata
     ├── validate.py             # cptppinn-validate console script
     ├── foundations.py          # theory-to-code map, from first principles
     ├── operators.py / lindblad.py / solvers.py
     ├── models.py / losses.py / metrics.py / stats.py
     ├── compiler.py / ir.py     # matrix-free open-system compiler and IR
-    ├── spectral.py             # spectral frame + operator-system truncation + rate readouts
+    ├── spectral.py             # spectral frame + Fourier diagnostic + rate readouts
     ├── theory.py               # statements of the guarantees
-    ├── experiments/            # exp1–exp6 (exp6 = operator-system spectral truncation)
+    ├── experiments/            # exp1–exp6 (exp6 = Fourier approximation)
     └── tests/                  # invariant tests
 ```
 
@@ -382,8 +429,7 @@ If this package or its method is used, please cite the manuscript:
 ```bibtex
 @article{huynh2026cptppinn,
   author  = {Huynh, Molena},
-  title   = {Structure-preserving physics-informed learning of open quantum
-             dynamics with spectral-frame encodings and operator-system truncation},
+  title   = {Matrix-Free Learning of Open Quantum Systems from Measured Signals},
   journal = {arXiv preprint},
   year    = {2026},
   note    = {Part of the spectral-truncation operators (specops) program}
@@ -401,3 +447,20 @@ python -m build                          # builds sdist + wheel into dist/
 ## License
 
 MIT. See `../LICENSE`.
+
+<!-- standardized-public-entry-points -->
+## Standard public entry points
+
+From the repository root:
+
+```bash
+python -m pip install -e code
+python code/scripts/download_data.py
+python code/scripts/reproduce.py
+python code/scripts/make_figures.py
+python code/scripts/validate_release.py
+```
+
+The wrappers delegate to the package's existing scientific entry points.
+Dataset provenance is in `data/`, locked evidence in `results/`, and
+manuscript bibliography/figures in `manuscript_assets/`.

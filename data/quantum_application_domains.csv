@@ -1,5 +1,0 @@
-benchmark_family,representative_system_class,why_transfer_matters
-Harmonic confinement,molecular vibrations and trapped-ion motional modes,tests baseline eigenstate recovery under locally quadratic physics
-Anharmonic confinement,bond-stretching and nonlinear confinement models,tests transfer beyond exactly solvable quadratic structure
-Double-well tunneling,ammonia inversion and coupled quantum dots,tests multi-basin optimization and symmetry-sensitive tunneling structure
-Time-dependent transport,electron neutron and cold-atom wavepacket propagation,tests whether stationary PINN design principles extend to dynamical inference

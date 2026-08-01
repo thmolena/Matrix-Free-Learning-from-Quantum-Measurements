@@ -1,0 +1,24 @@
+{
+  "creators": [
+    "Artem Kovalenko",
+    "Minh Tuan Pham",
+    "Kratveer Singh",
+    "Ondrej Cip",
+    "Lukas Slodicka"
+  ],
+  "derived_csv": {
+    "observations": 40787,
+    "sha256": "197424d048c612e5ab8605129a45a46108153758af257ae5b1b63c6436291711",
+    "traces": 177
+  },
+  "doi": "10.5281/zenodo.15797402",
+  "license": "CC-BY-4.0",
+  "record_url": "https://zenodo.org/records/15797402",
+  "source_archive": {
+    "filename": "Ramsey.zip",
+    "md5": "c78b673a91a93399b1b4f13699f31ce8",
+    "sha256": "506b83ec63b0934dc813c630625402bd81070ed3529ff3c81af66c0208f0fec7",
+    "url": "https://zenodo.org/api/records/15797402/files/Ramsey.zip/content"
+  },
+  "title": "Experimental Data - Quantum non-Gaussian coherences of an oscillating atom"
+}

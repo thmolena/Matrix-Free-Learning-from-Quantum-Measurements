@@ -1,0 +1,14 @@
+\begin{table}[ht]
+\centering
+\caption{Experiment 3: fast qutrit reconstruction. Mean state fidelity and mean relative recovery error of the dominant decay rates ($\gamma_{10},\gamma_{21}$) for a plain MLP, a Fourier-feature density network, and the spectral-frame (interaction-picture) density network. Rates are read out by an integral least-squares fit of the linear-in-rates generator to the learned interaction-picture envelope; this readout is only meaningful for a reconstructed trajectory, so it is reported only for methods reaching mean fidelity $\ge0.9$ (`---' otherwise). Mean $\pm$ 95\% CI over 5 seeds.}
+\label{tab:exp3}
+\begin{tabular}{lcc}
+\toprule
+Density network & Mean state fidelity & Dominant-rate error \\
+\midrule
+Plain MLP & 0.7657 $\pm$ 0.3463 & --- \\
+Fourier & 0.5238 $\pm$ 0.4897 & --- \\
+Spectral (ours) & 0.9847 $\pm$ 0.0015 & 0.273 $\pm$ 0.025 \\
+\bottomrule
+\end{tabular}
+\end{table}

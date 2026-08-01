@@ -1,0 +1,2144 @@
+{
+  "all_trace_metrics": [
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.05778655305765966,
+      "matrix_free_rmse": 0.11262446689423923,
+      "mean_rmse": 0.32785818571089803,
+      "n_test": 49,
+      "source_file": "Ramsey/0+1/step_2_delay_0.1_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 0
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.043175576832077275,
+      "matrix_free_rmse": 0.03904329987066763,
+      "mean_rmse": 0.32678360924002964,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_0.2_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 1
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.04492142899116964,
+      "matrix_free_rmse": 0.038083902031090494,
+      "mean_rmse": 0.3348946043296988,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_0.5_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 2
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.05629781918018179,
+      "matrix_free_rmse": 0.04271019887953923,
+      "mean_rmse": 0.2952576703605201,
+      "n_test": 45,
+      "source_file": "Ramsey/0+1/step_2_delay_10_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 3
+    },
+    {
+      "delay_ms": 120.0,
+      "linear_rmse": 0.0602891583014364,
+      "matrix_free_rmse": 0.055229214960420166,
+      "mean_rmse": 0.10932514948707622,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_120_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 4
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.040780430089209084,
+      "matrix_free_rmse": 0.03072875112365135,
+      "mean_rmse": 0.3421611696243276,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_1_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 5
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.060965956287808334,
+      "matrix_free_rmse": 0.05668111922715077,
+      "mean_rmse": 0.2656022117633078,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_20_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 6
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.0540128809113884,
+      "matrix_free_rmse": 0.04342206393522731,
+      "mean_rmse": 0.3360102251556431,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_2_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 7
+    },
+    {
+      "delay_ms": 40.0,
+      "linear_rmse": 0.06967705005486258,
+      "matrix_free_rmse": 0.05442930700278233,
+      "mean_rmse": 0.20536522960164544,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_40_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 8
+    },
+    {
+      "delay_ms": 5.0,
+      "linear_rmse": 0.04887873192690874,
+      "matrix_free_rmse": 0.042815444504839935,
+      "mean_rmse": 0.3106808235213344,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_5_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 9
+    },
+    {
+      "delay_ms": 80.0,
+      "linear_rmse": 0.06641133273981988,
+      "matrix_free_rmse": 0.04898373268743508,
+      "mean_rmse": 0.13050271690359735,
+      "n_test": 43,
+      "source_file": "Ramsey/0+1/step_2_delay_80_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 10
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.042973702777801014,
+      "matrix_free_rmse": 0.04100625964230016,
+      "mean_rmse": 0.3109271970979957,
+      "n_test": 46,
+      "source_file": "Ramsey/0+2/step_2_delay_0.1_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 11
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.05495627632666088,
+      "matrix_free_rmse": 0.08860442952523587,
+      "mean_rmse": 0.3221898718018664,
+      "n_test": 52,
+      "source_file": "Ramsey/0+2/step_2_delay_0.2_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 12
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.047557356188707274,
+      "matrix_free_rmse": 0.05368196912311789,
+      "mean_rmse": 0.32805033344990786,
+      "n_test": 47,
+      "source_file": "Ramsey/0+2/step_2_delay_0.5_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 13
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.04838141037180725,
+      "matrix_free_rmse": 0.03769294289059619,
+      "mean_rmse": 0.2948896135137128,
+      "n_test": 46,
+      "source_file": "Ramsey/0+2/step_2_delay_10_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 14
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.04770835311055852,
+      "matrix_free_rmse": 0.04143736189522765,
+      "mean_rmse": 0.3346857924241695,
+      "n_test": 46,
+      "source_file": "Ramsey/0+2/step_2_delay_1_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 15
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.0619782570570203,
+      "matrix_free_rmse": 0.051694484761368696,
+      "mean_rmse": 0.2502776886958341,
+      "n_test": 46,
+      "source_file": "Ramsey/0+2/step_2_delay_20_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 16
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.04273273869671517,
+      "matrix_free_rmse": 0.043484823691080865,
+      "mean_rmse": 0.3227293809186399,
+      "n_test": 46,
+      "source_file": "Ramsey/0+2/step_2_delay_2_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 17
+    },
+    {
+      "delay_ms": 5.0,
+      "linear_rmse": 0.052170289729258586,
+      "matrix_free_rmse": 0.04550345971476457,
+      "mean_rmse": 0.30038734334242334,
+      "n_test": 46,
+      "source_file": "Ramsey/0+2/step_2_delay_5_ms_(1).xlsx",
+      "state": "0+2",
+      "trace_id": 18
+    },
+    {
+      "delay_ms": 5.0,
+      "linear_rmse": 0.05224712341136022,
+      "matrix_free_rmse": 0.043730774991422056,
+      "mean_rmse": 0.28676987542496013,
+      "n_test": 21,
+      "source_file": "Ramsey/0+2/step_2_delay_5_ms_(2).xlsx",
+      "state": "0+2",
+      "trace_id": 19
+    },
+    {
+      "delay_ms": 80.0,
+      "linear_rmse": 0.06835431096834337,
+      "matrix_free_rmse": 0.08286112091725122,
+      "mean_rmse": 0.0981792334522469,
+      "n_test": 93,
+      "source_file": "Ramsey/0+2/step_2_delay_80_ms.xlsx",
+      "state": "0+2",
+      "trace_id": 20
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.10303098861694288,
+      "matrix_free_rmse": 0.10634434631630264,
+      "mean_rmse": 0.2962697078017342,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.1_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 21
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.1009142985516617,
+      "matrix_free_rmse": 0.12005994754607219,
+      "mean_rmse": 0.29903199034970274,
+      "n_test": 92,
+      "source_file": "Ramsey/0+3/step_1_delay_0.1_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 22
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.11129540272026814,
+      "matrix_free_rmse": 0.10540569483286723,
+      "mean_rmse": 0.2847756830859452,
+      "n_test": 90,
+      "source_file": "Ramsey/0+3/step_1_delay_0.1_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 23
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.11235735767708241,
+      "matrix_free_rmse": 0.10484860621744924,
+      "mean_rmse": 0.3014830664239552,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.1_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 24
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.11170998558374663,
+      "matrix_free_rmse": 0.12459875709695326,
+      "mean_rmse": 0.30375352976100867,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.1_ms_repetitions_25_(4).xlsx",
+      "state": "0+3",
+      "trace_id": 25
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.10381607668264957,
+      "matrix_free_rmse": 0.11240472464779779,
+      "mean_rmse": 0.2900036989499684,
+      "n_test": 90,
+      "source_file": "Ramsey/0+3/step_1_delay_0.1_ms_repetitions_25_(5).xlsx",
+      "state": "0+3",
+      "trace_id": 26
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.1058510483861376,
+      "matrix_free_rmse": 0.09762331002295654,
+      "mean_rmse": 0.2894061845285049,
+      "n_test": 90,
+      "source_file": "Ramsey/0+3/step_1_delay_0.2_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 27
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.10054794930723406,
+      "matrix_free_rmse": 0.09453558827281408,
+      "mean_rmse": 0.30013292079235737,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.2_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 28
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.10087786717621218,
+      "matrix_free_rmse": 0.10543294724048566,
+      "mean_rmse": 0.27836172278139765,
+      "n_test": 93,
+      "source_file": "Ramsey/0+3/step_1_delay_0.2_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 29
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.10789713177270338,
+      "matrix_free_rmse": 0.12505833696991644,
+      "mean_rmse": 0.280503918785899,
+      "n_test": 67,
+      "source_file": "Ramsey/0+3/step_1_delay_0.2_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 30
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.09032298576908182,
+      "matrix_free_rmse": 0.09945773771361309,
+      "mean_rmse": 0.3041145209139096,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.5_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 31
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.09911698050372512,
+      "matrix_free_rmse": 0.12138189649427039,
+      "mean_rmse": 0.28852248807746567,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.5_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 32
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.08407218248702639,
+      "matrix_free_rmse": 0.0863739016619186,
+      "mean_rmse": 0.2845118776905607,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.5_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 33
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.10011933178470041,
+      "matrix_free_rmse": 0.141151986360566,
+      "mean_rmse": 0.2895315825837189,
+      "n_test": 67,
+      "source_file": "Ramsey/0+3/step_1_delay_0.5_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 34
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.09399555752887918,
+      "matrix_free_rmse": 0.09328977991099584,
+      "mean_rmse": 0.2851679243627594,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_0.5_ms_repetitions_25_(4).xlsx",
+      "state": "0+3",
+      "trace_id": 35
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.10986310988052979,
+      "matrix_free_rmse": 0.15454289267774673,
+      "mean_rmse": 0.2657057686193202,
+      "n_test": 103,
+      "source_file": "Ramsey/0+3/step_1_delay_10_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 36
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.10258871499558049,
+      "matrix_free_rmse": 0.12408183445561383,
+      "mean_rmse": 0.2773495693808668,
+      "n_test": 90,
+      "source_file": "Ramsey/0+3/step_1_delay_10_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 37
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.1183388424510442,
+      "matrix_free_rmse": 0.12601323711325713,
+      "mean_rmse": 0.24346429284114532,
+      "n_test": 98,
+      "source_file": "Ramsey/0+3/step_1_delay_15_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 38
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.11226827987756233,
+      "matrix_free_rmse": 0.127077215461193,
+      "mean_rmse": 0.23998906868109587,
+      "n_test": 96,
+      "source_file": "Ramsey/0+3/step_1_delay_15_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 39
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.11040385404962541,
+      "matrix_free_rmse": 0.11186981116656629,
+      "mean_rmse": 0.23980202771540504,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_15_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 40
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.11602098760662828,
+      "matrix_free_rmse": 0.1439818126508673,
+      "mean_rmse": 0.2523313931857555,
+      "n_test": 92,
+      "source_file": "Ramsey/0+3/step_1_delay_15_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 41
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.10054794930723406,
+      "matrix_free_rmse": 0.11839448932905483,
+      "mean_rmse": 0.2865436356981376,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_1_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 42
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.11498125784306072,
+      "matrix_free_rmse": 0.10852042442491762,
+      "mean_rmse": 0.3101785846781149,
+      "n_test": 58,
+      "source_file": "Ramsey/0+3/step_1_delay_1_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 43
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.09675504359741904,
+      "matrix_free_rmse": 0.08405345232815362,
+      "mean_rmse": 0.2868661650036741,
+      "n_test": 52,
+      "source_file": "Ramsey/0+3/step_1_delay_1_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 44
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.09543423027243585,
+      "matrix_free_rmse": 0.10482464483731757,
+      "mean_rmse": 0.2757185657550942,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_1_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 45
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.13376596477928657,
+      "matrix_free_rmse": 0.1215351811895159,
+      "mean_rmse": 0.23623227518657938,
+      "n_test": 90,
+      "source_file": "Ramsey/0+3/step_1_delay_20_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 46
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.1152073229995701,
+      "matrix_free_rmse": 0.15951237792116127,
+      "mean_rmse": 0.24364131011741136,
+      "n_test": 99,
+      "source_file": "Ramsey/0+3/step_1_delay_20_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 47
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.10526784257938736,
+      "matrix_free_rmse": 0.11623137298847414,
+      "mean_rmse": 0.25602456770219884,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_20_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 48
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.10324408292653221,
+      "matrix_free_rmse": 0.11332038048606857,
+      "mean_rmse": 0.2873542352789044,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_2_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 49
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.10583005244258362,
+      "matrix_free_rmse": 0.08872622862875544,
+      "mean_rmse": 0.2837943209828562,
+      "n_test": 97,
+      "source_file": "Ramsey/0+3/step_1_delay_2_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 50
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.09614549414276284,
+      "matrix_free_rmse": 0.09336403426532826,
+      "mean_rmse": 0.29370354291781386,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_2_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 51
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.10388120305342101,
+      "matrix_free_rmse": 0.12770970861201814,
+      "mean_rmse": 0.29579567663606215,
+      "n_test": 92,
+      "source_file": "Ramsey/0+3/step_1_delay_2_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 52
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.08968810424998425,
+      "matrix_free_rmse": 0.09812381349558058,
+      "mean_rmse": 0.2763417586824639,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_4_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 53
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.10200193921879919,
+      "matrix_free_rmse": 0.1096780442019203,
+      "mean_rmse": 0.2958537594690416,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_4_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 54
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.10275767506588612,
+      "matrix_free_rmse": 0.12863730408456303,
+      "mean_rmse": 0.27130062895287643,
+      "n_test": 93,
+      "source_file": "Ramsey/0+3/step_1_delay_4_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 55
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.11042375918889281,
+      "matrix_free_rmse": 0.11252975026088008,
+      "mean_rmse": 0.2859783883156882,
+      "n_test": 91,
+      "source_file": "Ramsey/0+3/step_1_delay_4_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 56
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.0955833155564608,
+      "matrix_free_rmse": 0.11524390807709028,
+      "mean_rmse": 0.28037942539304983,
+      "n_test": 94,
+      "source_file": "Ramsey/0+3/step_1_delay_6_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 57
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.11840080236214617,
+      "matrix_free_rmse": 0.1832194933027399,
+      "mean_rmse": 0.2759512112561477,
+      "n_test": 128,
+      "source_file": "Ramsey/0+3/step_1_delay_6_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 58
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.10439242203233805,
+      "matrix_free_rmse": 0.11546338318019704,
+      "mean_rmse": 0.29737435633600523,
+      "n_test": 90,
+      "source_file": "Ramsey/0+3/step_1_delay_6_ms_repetitions_25_(2).xlsx",
+      "state": "0+3",
+      "trace_id": 59
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.09924156835161811,
+      "matrix_free_rmse": 0.1163072573653239,
+      "mean_rmse": 0.2781252148162731,
+      "n_test": 90,
+      "source_file": "Ramsey/0+3/step_1_delay_6_ms_repetitions_25_(3).xlsx",
+      "state": "0+3",
+      "trace_id": 60
+    },
+    {
+      "delay_ms": 30.0,
+      "linear_rmse": 0.12032564510346586,
+      "matrix_free_rmse": 0.11649838015160632,
+      "mean_rmse": 0.20047405079679637,
+      "n_test": 46,
+      "source_file": "Ramsey/0+3/step_2_delay_30_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 61
+    },
+    {
+      "delay_ms": 30.0,
+      "linear_rmse": 0.12211897263841055,
+      "matrix_free_rmse": 0.11865823826891066,
+      "mean_rmse": 0.21669384128653027,
+      "n_test": 46,
+      "source_file": "Ramsey/0+3/step_2_delay_30_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 62
+    },
+    {
+      "delay_ms": 40.0,
+      "linear_rmse": 0.11397940317367031,
+      "matrix_free_rmse": 0.11271812638737069,
+      "mean_rmse": 0.18685522505843485,
+      "n_test": 46,
+      "source_file": "Ramsey/0+3/step_2_delay_40_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 63
+    },
+    {
+      "delay_ms": 40.0,
+      "linear_rmse": 0.12024280990285173,
+      "matrix_free_rmse": 0.11933080100660219,
+      "mean_rmse": 0.16695830964792924,
+      "n_test": 48,
+      "source_file": "Ramsey/0+3/step_2_delay_40_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 64
+    },
+    {
+      "delay_ms": 60.0,
+      "linear_rmse": 0.12890846094941877,
+      "matrix_free_rmse": 0.10670616166339579,
+      "mean_rmse": 0.13216463289799524,
+      "n_test": 46,
+      "source_file": "Ramsey/0+3/step_2_delay_60_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 65
+    },
+    {
+      "delay_ms": 60.0,
+      "linear_rmse": 0.11414276774536103,
+      "matrix_free_rmse": 0.10989633064299814,
+      "mean_rmse": 0.1362265577734615,
+      "n_test": 49,
+      "source_file": "Ramsey/0+3/step_2_delay_60_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 66
+    },
+    {
+      "delay_ms": 80.0,
+      "linear_rmse": 0.13704965777283856,
+      "matrix_free_rmse": 0.11212070610215936,
+      "mean_rmse": 0.11496213752597155,
+      "n_test": 46,
+      "source_file": "Ramsey/0+3/step_2_delay_80_ms_repetitions_25_(0).xlsx",
+      "state": "0+3",
+      "trace_id": 67
+    },
+    {
+      "delay_ms": 80.0,
+      "linear_rmse": 0.12476064039313177,
+      "matrix_free_rmse": 0.10755785838488234,
+      "mean_rmse": 0.11130278754830118,
+      "n_test": 46,
+      "source_file": "Ramsey/0+3/step_2_delay_80_ms_repetitions_25_(1).xlsx",
+      "state": "0+3",
+      "trace_id": 68
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.08816979666233933,
+      "matrix_free_rmse": 0.084032276584739,
+      "mean_rmse": 0.31300427287415483,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_0.1_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 69
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.10810622795074822,
+      "matrix_free_rmse": 0.09168977365189057,
+      "mean_rmse": 0.2884968015160658,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_0.1_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 70
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.099958324649159,
+      "matrix_free_rmse": 0.09469856321043077,
+      "mean_rmse": 0.3145237988759406,
+      "n_test": 48,
+      "source_file": "Ramsey/0+4/step_2_delay_0.1_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 71
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.11873603334302138,
+      "matrix_free_rmse": 0.12759921784398742,
+      "mean_rmse": 0.29749924001446254,
+      "n_test": 57,
+      "source_file": "Ramsey/0+4/step_2_delay_0.2_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 72
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.1139794031736703,
+      "matrix_free_rmse": 0.12459805967946702,
+      "mean_rmse": 0.2781045884269677,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_0.2_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 73
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.11328430311977619,
+      "matrix_free_rmse": 0.10501720984815814,
+      "mean_rmse": 0.31533790918325516,
+      "n_test": 48,
+      "source_file": "Ramsey/0+4/step_2_delay_0.2_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 74
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.08550503558920441,
+      "matrix_free_rmse": 0.18981834130033964,
+      "mean_rmse": 0.29503615912704156,
+      "n_test": 54,
+      "source_file": "Ramsey/0+4/step_2_delay_0.5_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 75
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.10168151471522544,
+      "matrix_free_rmse": 0.10220124967526664,
+      "mean_rmse": 0.31154385149193387,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_0.5_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 76
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.11549515329563664,
+      "matrix_free_rmse": 0.11129479020503595,
+      "mean_rmse": 0.3129448089280472,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_0.5_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 77
+    },
+    {
+      "delay_ms": 1.5,
+      "linear_rmse": 0.10526562147173116,
+      "matrix_free_rmse": 0.1082477597286849,
+      "mean_rmse": 0.26915991134856404,
+      "n_test": 47,
+      "source_file": "Ramsey/0+4/step_2_delay_1.5_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 78
+    },
+    {
+      "delay_ms": 1.5,
+      "linear_rmse": 0.09699656351300975,
+      "matrix_free_rmse": 0.10129451458187903,
+      "mean_rmse": 0.26758886865044,
+      "n_test": 48,
+      "source_file": "Ramsey/0+4/step_2_delay_1.5_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 79
+    },
+    {
+      "delay_ms": 1.5,
+      "linear_rmse": 0.10558326613131705,
+      "matrix_free_rmse": 0.1305954346000218,
+      "mean_rmse": 0.24762276598993263,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_1.5_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 80
+    },
+    {
+      "delay_ms": 1.5,
+      "linear_rmse": 0.10451052090383933,
+      "matrix_free_rmse": 0.1330861478229068,
+      "mean_rmse": 0.28614189167079973,
+      "n_test": 49,
+      "source_file": "Ramsey/0+4/step_2_delay_1.5_ms_repetitions_25_(3).xlsx",
+      "state": "0+4",
+      "trace_id": 81
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.11448311219880163,
+      "matrix_free_rmse": 0.10696581366094886,
+      "mean_rmse": 0.23312746096865825,
+      "n_test": 47,
+      "source_file": "Ramsey/0+4/step_2_delay_10_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 82
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.11649348354014089,
+      "matrix_free_rmse": 0.14259834532481133,
+      "mean_rmse": 0.2001103194323187,
+      "n_test": 82,
+      "source_file": "Ramsey/0+4/step_2_delay_10_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 83
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.12133317407219997,
+      "matrix_free_rmse": 0.10609609449307093,
+      "mean_rmse": 0.22371793149112534,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_10_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 84
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.12638794659095565,
+      "matrix_free_rmse": 0.1369239614710725,
+      "mean_rmse": 0.2207175324389104,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_15_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 85
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.12618137394415543,
+      "matrix_free_rmse": 0.10780006290800397,
+      "mean_rmse": 0.20735823473671713,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_15_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 86
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.11974610822395275,
+      "matrix_free_rmse": 0.10141206137210759,
+      "mean_rmse": 0.19933108870618435,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_15_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 87
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.13179529581893276,
+      "matrix_free_rmse": 0.11488680877589083,
+      "mean_rmse": 0.2611547008533022,
+      "n_test": 40,
+      "source_file": "Ramsey/0+4/step_2_delay_1_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 88
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.11340006379224443,
+      "matrix_free_rmse": 0.08746883316466485,
+      "mean_rmse": 0.27739379503198,
+      "n_test": 47,
+      "source_file": "Ramsey/0+4/step_2_delay_1_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 89
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.09411871935663665,
+      "matrix_free_rmse": 0.11156739654682492,
+      "mean_rmse": 0.3051214595709608,
+      "n_test": 48,
+      "source_file": "Ramsey/0+4/step_2_delay_1_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 90
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.10492233152276934,
+      "matrix_free_rmse": 0.10024132141455533,
+      "mean_rmse": 0.2706212692315584,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_1_ms_repetitions_25_(3).xlsx",
+      "state": "0+4",
+      "trace_id": 91
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.13019216566291536,
+      "matrix_free_rmse": 0.1255781175922335,
+      "mean_rmse": 0.1975795515512361,
+      "n_test": 48,
+      "source_file": "Ramsey/0+4/step_2_delay_20_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 92
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.13687846538339873,
+      "matrix_free_rmse": 0.13355256255225545,
+      "mean_rmse": 0.1880043481428951,
+      "n_test": 56,
+      "source_file": "Ramsey/0+4/step_2_delay_20_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 93
+    },
+    {
+      "delay_ms": 25.0,
+      "linear_rmse": 0.11074864856012798,
+      "matrix_free_rmse": 0.1433794236495569,
+      "mean_rmse": 0.1646971347620547,
+      "n_test": 95,
+      "source_file": "Ramsey/0+4/step_2_delay_25_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 94
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.1278296739099138,
+      "matrix_free_rmse": 0.11194632700921392,
+      "mean_rmse": 0.25009273016891204,
+      "n_test": 47,
+      "source_file": "Ramsey/0+4/step_2_delay_2_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 95
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.13644556168797806,
+      "matrix_free_rmse": 0.13526154813470093,
+      "mean_rmse": 0.2536154916984367,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_2_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 96
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.1058702537934895,
+      "matrix_free_rmse": 0.10949048848259756,
+      "mean_rmse": 0.29493769076707826,
+      "n_test": 47,
+      "source_file": "Ramsey/0+4/step_2_delay_2_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 97
+    },
+    {
+      "delay_ms": 3.0,
+      "linear_rmse": 0.09851064828782193,
+      "matrix_free_rmse": 0.1165823518385519,
+      "mean_rmse": 0.26593869641562345,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_3_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 98
+    },
+    {
+      "delay_ms": 3.0,
+      "linear_rmse": 0.11470188202087371,
+      "matrix_free_rmse": 0.09965085433027504,
+      "mean_rmse": 0.2668842842357389,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_3_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 99
+    },
+    {
+      "delay_ms": 3.0,
+      "linear_rmse": 0.12727922061357855,
+      "matrix_free_rmse": 0.13847960289205144,
+      "mean_rmse": 0.25478891519127717,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_3_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 100
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.10762747543907064,
+      "matrix_free_rmse": 0.201681472906879,
+      "mean_rmse": 0.2640059191844597,
+      "n_test": 98,
+      "source_file": "Ramsey/0+4/step_2_delay_4_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 101
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.11650713730702625,
+      "matrix_free_rmse": 0.10582632312757224,
+      "mean_rmse": 0.2640580236189021,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_4_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 102
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.12535167920000462,
+      "matrix_free_rmse": 0.11430711125939412,
+      "mean_rmse": 0.24262027287634325,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_6_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 103
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.10043384151638894,
+      "matrix_free_rmse": 0.08457935121870441,
+      "mean_rmse": 0.24237050038194294,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_6_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 104
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.1252517464948094,
+      "matrix_free_rmse": 0.1293690079364248,
+      "mean_rmse": 0.23801976024252217,
+      "n_test": 50,
+      "source_file": "Ramsey/0+4/step_2_delay_6_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 105
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.12893796958227627,
+      "matrix_free_rmse": 0.13649353216463656,
+      "mean_rmse": 0.25674791327541324,
+      "n_test": 48,
+      "source_file": "Ramsey/0+4/step_2_delay_6_ms_repetitions_25_(3).xlsx",
+      "state": "0+4",
+      "trace_id": 106
+    },
+    {
+      "delay_ms": 8.0,
+      "linear_rmse": 0.14211290733558493,
+      "matrix_free_rmse": 0.14377341795524254,
+      "mean_rmse": 0.21503622402702272,
+      "n_test": 51,
+      "source_file": "Ramsey/0+4/step_2_delay_8_ms_repetitions_25_(0).xlsx",
+      "state": "0+4",
+      "trace_id": 107
+    },
+    {
+      "delay_ms": 8.0,
+      "linear_rmse": 0.10452506970138041,
+      "matrix_free_rmse": 0.09132068284771734,
+      "mean_rmse": 0.25141553248451415,
+      "n_test": 51,
+      "source_file": "Ramsey/0+4/step_2_delay_8_ms_repetitions_25_(1).xlsx",
+      "state": "0+4",
+      "trace_id": 108
+    },
+    {
+      "delay_ms": 8.0,
+      "linear_rmse": 0.1306172636569048,
+      "matrix_free_rmse": 0.1299119305798264,
+      "mean_rmse": 0.25315232369470064,
+      "n_test": 46,
+      "source_file": "Ramsey/0+4/step_2_delay_8_ms_repetitions_25_(2).xlsx",
+      "state": "0+4",
+      "trace_id": 109
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.12014484012514084,
+      "matrix_free_rmse": 0.12830798461202947,
+      "mean_rmse": 0.28609205100116597,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_0.1_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 110
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.1193096081994055,
+      "matrix_free_rmse": 0.09393438892588984,
+      "mean_rmse": 0.2816720263618356,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_0.1_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 111
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.13104927715740464,
+      "matrix_free_rmse": 0.12033635679824538,
+      "mean_rmse": 0.3017176564462726,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_0.1_ms_repetitions_25_(2).xlsx",
+      "state": "0+6",
+      "trace_id": 112
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.13124404748406687,
+      "matrix_free_rmse": 0.11896903026416826,
+      "mean_rmse": 0.2990242586618117,
+      "n_test": 48,
+      "source_file": "Ramsey/0+6/step_2_delay_0.2_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 113
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.1220121162907157,
+      "matrix_free_rmse": 0.10577252880623993,
+      "mean_rmse": 0.28178644722012736,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_0.5_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 114
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.1645018831661735,
+      "matrix_free_rmse": 0.15404502802037467,
+      "mean_rmse": 0.23418272527882172,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_10_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 115
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.12489995996796799,
+      "matrix_free_rmse": 0.16077483199377024,
+      "mean_rmse": 0.2375674043401962,
+      "n_test": 48,
+      "source_file": "Ramsey/0+6/step_2_delay_10_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 116
+    },
+    {
+      "delay_ms": 12.0,
+      "linear_rmse": 0.13429364321774748,
+      "matrix_free_rmse": 0.12878184159561235,
+      "mean_rmse": 0.23253949363315565,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_12_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 117
+    },
+    {
+      "delay_ms": 12.0,
+      "linear_rmse": 0.14925903949029426,
+      "matrix_free_rmse": 0.14272950054121114,
+      "mean_rmse": 0.2178958396422872,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_12_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 118
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.13237373990918236,
+      "matrix_free_rmse": 0.11318503760291466,
+      "mean_rmse": 0.19198228966882663,
+      "n_test": 57,
+      "source_file": "Ramsey/0+6/step_2_delay_15_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 119
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.13445542335497376,
+      "matrix_free_rmse": 0.12299768714934425,
+      "mean_rmse": 0.22069651776668248,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_15_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 120
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.12638794659095567,
+      "matrix_free_rmse": 0.13895099921395282,
+      "mean_rmse": 0.29984780628755586,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_1_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 121
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.13279323233204124,
+      "matrix_free_rmse": 0.16199847254443206,
+      "mean_rmse": 0.3031460998151141,
+      "n_test": 47,
+      "source_file": "Ramsey/0+6/step_2_delay_1_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 122
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.1363151428925568,
+      "matrix_free_rmse": 0.14972746254665587,
+      "mean_rmse": 0.19015919251646687,
+      "n_test": 77,
+      "source_file": "Ramsey/0+6/step_2_delay_20_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 123
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.13739818364725648,
+      "matrix_free_rmse": 0.11643499912333259,
+      "mean_rmse": 0.16150468697577752,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_20_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 124
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.11916375287812986,
+      "matrix_free_rmse": 0.11356287637255581,
+      "mean_rmse": 0.27849885528956586,
+      "n_test": 52,
+      "source_file": "Ramsey/0+6/step_2_delay_2_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 125
+    },
+    {
+      "delay_ms": 3.0,
+      "linear_rmse": 0.1105928082235424,
+      "matrix_free_rmse": 0.08982165067334054,
+      "mean_rmse": 0.2847396858635536,
+      "n_test": 52,
+      "source_file": "Ramsey/0+6/step_2_delay_3_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 126
+    },
+    {
+      "delay_ms": 3.0,
+      "linear_rmse": 0.11978241142570356,
+      "matrix_free_rmse": 0.1123801800339226,
+      "mean_rmse": 0.259744423989688,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_3_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 127
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.11646981321915283,
+      "matrix_free_rmse": 0.11229328814409403,
+      "mean_rmse": 0.2631383144457933,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_4_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 128
+    },
+    {
+      "delay_ms": 4.0,
+      "linear_rmse": 0.1296790910928461,
+      "matrix_free_rmse": 0.12038228498090037,
+      "mean_rmse": 0.2841398437324304,
+      "n_test": 48,
+      "source_file": "Ramsey/0+6/step_2_delay_4_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 129
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.14293507191242005,
+      "matrix_free_rmse": 0.20613146084477674,
+      "mean_rmse": 0.2519168944683855,
+      "n_test": 92,
+      "source_file": "Ramsey/0+6/step_2_delay_6_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 130
+    },
+    {
+      "delay_ms": 6.0,
+      "linear_rmse": 0.1367885635245546,
+      "matrix_free_rmse": 0.12824829920863107,
+      "mean_rmse": 0.26685693553158074,
+      "n_test": 45,
+      "source_file": "Ramsey/0+6/step_2_delay_6_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 131
+    },
+    {
+      "delay_ms": 8.0,
+      "linear_rmse": 0.1284606074233439,
+      "matrix_free_rmse": 0.1274115023786911,
+      "mean_rmse": 0.268170537489253,
+      "n_test": 47,
+      "source_file": "Ramsey/0+6/step_2_delay_8_ms_repetitions_25_(0).xlsx",
+      "state": "0+6",
+      "trace_id": 132
+    },
+    {
+      "delay_ms": 8.0,
+      "linear_rmse": 0.14040314625485023,
+      "matrix_free_rmse": 0.15476308291786953,
+      "mean_rmse": 0.23413367935955048,
+      "n_test": 46,
+      "source_file": "Ramsey/0+6/step_2_delay_8_ms_repetitions_25_(1).xlsx",
+      "state": "0+6",
+      "trace_id": 133
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.0496947202164506,
+      "matrix_free_rmse": 0.0396360560071599,
+      "mean_rmse": 0.2973156611645445,
+      "n_test": 46,
+      "source_file": "Ramsey/1+2/step_2_delay_0.1_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 134
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.03959617586152913,
+      "matrix_free_rmse": 0.04308693848688538,
+      "mean_rmse": 0.2926930240870225,
+      "n_test": 35,
+      "source_file": "Ramsey/1+2/step_2_delay_0.2_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 135
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.08585498489530206,
+      "matrix_free_rmse": 0.08145992912751861,
+      "mean_rmse": 0.31550054076910394,
+      "n_test": 51,
+      "source_file": "Ramsey/1+2/step_2_delay_0.5_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 136
+    },
+    {
+      "delay_ms": 100.0,
+      "linear_rmse": 0.06191684465615083,
+      "matrix_free_rmse": 0.04779084182534645,
+      "mean_rmse": 0.08382291256192666,
+      "n_test": 46,
+      "source_file": "Ramsey/1+2/step_2_delay_100_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 137
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.06080975322229585,
+      "matrix_free_rmse": 0.05924858322619515,
+      "mean_rmse": 0.2518003046679821,
+      "n_test": 46,
+      "source_file": "Ramsey/1+2/step_2_delay_10_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 138
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.05486928373755521,
+      "matrix_free_rmse": 0.052708331253610526,
+      "mean_rmse": 0.23033695518063363,
+      "n_test": 47,
+      "source_file": "Ramsey/1+2/step_2_delay_15_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 139
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.04666019623880164,
+      "matrix_free_rmse": 0.03679928592341908,
+      "mean_rmse": 0.31253471976838276,
+      "n_test": 46,
+      "source_file": "Ramsey/1+2/step_2_delay_1_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 140
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.08190874527906948,
+      "matrix_free_rmse": 0.06582254080192021,
+      "mean_rmse": 0.3210337277387145,
+      "n_test": 47,
+      "source_file": "Ramsey/1+2/step_2_delay_1_ms_(1).xlsx",
+      "state": "1+2",
+      "trace_id": 141
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.0456856595353453,
+      "matrix_free_rmse": 0.044250194298639633,
+      "mean_rmse": 0.30882009519266057,
+      "n_test": 39,
+      "source_file": "Ramsey/1+2/step_2_delay_1_ms_(2).xlsx",
+      "state": "1+2",
+      "trace_id": 142
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.04786757094135954,
+      "matrix_free_rmse": 0.043837427550315916,
+      "mean_rmse": 0.19954244712643313,
+      "n_test": 46,
+      "source_file": "Ramsey/1+2/step_2_delay_20_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 143
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.08320185706826407,
+      "matrix_free_rmse": 0.09401466589582172,
+      "mean_rmse": 0.31148476974490635,
+      "n_test": 51,
+      "source_file": "Ramsey/1+2/step_2_delay_2_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 144
+    },
+    {
+      "delay_ms": 30.0,
+      "linear_rmse": 0.061160649113625336,
+      "matrix_free_rmse": 0.10130142938286273,
+      "mean_rmse": 0.17356527825914525,
+      "n_test": 64,
+      "source_file": "Ramsey/1+2/step_2_delay_30_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 145
+    },
+    {
+      "delay_ms": 40.0,
+      "linear_rmse": 0.06103723026367489,
+      "matrix_free_rmse": 0.05629587596368155,
+      "mean_rmse": 0.13474835365598478,
+      "n_test": 46,
+      "source_file": "Ramsey/1+2/step_2_delay_40_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 146
+    },
+    {
+      "delay_ms": 5.0,
+      "linear_rmse": 0.049529703101893335,
+      "matrix_free_rmse": 0.04469479351179633,
+      "mean_rmse": 0.28803723290820554,
+      "n_test": 47,
+      "source_file": "Ramsey/1+2/step_2_delay_5_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 147
+    },
+    {
+      "delay_ms": 60.0,
+      "linear_rmse": 0.06779123965464154,
+      "matrix_free_rmse": 0.05606322738738113,
+      "mean_rmse": 0.13028061839395327,
+      "n_test": 46,
+      "source_file": "Ramsey/1+2/step_2_delay_60_ms_(0).xlsx",
+      "state": "1+2",
+      "trace_id": 148
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.058933982435554845,
+      "matrix_free_rmse": 0.1062697796107854,
+      "mean_rmse": 0.2832049916515244,
+      "n_test": 56,
+      "source_file": "Ramsey/1+3/step_2_delay_0.1_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 149
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.047146856596771335,
+      "matrix_free_rmse": 0.04439694956883451,
+      "mean_rmse": 0.2748881936746995,
+      "n_test": 46,
+      "source_file": "Ramsey/1+3/step_2_delay_0.2_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 150
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.050339274460320625,
+      "matrix_free_rmse": 0.05301307925359761,
+      "mean_rmse": 0.265068993564939,
+      "n_test": 47,
+      "source_file": "Ramsey/1+3/step_2_delay_0.5_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 151
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.051998118695065175,
+      "matrix_free_rmse": 0.04603964994858134,
+      "mean_rmse": 0.21633753373277523,
+      "n_test": 46,
+      "source_file": "Ramsey/1+3/step_2_delay_10_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 152
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.06157075155305895,
+      "matrix_free_rmse": 0.06003581914449827,
+      "mean_rmse": 0.20456154285907557,
+      "n_test": 47,
+      "source_file": "Ramsey/1+3/step_2_delay_15_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 153
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.05754487851649581,
+      "matrix_free_rmse": 0.05211666491777585,
+      "mean_rmse": 0.2717434401832153,
+      "n_test": 46,
+      "source_file": "Ramsey/1+3/step_2_delay_1_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 154
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.06130669325854947,
+      "matrix_free_rmse": 0.0574339722368632,
+      "mean_rmse": 0.16647479034008658,
+      "n_test": 47,
+      "source_file": "Ramsey/1+3/step_2_delay_20_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 155
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.05458283351279699,
+      "matrix_free_rmse": 0.04545536122970467,
+      "mean_rmse": 0.2609377820038668,
+      "n_test": 35,
+      "source_file": "Ramsey/1+3/step_2_delay_2_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 156
+    },
+    {
+      "delay_ms": 30.0,
+      "linear_rmse": 0.05766281297335399,
+      "matrix_free_rmse": 0.056867355503789824,
+      "mean_rmse": 0.1471321806979473,
+      "n_test": 46,
+      "source_file": "Ramsey/1+3/step_2_delay_30_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 157
+    },
+    {
+      "delay_ms": 40.0,
+      "linear_rmse": 0.06767489419532052,
+      "matrix_free_rmse": 0.06655550301490609,
+      "mean_rmse": 0.12477964253882419,
+      "n_test": 46,
+      "source_file": "Ramsey/1+3/step_2_delay_40_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 158
+    },
+    {
+      "delay_ms": 5.0,
+      "linear_rmse": 0.05801517792410204,
+      "matrix_free_rmse": 0.045739189871036603,
+      "mean_rmse": 0.2573625861364008,
+      "n_test": 46,
+      "source_file": "Ramsey/1+3/step_2_delay_5_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 159
+    },
+    {
+      "delay_ms": 60.0,
+      "linear_rmse": 0.14554387265675092,
+      "matrix_free_rmse": 0.16017995511814268,
+      "mean_rmse": 0.1836217242625131,
+      "n_test": 53,
+      "source_file": "Ramsey/1+3/step_2_delay_60_ms_(0).xlsx",
+      "state": "1+3",
+      "trace_id": 160
+    },
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.04049559997112375,
+      "matrix_free_rmse": 0.07214703859780718,
+      "mean_rmse": 0.28307085366344736,
+      "n_test": 47,
+      "source_file": "Ramsey/2+3/step_2_delay_0.1_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 161
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.054552374269701026,
+      "matrix_free_rmse": 0.13627974426497078,
+      "mean_rmse": 0.2749514884379178,
+      "n_test": 52,
+      "source_file": "Ramsey/2+3/step_2_delay_0.2_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 162
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.053846601765934386,
+      "matrix_free_rmse": 0.04557487722048964,
+      "mean_rmse": 0.26668923861044375,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_0.5_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 163
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.04784813940420717,
+      "matrix_free_rmse": 0.03577829208603377,
+      "mean_rmse": 0.2771120912394678,
+      "n_test": 45,
+      "source_file": "Ramsey/2+3/step_2_delay_0.5_ms_(1).xlsx",
+      "state": "2+3",
+      "trace_id": 164
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.04898979485566357,
+      "matrix_free_rmse": 0.03982158852919358,
+      "mean_rmse": 0.29615759052081203,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_0.5_ms_(2).xlsx",
+      "state": "2+3",
+      "trace_id": 165
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.052729828205757466,
+      "matrix_free_rmse": 0.04908661566222388,
+      "mean_rmse": 0.2390402785456631,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_10_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 166
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.0579120397484503,
+      "matrix_free_rmse": 0.05090289272865059,
+      "mean_rmse": 0.2107027734886983,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_10_ms_(1).xlsx",
+      "state": "2+3",
+      "trace_id": 167
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.06084102591822898,
+      "matrix_free_rmse": 0.04662617037687435,
+      "mean_rmse": 0.21461667079098015,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_15_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 168
+    },
+    {
+      "delay_ms": 15.0,
+      "linear_rmse": 0.10535653752852739,
+      "matrix_free_rmse": 0.09663989419922575,
+      "mean_rmse": 0.21337761327002938,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_15_ms_(1).xlsx",
+      "state": "2+3",
+      "trace_id": 169
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.04437978388175527,
+      "matrix_free_rmse": 0.03790568183457416,
+      "mean_rmse": 0.28105669685639245,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_1_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 170
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.06931732326300423,
+      "matrix_free_rmse": 0.055043865991200536,
+      "mean_rmse": 0.1842978609659621,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_20_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 171
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.04656692238992788,
+      "matrix_free_rmse": 0.03798390935327342,
+      "mean_rmse": 0.25609247198555024,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_2_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 172
+    },
+    {
+      "delay_ms": 30.0,
+      "linear_rmse": 0.050728390130353934,
+      "matrix_free_rmse": 0.04654043386499539,
+      "mean_rmse": 0.1717076764964807,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_30_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 173
+    },
+    {
+      "delay_ms": 40.0,
+      "linear_rmse": 0.05400784967101502,
+      "matrix_free_rmse": 0.04702200105523511,
+      "mean_rmse": 0.1369756231888599,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_40_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 174
+    },
+    {
+      "delay_ms": 5.0,
+      "linear_rmse": 0.05453128197911466,
+      "matrix_free_rmse": 0.15217852104079024,
+      "mean_rmse": 0.23473145652792327,
+      "n_test": 56,
+      "source_file": "Ramsey/2+3/step_2_delay_5_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 175
+    },
+    {
+      "delay_ms": 60.0,
+      "linear_rmse": 0.055901699437494755,
+      "matrix_free_rmse": 0.05593388388590078,
+      "mean_rmse": 0.11442299039597294,
+      "n_test": 46,
+      "source_file": "Ramsey/2+3/step_2_delay_60_ms_(0).xlsx",
+      "state": "2+3",
+      "trace_id": 176
+    }
+  ],
+  "all_trace_summary": {
+    "explicit_dense_design_gb": 0.90739404,
+    "linear_mean_rmse": 0.09433515448907652,
+    "matrix_free_design_mb": 5.37064,
+    "matrix_free_mean_rmse": 0.09773278573488518,
+    "mean_baseline_rmse": 0.254033599354579,
+    "solver": {
+      "block_size": 21,
+      "block_solves": 177,
+      "bohr_anchor_harmonic": 4,
+      "bohr_weight": 0.3,
+      "normal_residual_norm": 7.678159335168382e-13,
+      "residual_norm": 17.720405706582383
+    },
+    "traces": 177,
+    "wins_vs_linear": 106
+  },
+  "benchmark": [
+    {
+      "dense_build_seconds": 0.0001025420060614124,
+      "dense_design_mb": 0.370944,
+      "dense_solve_seconds": 0.00023804200463928282,
+      "matrix_free_mb": 0.097152,
+      "matrix_free_seconds": 0.00010525000107008964,
+      "observations": 552,
+      "parameters": 84,
+      "prediction_max_abs_difference": 3.3306690738754696e-16,
+      "speedup_vs_dense_solve": 2.2616817312976782,
+      "traces": 4
+    },
+    {
+      "dense_build_seconds": 0.0003240839869249612,
+      "dense_design_mb": 1.47168,
+      "dense_solve_seconds": 0.0010523330129217356,
+      "matrix_free_mb": 0.19272,
+      "matrix_free_seconds": 0.00018487501074559987,
+      "observations": 1095,
+      "parameters": 168,
+      "prediction_max_abs_difference": 3.3306690738754696e-16,
+      "speedup_vs_dense_solve": 5.6921322610215555,
+      "traces": 8
+    },
+    {
+      "dense_build_seconds": 0.0006050840020179749,
+      "dense_design_mb": 5.90016,
+      "dense_solve_seconds": 0.003107541997451335,
+      "matrix_free_mb": 0.38632,
+      "matrix_free_seconds": 0.0004007920069852844,
+      "observations": 2195,
+      "parameters": 336,
+      "prediction_max_abs_difference": 4.440892098500626e-16,
+      "speedup_vs_dense_solve": 7.753502922440847,
+      "traces": 16
+    },
+    {
+      "dense_build_seconds": 0.0032947919971775264,
+      "dense_design_mb": 31.546368,
+      "dense_solve_seconds": 0.018181292005465366,
+      "matrix_free_mb": 1.032768,
+      "matrix_free_seconds": 0.0010621660039760172,
+      "observations": 5868,
+      "parameters": 672,
+      "prediction_max_abs_difference": 9.43689570931383e-16,
+      "speedup_vs_dense_solve": 17.117185013836956,
+      "traces": 32
+    }
+  ],
+  "coherence": [
+    {
+      "coherence_amplitude": 0.8577392298772668,
+      "delay_ms": 0.1,
+      "n_points": 193,
+      "offset": 0.5165356549841744
+    },
+    {
+      "coherence_amplitude": 0.9271590551477169,
+      "delay_ms": 0.2,
+      "n_points": 182,
+      "offset": 0.4964135564889213
+    },
+    {
+      "coherence_amplitude": 0.9255560634603349,
+      "delay_ms": 0.5,
+      "n_points": 183,
+      "offset": 0.4951488914053361
+    },
+    {
+      "coherence_amplitude": 0.9438403309286086,
+      "delay_ms": 1.0,
+      "n_points": 181,
+      "offset": 0.49159321531738376
+    },
+    {
+      "coherence_amplitude": 0.9267673926631651,
+      "delay_ms": 2.0,
+      "n_points": 183,
+      "offset": 0.48696057190925984
+    },
+    {
+      "coherence_amplitude": 0.8794674248938801,
+      "delay_ms": 5.0,
+      "n_points": 181,
+      "offset": 0.486260277016517
+    },
+    {
+      "coherence_amplitude": 0.813134634649264,
+      "delay_ms": 10.0,
+      "n_points": 180,
+      "offset": 0.4754462632397598
+    },
+    {
+      "coherence_amplitude": 0.7058076889976593,
+      "delay_ms": 20.0,
+      "n_points": 182,
+      "offset": 0.4484520309175627
+    },
+    {
+      "coherence_amplitude": 0.5554445176035329,
+      "delay_ms": 40.0,
+      "n_points": 182,
+      "offset": 0.4265412499793926
+    },
+    {
+      "coherence_amplitude": 0.19111949918748,
+      "delay_ms": 80.0,
+      "n_points": 169,
+      "offset": 0.38212363358063195
+    },
+    {
+      "coherence_amplitude": 0.21507076736716135,
+      "delay_ms": 120.0,
+      "n_points": 181,
+      "offset": 0.3327160951040664
+    }
+  ],
+  "configuration": {
+    "bohr_anchor_harmonic": 4,
+    "bohr_weight_development_grid": [
+      {
+        "bohr_weight": 0.0,
+        "development_mean_rmse": 0.05487760110041575,
+        "development_observations": 252,
+        "fit_observations": 1240
+      },
+      {
+        "bohr_weight": 0.03,
+        "development_mean_rmse": 0.05471783684068234,
+        "development_observations": 252,
+        "fit_observations": 1240
+      },
+      {
+        "bohr_weight": 0.1,
+        "development_mean_rmse": 0.054434131396471595,
+        "development_observations": 252,
+        "fit_observations": 1240
+      },
+      {
+        "bohr_weight": 0.3,
+        "development_mean_rmse": 0.054034950682895926,
+        "development_observations": 252,
+        "fit_observations": 1240
+      },
+      {
+        "bohr_weight": 1.0,
+        "development_mean_rmse": 0.05424855848391153,
+        "development_observations": 252,
+        "fit_observations": 1240
+      },
+      {
+        "bohr_weight": 3.0,
+        "development_mean_rmse": 0.05618363317597477,
+        "development_observations": 252,
+        "fit_observations": 1240
+      },
+      {
+        "bohr_weight": 10.0,
+        "development_mean_rmse": 0.05933085018793673,
+        "development_observations": 252,
+        "fit_observations": 1240
+      }
+    ],
+    "bohr_weight_grid": [
+      0.0,
+      0.03,
+      0.1,
+      0.3,
+      1.0,
+      3.0,
+      10.0
+    ],
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20260728,
+    "harmonics": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "held_out_rule": "phase_index mod 4 equals 0",
+    "inner_development_rule": "outer-train points with phase_index mod 8 equals 3",
+    "loss": "Bohr-anchored Sobolev spectral loss",
+    "ridge": 0.01,
+    "selected_bohr_weight": 0.3
+  },
+  "dataset": {
+    "derived_csv_sha256": "197424d048c612e5ab8605129a45a46108153758af257ae5b1b63c6436291711",
+    "doi": "10.5281/zenodo.15797402",
+    "observations": 40787,
+    "ramsey_archive_sha256": "506b83ec63b0934dc813c630625402bd81070ed3529ff3c81af66c0208f0fec7",
+    "record_url": "https://zenodo.org/records/15797402",
+    "states": 8,
+    "traces": 177
+  },
+  "environment": {
+    "numpy": "2.4.3",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "3.13.12"
+  },
+  "primary_summary": {
+    "explicit_dense_design_mb": 2.757216,
+    "held_out_observations": 505,
+    "linear_mean_rmse": 0.054836083488411076,
+    "matrix_free_design_mb": 0.262592,
+    "matrix_free_mean_rmse": 0.051341045556094866,
+    "mean_baseline_rmse": 0.2713128723361889,
+    "observations": 1997,
+    "paired_bootstrap_95ci": [
+      -0.011449153710185804,
+      0.009235514350060153
+    ],
+    "paired_rmse_difference": -0.0034950379323162033,
+    "relative_improvement_vs_linear_percent": 6.3736096927032415,
+    "solver": {
+      "block_size": 21,
+      "block_solves": 11,
+      "bohr_anchor_harmonic": 4,
+      "bohr_weight": 0.3,
+      "normal_residual_norm": 1.1046149561761593e-13,
+      "residual_norm": 1.9881822973327326
+    },
+    "state": "0+1",
+    "traces": 11,
+    "wins_vs_linear": 10
+  },
+  "primary_trace_metrics": [
+    {
+      "delay_ms": 0.1,
+      "linear_rmse": 0.05778655305765966,
+      "matrix_free_rmse": 0.11262446689423923,
+      "mean_rmse": 0.32785818571089803,
+      "n_test": 49,
+      "source_file": "Ramsey/0+1/step_2_delay_0.1_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 0
+    },
+    {
+      "delay_ms": 0.2,
+      "linear_rmse": 0.043175576832077275,
+      "matrix_free_rmse": 0.03904329987066763,
+      "mean_rmse": 0.32678360924002964,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_0.2_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 1
+    },
+    {
+      "delay_ms": 0.5,
+      "linear_rmse": 0.04492142899116964,
+      "matrix_free_rmse": 0.038083902031090494,
+      "mean_rmse": 0.3348946043296988,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_0.5_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 2
+    },
+    {
+      "delay_ms": 10.0,
+      "linear_rmse": 0.05629781918018179,
+      "matrix_free_rmse": 0.04271019887953923,
+      "mean_rmse": 0.2952576703605201,
+      "n_test": 45,
+      "source_file": "Ramsey/0+1/step_2_delay_10_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 3
+    },
+    {
+      "delay_ms": 120.0,
+      "linear_rmse": 0.0602891583014364,
+      "matrix_free_rmse": 0.055229214960420166,
+      "mean_rmse": 0.10932514948707622,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_120_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 4
+    },
+    {
+      "delay_ms": 1.0,
+      "linear_rmse": 0.040780430089209084,
+      "matrix_free_rmse": 0.03072875112365135,
+      "mean_rmse": 0.3421611696243276,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_1_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 5
+    },
+    {
+      "delay_ms": 20.0,
+      "linear_rmse": 0.060965956287808334,
+      "matrix_free_rmse": 0.05668111922715077,
+      "mean_rmse": 0.2656022117633078,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_20_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 6
+    },
+    {
+      "delay_ms": 2.0,
+      "linear_rmse": 0.0540128809113884,
+      "matrix_free_rmse": 0.04342206393522731,
+      "mean_rmse": 0.3360102251556431,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_2_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 7
+    },
+    {
+      "delay_ms": 40.0,
+      "linear_rmse": 0.06967705005486258,
+      "matrix_free_rmse": 0.05442930700278233,
+      "mean_rmse": 0.20536522960164544,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_40_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 8
+    },
+    {
+      "delay_ms": 5.0,
+      "linear_rmse": 0.04887873192690874,
+      "matrix_free_rmse": 0.042815444504839935,
+      "mean_rmse": 0.3106808235213344,
+      "n_test": 46,
+      "source_file": "Ramsey/0+1/step_2_delay_5_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 9
+    },
+    {
+      "delay_ms": 80.0,
+      "linear_rmse": 0.06641133273981988,
+      "matrix_free_rmse": 0.04898373268743508,
+      "mean_rmse": 0.13050271690359735,
+      "n_test": 43,
+      "source_file": "Ramsey/0+1/step_2_delay_80_ms.xlsx",
+      "state": "0+1",
+      "trace_id": 10
+    }
+  ],
+  "representation_audit": {
+    "explicit_dense_gb": 0.90739404,
+    "matrix_free_mb": 5.37064,
+    "memory_reduction": 168.95454545454547,
+    "observations": 30515,
+    "parameters": 3717,
+    "traces": 177
+  }
+}

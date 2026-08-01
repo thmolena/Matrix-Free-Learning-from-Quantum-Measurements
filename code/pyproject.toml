@@ -4,10 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "specops-cptppinn"
-version = "2.0.0"
-description = "Spectral-CPTP-PINNs: spectral-frame (interaction-picture eigen-operator) structure-preserving residual learning, operator-system spectral truncation of the open-system generator, and matrix-free compilation for Markovian open quantum (Lindblad/GKSL) dynamics. Regenerates every table and figure of the manuscript deterministically. Part of the spectral-truncation operators (specops) program."
+version = "3.0.0"
+description = "Matrix-free spectral-frame recovery with a Bohr-anchored Sobolev loss on checksum-traceable experimental Ramsey data."
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
 maintainers = [{ name = "Molena Huynh", email = "molena.huynh@jmp.com" }]
 keywords = [
@@ -21,12 +22,12 @@ keywords = [
     "spectral-truncation",
     "operator-systems",
     "interaction-picture",
+    "sobolev-regularization",
     "reproducibility",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
@@ -35,7 +36,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Physics",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
 # Lower-bound floors keep the package broadly installable across recent
@@ -65,10 +65,20 @@ cptppinn-reproduce = "ctpcpinn.reproduce:main"
 ctpcpinn-reproduce = "ctpcpinn.reproduce:main"
 cptppinn-validate = "ctpcpinn.validate:main"
 ctpcpinn-validate = "ctpcpinn.validate:main"
+cptppinn-real-data = "ctpcpinn.real_data:main"
+cptppinn-fetch-real-data = "ctpcpinn.fetch_real_data:main"
+ramsey-adaptive-study = "ctpcpinn.adaptive_ramsey:main"
+ramsey-adaptive-figures = "ctpcpinn.adaptive_figures:main"
 
 [project.urls]
 Repository = "https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling"
-Homepage = "https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["ctpcpinn*"]
+
+[tool.setuptools.package-data]
+ctpcpinn = ["data/*.csv", "data/*.json", "data/*.md"]

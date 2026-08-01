@@ -9,6 +9,8 @@ __pycache__/
 dist/
 build/
 .eggs/
+.pytest_cache/
+.mplconfig/
 
 # Virtual environments
 .venv/
@@ -24,10 +26,11 @@ ENV/
 # Jupyter checkpoints
 .ipynb_checkpoints/
 
-# Generated outputs (keep tracked CSVs, ignore large binaries)
-outputs/*.png
-outputs/*.npy
-outputs/*_bench.pt
+# Generated local reproduction directories
+ctpcpinn_results/
+ctpcpinn_real_results/
+reproduced/
+reproduced_simulations/
 
 # VS Code
 .vs/
@@ -41,3 +44,10 @@ __MACOSX/
 *.log
 runs/
 tb_logs/
+
+# LaTeX auxiliaries (the release keeps main.tex and the inspected main.pdf)
+*.aux
+*.bbl
+*.blg
+*.out
+*Notes.bib

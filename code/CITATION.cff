@@ -1,21 +1,21 @@
 cff-version: 1.2.0
 message: "If you use this software or its method, please cite the manuscript below."
-title: "Structure-preserving physics-informed learning of open quantum dynamics with spectral-frame encodings and operator-system truncation"
+title: "Matrix-Free Learning of Open Quantum Systems from Measured Signals"
 authors:
   - family-names: Huynh
     given-names: Molena
     email: molena.huynh@jmp.com
     affiliation: "North Carolina State University, Raleigh, North Carolina 27695, USA"
 abstract: >-
-  A structure-preserving, physics-informed framework for identifying Markovian
-  open quantum systems. A Cholesky density network makes unphysical states
-  unrepresentable; a spectral-frame (interaction-picture) parameterization learns
-  only the slow envelope in the Hamiltonian eigenbasis and supplies the fast Bohr
-  oscillations analytically; and an operator-system spectral truncation
-  band-limits the generator to its slow Bohr modes, yielding a controlled
-  hierarchy from the secular (Davies) generator through the rotating-wave
-  approximation to the exact generator with an a posteriori error certificate.
-  Part of the spectral-truncation operators (specops) program.
+  A structure-preserving, physics-informed framework for recovering open quantum
+  dynamics from experimental Ramsey fringes. A Cholesky density network makes
+  unphysical states unrepresentable; a spectral-frame parameterization supplies
+  known Bohr oscillations analytically; a nested-selected Bohr-anchored Sobolev
+  loss regularizes off-resonant sidebands; and matrix-free kernels apply the
+  residual and block spectral design without materializing the largest matrices.
+  The primary analysis uses 40,787 measured probabilities from the CC BY 4.0
+  Zenodo record 10.5281/zenodo.15797402 and reports both the favorable
+  clean-subset result and the negative all-trace comparison.
 keywords:
   - quantum
   - open-quantum-systems
@@ -25,19 +25,19 @@ keywords:
   - spectral-truncation
   - operator-systems
   - interaction-picture
+  - sobolev-regularization
   - reproducibility
 license: MIT
-version: "2.0.0"
-date-released: "2026-06-30"
+version: "2.1.0"
+date-released: "2026-07-29"
 repository-code: "https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling"
 preferred-citation:
-  type: article
-  title: "Structure-preserving physics-informed learning of open quantum dynamics with spectral-frame encodings and operator-system truncation"
+  type: generic
+  title: "Matrix-Free Learning of Open Quantum Systems from Measured Signals"
   authors:
     - family-names: Huynh
       given-names: Molena
       email: molena.huynh@jmp.com
       affiliation: "North Carolina State University, Raleigh, North Carolina 27695, USA"
   year: 2026
-  journal: "arXiv preprint"
-  notes: "Part of the spectral-truncation operators (specops) program. BibTeX key: huynh2026cptppinn"
+  notes: "Unpublished manuscript and software package. BibTeX key: huynh2026cptppinn"
